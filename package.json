@@ -5,6 +5,9 @@
   "targets": {
     "main": false
   },
+  "engines": {
+    "node": "14.x"
+  },
   "scripts": {
     "start": "node server.js",
     "start:dev": "nodemon server.js",
