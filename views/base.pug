@@ -1,0 +1,96 @@
+doctype html
+html  
+  head 
+   block head
+    meta(charset='UTF-8' )
+    meta( name='viewport' content='width=device-width, initial-scale=1.0') 
+    //meta(http-equiv="Content-Security-Policy" content="script-src 'self' https://unpkg.com/ https://tile.openstreetmap.org https://cdnjs.cloudflare.com ")
+    //meta(http-equiv="Content-Security-Policy" content="script-src 'self' https://js.stripe.com https://js.stripe.com/v3/;")
+    meta(http-equiv="Content-Security-Policy" content="script-src 'self' https://unpkg.com/ https://tile.openstreetmap.org https://cdnjs.cloudflare.com https://js.stripe.com/v3 'unsafe-inline' 'unsafe-eval';")
+
+
+        //- <link rel='stylesheet' href='css/style.css'/> -> a regular html css file exampel and bellow the pug exmaple 
+    link(rel='stylesheet' href='/css/style.css')
+    link(rel='shortcut icon' type='image/png' href='/img/favicon.png') 
+    link(rel='stylesheet' href='https://fonts.googleapis.com/css?family=Lato:300,300i,700')
+
+
+    title Natours | #{title} 
+    //- title = > the title we pass in the res 
+
+
+    body 
+      // HEADER 
+      include _header
+
+      //CONTENT 
+      //- section.overview => section elemnt with a classname in it ! 
+      //-   h1=tour
+      block content 
+        h1 This is a placeholder heading
+      //FOOTER
+      include _footer
+      
+      //- script(src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js')
+      //- script(type='module' src='/js/login.js' defer)
+      //- script(type='module' src='/js/bundle.js' defer)*** beloow is testing
+      script(type='module' src='/js/bundled/index.js' defer)
+
+      
+
+      //- //- script(src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.1/axios.min.js")
+      //- script(type="module" src='/js/login.js')
+    //- exmpales:
+        //- h1= tour 
+        //- h2= user.toUpperCase()
+        //- //  h1 The park camper 
+
+        //- - const x= 9;
+        //- h= 2 * x 
+        //- p This is just some text  
+        
+        
+
+
+
+//- COMMENTS :
+//- we need to keep the starcute of html file , to create a organic html fille 
+//- *  , to set the levels of stracuture of html filles , we need to pres TAB key in the keyboard 
+
+//- h1 The park camper  
+//- will translate it to :
+//- <h1>The park camper </h1>
+
+//- we can pass elemnts with the option like in react , passing props to the fille 
+//- exmaple:
+  res.status(200).render('base', {
+    tour: 'The Forest Hiker',
+    user: 'Jonas',
+  });
+//- });
+//- if we want to use them we simply just call them with a equal sing ,TODO:for exmaple: h1= tour TODO:
+//- this code , when we calling veribles that we have set to the pug tamplate options called TODO: BUFFERD code,TODO:
+//- basiclly we can run js code on the elemnts we set 
+//- for exmaple : TODO: h2= user.toUppercaese(),TODO:
+
+//-TODO: UNBOFFERD code TODO: , is a code that is not going to add anything to the output ,TODO: like for example :  - const x= 9;TODO:
+
+//- we have two options of the comments in pug:
+//-  option one : //-  => this one will not be visibble in the code
+//-  option two : // => regular comment ,this one will be visual in the output 
+
+//- we can use distracture on the title for exmpale:
+//-         //- title Natours | #{tour} 
+//-         //- in js code is ${} and in pug is #{}
+
+//- AN DOTE IS A DIV ELEMNT 
+//- TO SELCET CLASS WE NEED TO PUT .CLASSNAME 
+
+//- extension mamed: pug beautify -> make an order to our pug file 
+
+//-to make our code more arggend we can create pug fille to each section , and from there we basiclly can just import them with the include proparty
+//- we are selecting the  section that we have created with pug file , with _(the name of section), like in the exmaple below 
+//- and then we importing them using include {name of the fille}, in those filles we are adding the sections that we want to pass to that current file /section 
+//- when we doing that we can use the pug beutify extension that will help us order the pug file if we want (ctrl a - to select all the code , ctrl - shift - p , to open the code pannel from there selcting the extension and this should make the work  )
+
+
