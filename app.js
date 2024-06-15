@@ -8,6 +8,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParer = require('cookie-parser');
 const compresion = require('compresion');
+const cors = require('cors');
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
@@ -30,9 +31,25 @@ app.set('views', path.join(__dirname, 'views'));
 // console.log(path.join(__dirname, 'views'));
 
 // Global middaleeares:
-//Serving static files
-// app.use(express.static('./public'));
-app.use(express.static(path.join(__dirname, 'public')));
+//Impelement CORS:
+//allow all the request
+app.use(cors()); //return a midddleware function which then add a couple of a diffrent headers to our response
+// backend app ,   fronted app
+//api.natours.com , natours.com => to allow them both we will use origin:
+// app.use(
+//   cors({
+//     origin: 'https://www.natours.com', //will alow onlt this origin to create reqursts to api.natours.com
+//   })
+// );
+//app.use(cors()) => will only work for simple requests (GET,POST) ,none simple request (PUT,PATCH,DELETE,COOKIE,NONE-STANDART-HEADERS)-called preflight phase
+//so when there a non simple requst the browser will automatically issue the preflight phase,and this is how its work , before the real request is actually happens ,for example delete request, the browser first does an options request in order to figure out if the actuall request is safe to send
+//we need to actually response to the options request , and options is really just another HTTP method , what its means that when we get an options request to our server , we need to send back the same Access-Allow-Origin header.
+//this way the browser will then know that the actual request is safe to perfoem and then execude the delete request itself
+app.options('*', cors()); //define all the routes
+//app.options('/api/v1/tours/:id', cors()); //to a sepsific route
+
+app.app // app.use(express.static('./public')); //Serving static files
+  .use(express.static(path.join(__dirname, 'public')));
 
 // app.use((req, res, next) => { // exampe of middaleware
 //   console.log('Hello from the middleware function 👋');
