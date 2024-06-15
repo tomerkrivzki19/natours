@@ -1,7 +1,7 @@
 {
   "name": "starter",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "server.js",
   "targets": {
     "main": false
   },
@@ -15,6 +15,7 @@
     "debug": "ndb server.js",
     "watch:js": "parcel watch --no-hmr ./public/js/index.js --dist-dir ./public/js/bundled",
     "build:js": "parcel build ./public/js/index.js --dist-dir ./public/js/bundled",
+    "build": "npm run build:js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

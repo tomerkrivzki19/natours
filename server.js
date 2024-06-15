@@ -70,6 +70,8 @@ process.on('unhandledRejection', (err) => {
   //if there an problem like a database connection then our application not woek at all , so what we need to do here is to shout down our application
   console.log('UNHANDLE REJECTION! 💣, Shutting down.... ');
   console.log(err.name, err.message);
+  console.error(err.stack);
+
   server.close(() => {
     // in this method , ther server will get more time to handle all the reqeust that been handled at the time , and inly after that the server will shut down
     process.exit(1);
@@ -82,3 +84,21 @@ process.on('unhandledRejection', (err) => {
 //- in production we should have then a tool in place that will restart the apllication after crashing
 
 //in node.js this way of two unction that catch error and handled in not a good practic becouse we need to handle the problem inside the funciton that it accured, with catch method , and not realy on the callback function that we have made
+
+// Debug logging for connection events
+mongoose.connection.on('connected', () => {
+  console.log('Mongoose connected to DB');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('Mongoose connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('Mongoose disconnected');
+});
+console.log('Environment variables:', {
+  PORT: process.env.PORT,
+  DATABASE: process.env.DATABASE ? 'defined' : 'undefined',
+  DATABASE_PASSWORD: process.env.DATABASE_PASSWORD ? 'defined' : 'undefined',
+});
