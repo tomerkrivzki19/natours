@@ -20,7 +20,7 @@ const bookingRouter = require('./routes/bookingRoutes');
 //tessting
 const app = express();
 
-//trust proxys  - for conection secure setting and testing , here is basiclly for heroku becoust heroku works with/as proxy
+//trust proxys  - for conection secure setting and testing , here is basiclly for heroku becouse heroku works with/as proxy
 app.enable('trust proxy');
 
 //pug --> a tamplate engin for express
