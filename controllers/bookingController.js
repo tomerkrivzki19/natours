@@ -49,7 +49,11 @@ exports.getCheckoutSession = async (req, res, next) => {
             currency: 'usd',
             product_data: {
               name: `${tour.name} Tour`,
-              images: [`https://www.natours.dev/img/tours/${tour.imageCover}`], //
+              images: [
+                `${req.protocol}://${req.get('host')}/img/tours/${
+                  tour.imageCover
+                }`,
+              ], //
               description: tour.summary,
             },
           },
@@ -101,9 +105,9 @@ const createBookingCheckout = async (session) => {
   //information about the tour =>  client_reference_id: req.params.tourId => we can get access from there
   const tour = session.client_reference_id;
   //information about the user =>  customer_email: req.user.email,
-  const user = (await User.findOne({ email: session.customer_email })).id; // to get only the id from the output
+  const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
   // information about the price => unit_amount
-  const price = session.line_items[0].unit_amount / 100; ///need to procced
+  const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
   await Booking.create({ tour, user, price });
 };
 exports.webhookCheckout = (req, res, next) => {
@@ -132,7 +136,7 @@ exports.webhookCheckout = (req, res, next) => {
   //                   the type we definde in the stripe deshboard
   if (event.type === 'checkout.session.completed') {
     createBookingCheckout(event.data.object);
-    res.status(200).json({ recived: true });
+    res.status(200).json({ received: true });
   }
 };
 
