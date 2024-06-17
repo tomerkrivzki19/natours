@@ -23,8 +23,8 @@ const bookingContorller = require('./controllers/bookingController');
 const app = express();
 
 //trust proxys  - for conection secure setting and testing , here is basiclly for heroku becouse heroku works with/as proxy
-app.enable('trust proxy');
-
+app.enable('trust proxy', 1); // Trust the first proxy in the chain (Vercel)
+app.set('trust proxy', 1);
 //pug --> a tamplate engin for express
 //tell express what tamplate engin we are going to use:
 app.set('view engine', 'pug');
