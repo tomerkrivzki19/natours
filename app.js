@@ -49,8 +49,7 @@ app.use(cors()); //return a midddleware function which then add a couple of a di
 app.options('*', cors()); //define all the routes
 //app.options('/api/v1/tours/:id', cors()); //to a sepsific route
 
-app.app // app.use(express.static('./public')); //Serving static files
-  .use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'))); // app.use(express.static('./public')); //Serving static files
 
 // app.use((req, res, next) => { // exampe of middaleware
 //   console.log('Hello from the middleware function 👋');
