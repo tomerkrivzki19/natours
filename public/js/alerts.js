@@ -5,12 +5,12 @@ export const hideAlert = () => {
   if (el) el.parentElement.removeChild(el);
   //basic dom manipulation
 };
-// type is 'success' or 'error'
-export const showAlert = (type, msg) => {
+// type is 'success' or 'error' |time => if we will add that to the argumant and specife it with a diffrent number then it will overweite the default
+export const showAlert = (type, msg, time = 7) => {
   hideAlert();
   const markup = `<div class="alert alert--${type}">${msg}</div>`;
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup); // 'afterbegin' ==> inside ht body but right in the begining
 
   //hide all the alerts after 5 secondes
-  window.setTimeout(hideAlert, 5000);
+  window.setTimeout(hideAlert, time, 1000);
 };

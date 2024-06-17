@@ -18,8 +18,8 @@ html
     title Natours | #{title} 
     //- title = > the title we pass in the res 
 
-
-    body 
+    //- alert = alert message that was send to req.locals which then will be aviable in our tamplates 
+    body(data-alert=`${alert ? alert : ''}`)
       // HEADER 
       include _header
 

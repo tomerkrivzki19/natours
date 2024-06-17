@@ -38,7 +38,9 @@ exports.getCheckoutSession = async (req, res, next) => {
       // success_url: `${req.protocol}://${req.get('host')}/?tour=${
       //   req.params.tourId
       // }&user=${req.user.id}&price=${tour.price}`, //stripe get a get req to that url, this proccess is not secure becouse any one that knews the url can get to that route and book a a tour without having to pay
-      success_url: `${req.protocol}://${req.get('host')}/my-tours`, //no from stripe we geting a post req to a diffrent route with a difrrent calback funcitons
+      success_url: `${req.protocol}://${req.get(
+        'host'
+      )}/my-tours?alert=booking`, //no from stripe we geting a post req to a diffrent route with a difrrent calback funcitons
       cancel_url: `${req.protocol}://${req.get('host')}/tour/${tour.slug}`,
       customer_email: req.user.email,
       client_reference_id: req.params.tourId,

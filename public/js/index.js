@@ -8,6 +8,8 @@ import { login, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
+import { showAlert } from './alerts';
+
 // console.log('Hello from parcel'); -> check if the fille work
 
 // FIXEME: having problem with the mapbox when entering to a tour
@@ -20,6 +22,7 @@ const updateUserForm = document.querySelector('.form-user-data');
 const updateUserPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 
+// dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
 if (mapbox) {
   //extract the data from the div , what we have done in the pug tamplate - we display all the data in the div classname
@@ -87,3 +90,6 @@ if (bookBtn) {
     bookTour(tourId);
   });
 }
+
+const alertsMessage = document.querySelector('body').dataset.alert;
+if (alert) showAlert('success', alertsMessage, 20);

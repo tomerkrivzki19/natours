@@ -1,8 +1,9 @@
 const express = require('express');
 const viewController = require('../controllers/viewController');
-const router = express.Router();
 const authController = require('../controllers/authController');
 const bookingController = require('../controllers/bookingController');
+
+const router = express.Router();
 //TESTING :
 
 // router.get('/', (req, res) => {
@@ -18,6 +19,9 @@ const bookingController = require('../controllers/bookingController');
 // });
 
 // router.use(authController.isLoggedIn);
+
+//middleware for alerts:
+router.use(viewController.alerts);
 
 router.get(
   '/',
