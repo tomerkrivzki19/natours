@@ -17,6 +17,7 @@ const userRouter = require('./routes/clientsRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const bookingContorller = require('./controllers/bookingController');
 
 //tessting
 const app = express();
@@ -143,6 +144,15 @@ const limiter = rateLimit({
 // this middlewate only affect on routes that contain '/api' route
 app.use('/api', limiter);
 //TODO: ! PAY ATTENTION - THIS CURRENT LIMITER FUNTION MIDDLE WARE IS AVAIBLE FOR ALL THE REQ NOT ONLT FOR THE LOGIN , MEANING WE LINITING our clients in sorten way
+
+//we implement that here becouse in this route we need the body coming with the request to be not in JSON ,otherwise this is not going to be working at all
+//ass soon as a request hits this mddleware  app.use(express.json({ limit: '10kb' })); , then it wll parsed to json , meaning we are preventing to access the middleware
+//body-parsrer? in order to read HTTP POST data , we have to use "body-parser" node module. body-parser is a piece of express middleware that reads a form's input and stores it as a javascript object accessible through req.body
+app.post(
+  '/webhook-checkout',
+  express.raw({ type: 'application/json' }), //express.raw( ) => inseead of body parser npm pack
+  bookingContorller.webhookCheckout
+);
 
 //Body parser, reading data from the body into req.body
 app.use(express.json({ limit: '10kb' })); //here we set the limit for parsering files to max of 10 kb , what will happeend id there are a file more then 10 kb , simpily he will not be accepted

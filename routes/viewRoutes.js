@@ -21,7 +21,7 @@ const bookingController = require('../controllers/bookingController');
 
 router.get(
   '/',
-  bookingController.createBookingCheckout, //temporary intill we upload the site to the cloude
+  //bookingController.createBookingCheckout, //temporary intill we upload the site to the cloude
   authController.isLoggedIn,
   viewController.getOverview
 );
