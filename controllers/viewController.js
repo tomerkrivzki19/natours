@@ -7,11 +7,10 @@ const AppError = require('../utils/appError');
 exports.alerts = (req, res, next) => {
   //a miidleware that checkes if there an succes in order so send to the client alert when the booking is succesed
   const { alert } = req.query; // * what comes after the ? .... | we set that in the booking controoler when the pruchest is succeeded where and which url it will navigate
-  if (alert === 'booking') {
+  if (alert === 'booking')
     //here we set the alerts message in the req.locals , that way we will use that after that in the tamplates (pug)
     res.locals.alert =
       "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediatly please come back later.";
-  }
   next();
 };
 

@@ -12,5 +12,5 @@ export const showAlert = (type, msg, time = 7) => {
   document.querySelector('body').insertAdjacentHTML('afterbegin', markup); // 'afterbegin' ==> inside ht body but right in the begining
 
   //hide all the alerts after 5 secondes
-  window.setTimeout(hideAlert, time, 1000);
+  window.setTimeout(hideAlert, time * 1000);
 };

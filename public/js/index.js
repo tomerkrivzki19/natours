@@ -4,6 +4,9 @@
 // bable libary => make some of the new js fetures work at older broswers
 //npm i @babel/polyfill
 import '@babel/polyfill';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import { login, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
@@ -91,5 +94,6 @@ if (bookBtn) {
   });
 }
 
-const alertsMessage = document.querySelector('body').dataset.alert;
-if (alert) showAlert('success', alertsMessage, 20);
+const alertMessage = document.querySelector('body').dataset.alert;
+console.log(alertMessage);
+if (alertMessage) showAlert('success', alertMessage, 20);
