@@ -100,6 +100,7 @@ block content
         //- we added that becouse ; the api endpoint that we created need the tour id , and the tour id need to come somewhere ,and for now we need to put that information on the btn element so then our js file can grab it from that element and send it along with the request to the checkout session route -for that we are going to use data atribute  
         if user 
          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+         button.btn.btn--green.span-all-rows#favorite ⭐Add To Favorite!
         else 
          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour !
   //- purchest is inside req.locals when entering the page , find out if there is an tour user was purchest

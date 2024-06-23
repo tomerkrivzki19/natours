@@ -124,6 +124,27 @@ exports.getMyTours = async (req, res, next) => {
   }
 };
 
+//need to complete !
+exports.getMyFavorites = async (req, res, next) => {
+  try {
+    //1) get the localstorage data threw post req: when clicking button or link need to impelent a solution for displaying the favorites from local storage
+    const toursIDs = req.body.favorites;
+
+    if (!toursIDs) {
+      console.log('favorites not found ');
+      return next();
+    }
+
+    const tours = await Tour.find({ _id: { $in: toursIDs } });
+    console.log(tours);
+    res.status(200).render('overview', {
+      title: 'My Tours',
+      tours,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 exports.updateUserData = async (req, res, next) => {
   try {
     //we get an empty fiile -> so to solve that we basiclly added some exprees package middleware that parse for us urlencoded data

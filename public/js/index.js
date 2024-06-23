@@ -13,7 +13,7 @@ import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
 import { sendReview } from './sendReview';
-
+import { addFavoriteTour } from './addFavoriteTour';
 // console.log('Hello from parcel'); -> check if the fille work
 
 // FIXEME: having problem with the mapbox when entering to a tour
@@ -28,6 +28,7 @@ const updateUserPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
 const reviewBtn = document.getElementById('leave-review');
 const Reviewform = document.getElementById('review-data');
+const favorite = document.getElementById('favorite');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -141,5 +142,13 @@ if (Reviewform) {
     }
 
     sendReview({ review, rating, tour });
+  });
+}
+// Favorites
+if (favorite) {
+  favorite.addEventListener('click', (e) => {
+    e.preventDefault();
+    const tourId = bookBtn.dataset.tourId;
+    addFavoriteTour(tourId);
   });
 }

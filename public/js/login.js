@@ -53,7 +53,8 @@ export const logout = async () => {
   try {
     const res = await axios.get('/api/v1/users/logout');
     // location.reload() => will reload the page |  location.reload(true) => will force a reload the server and not from the broswer
-    if (res.data.status === 'success') location.reload(true);
+    if (res.data.status === 'success') localStorage.removeItem('favoriteTours');
+    location.reload(true);
   } catch (error) {
     console.log(err.response);
     showAlert('error', 'Error logging out! Try again .');

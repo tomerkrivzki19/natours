@@ -35,6 +35,13 @@ router.get('/singup', authController.isLoggedIn, viewController.getSingupForm);
 router.get('/me', authController.protect, viewController.getAccount);
 router.get('/my-tours', authController.protect, viewController.getMyTours);
 
+//need to compelet!
+router.get(
+  '/my-favorites',
+  authController.protect,
+  viewController.getMyFavorites
+);
+
 router.post(
   '/submit-user-data',
   authController.protect,
