@@ -11,6 +11,7 @@ exports.alerts = (req, res, next) => {
     //here we set the alerts message in the req.locals , that way we will use that after that in the tamplates (pug)
     res.locals.alert =
       "Your booking was successful! Please check your email for a confirmation. If your booking doesn't show up here immediatly please come back later.";
+
   next();
 };
 
@@ -47,6 +48,15 @@ exports.getTour = async (req, res, next) => {
     if (!tour) {
       return next(new AppError('There is no tour with that name.', 404));
     }
+    //check if the user bought the product
+    const booking = await Booking.find({
+      tour: tour.id,
+      user: res.locals.user._id,
+    });
+    if (booking.length > 0) {
+      res.locals.purchest = 'purchest';
+    }
+
     //2) Build tamplate(pug tamplate)
     //3) Render tamplate using the data from step 1
     res.status(200).render('tour', {

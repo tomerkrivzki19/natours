@@ -102,3 +102,14 @@ block content
          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
         else 
          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour !
+  //- purchest is inside req.locals when entering the page , find out if there is an tour user was purchest
+  if purchest
+    section.section-cta
+      .cta
+        .cta__content
+          h2.heading-secondary Leave an Rating? 
+          form#review-data(action="") 
+            input(type="text" placeholder="Comment here" name='reviewText')
+            input(type="number" min="0" max="5" name='reviewNumber')
+            button.btn.btn--green.span-all-rows#leave-review Send It!
+      

@@ -12,6 +12,7 @@ import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
+import { sendReview } from './sendReview';
 
 // console.log('Hello from parcel'); -> check if the fille work
 
@@ -24,6 +25,8 @@ const logOutBtn = document.querySelector('.nav__el--logout');
 const updateUserForm = document.querySelector('.form-user-data');
 const updateUserPasswordForm = document.querySelector('.form-user-password');
 const bookBtn = document.getElementById('book-tour');
+const reviewBtn = document.getElementById('leave-review');
+const Reviewform = document.getElementById('review-data');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -97,3 +100,23 @@ if (bookBtn) {
 const alertMessage = document.querySelector('body').dataset.alert;
 // console.log(alertMessage);
 if (alertMessage) showAlert('success', alertMessage, 20);
+
+// reviewBtn
+if (Reviewform) {
+  Reviewform.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    reviewBtn.textContent = 'Updating...';
+    const formData = new FormData(e.target);
+    const review = formData.get('reviewText');
+    const rating = formData.get('reviewNumber');
+    const tour = bookBtn.dataset.tourId;
+    console.log(tour);
+    if (!review && !rating) {
+      reviewBtn.textContent = 'SEND IT! ';
+      return showAlert('error', 'Please write a review before sending 😃', 5);
+    }
+
+    sendReview({ review, rating, tour });
+  });
+}
