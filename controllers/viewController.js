@@ -85,6 +85,15 @@ exports.getLoginForm = async (req, res, next) => {
   }
 };
 
+exports.getSingupForm = (req, res, next) => {
+  try {
+    res.status(200).render('singup', {
+      title: 'sing-up into you acoount',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 exports.getAccount = (req, res) => {
   // to get the account page we need simpaly render  the tamplate , we dont need to qery becouse  it already done in the protect middleware
   res.status(200).render('account', {

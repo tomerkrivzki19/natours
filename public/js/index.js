@@ -7,7 +7,7 @@ import '@babel/polyfill';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import { login, logout } from './login';
+import { login, singup, logout } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
@@ -21,6 +21,7 @@ import { sendReview } from './sendReview';
 //DOM ELEMNTS :
 const mapbox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
+const singupForm = document.querySelector('.form--singup');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const updateUserForm = document.querySelector('.form-user-data');
 const updateUserPasswordForm = document.querySelector('.form-user-password');
@@ -42,6 +43,28 @@ if (loginForm) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     login(email, password); //check if the err is provided when faield TODO:
+  });
+} else {
+  console.error('Form element not found');
+}
+if (singupForm) {
+  singupForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    //1) Get all the values from inputs
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+
+    //2) Check if the password and passwordConfirm is match =>
+    console.log(password, passwordConfirm);
+    if (password !== passwordConfirm) {
+      return showAlert('error', 'Password and Password Confirm are not match!');
+    }
+    //3) Send the data to funciton that will proccess the post operation
+    singup(name, email, password, passwordConfirm);
+    // login(email, password); //check if the err is provided when faield TODO:
   });
 } else {
   console.error('Form element not found');
