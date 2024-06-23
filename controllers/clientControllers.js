@@ -1,6 +1,7 @@
 const multer = require('multer'); // multer => is a middleware form npm package that is handling multi-part form data , upload filles from a form basiccly
 const sharp = require('sharp');
 const User = require('../models/userModel');
+const Booking = require('../models/bookingModel');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAsync');
 const factory = require('../controllers/handlerFactory');
@@ -195,6 +196,29 @@ exports.deleteMe = async (req, res, next) => {
 //   });
 // };
 exports.getClient = factory.getOne(User);
+
+///users/:id/bookings
+exports.getAllBookingByClientId = async (req, res, next) => {
+  try {
+    //1)get params and query it in the booking model
+    const bookings = await Booking.find({ user: req.params.id });
+
+    if (!bookings || bookings.length == 0) {
+      return next(new AppError('There is no bookings with that user', 404));
+    }
+
+    //2)send the results
+    res.status(200).json({
+      status: 'success',
+      length: bookings.length,
+      data: {
+        data: bookings,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 //Do NOT update password with this!
 exports.updateClient = factory.updateOne(User);

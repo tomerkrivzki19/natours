@@ -30,6 +30,7 @@ router.patch(
   clientControllers.updateMe
 );
 router.delete('/deleteMe', clientControllers.deleteMe);
+router.route('/:id/bookings').get(clientControllers.getAllBookingByClientId);
 
 router.use(authController.restrictTo('admin'));
 ///api/v1/users

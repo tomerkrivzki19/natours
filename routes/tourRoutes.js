@@ -87,5 +87,8 @@ router
     authController.restrictTo('admin', 'lead-guide'), // user-roles
     tourControllers.deleteTour
   );
+router
+  .route('/:id/bookings')
+  .get(authController.protect, tourControllers.getAllBookingsByTourId);
 
 module.exports = router;

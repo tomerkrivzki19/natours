@@ -2,6 +2,7 @@
 const sharp = require('sharp');
 const multer = require('multer');
 const Tour = require('../models/tourModel');
+const Booking = require('../models/bookingModel');
 const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
@@ -616,6 +617,28 @@ exports.getDistances = async (req, res, next) => {
       status: 'success',
       data: {
         data: distances,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// /tours/:id/bookings
+exports.getAllBookingsByTourId = async (req, res, next) => {
+  try {
+    //1)get the paramater from the query
+    //2) query it on the db
+    const bookings = await Booking.find({ tour: req.params.id });
+    if (!bookings || bookings.length == 0) {
+      return next(new AppError('There is no bookings with that tour ', 404));
+    }
+    //3) send results
+    res.status(200).json({
+      status: 'success',
+      length: bookings.length,
+      data: {
+        data: bookings,
       },
     });
   } catch (error) {
