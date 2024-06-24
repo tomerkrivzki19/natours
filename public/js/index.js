@@ -13,7 +13,7 @@ import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
 import { sendReview } from './sendReview';
-import { addFavoriteTour } from './addFavoriteTour';
+import { addFavoriteTour, displayFavorties } from './addFavoriteTour';
 // console.log('Hello from parcel'); -> check if the fille work
 
 // FIXEME: having problem with the mapbox when entering to a tour
@@ -29,7 +29,7 @@ const bookBtn = document.getElementById('book-tour');
 const reviewBtn = document.getElementById('leave-review');
 const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
-
+const iconFavorites = document.querySelector('a[href="/my-favorites"]');
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
 if (mapbox) {
@@ -135,7 +135,7 @@ if (Reviewform) {
     const review = formData.get('reviewText');
     const rating = formData.get('reviewNumber');
     const tour = bookBtn.dataset.tourId;
-    console.log(tour);
+    // console.log(tour);
     if (!review && !rating) {
       reviewBtn.textContent = 'SEND IT! ';
       return showAlert('error', 'Please write a review before sending 😃', 5);
@@ -152,3 +152,12 @@ if (favorite) {
     addFavoriteTour(tourId);
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (iconFavorites) {
+    iconFavorites.addEventListener('click', (e) => {
+      e.preventDefault(); // Prevent the default link behavior
+      displayFavorties(); // Call the function to handle favorites
+    });
+  }
+});

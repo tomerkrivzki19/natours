@@ -15,18 +15,22 @@ export const addFavoriteTour = async (tourId) => {
     } else {
       showAlert('error', 'The tour is already in favorites');
     }
-
-    // const res = await axios.post(
-    //   `${req.protocol}://${req.get('host')}/my-favorites`,
-    //   {
-    //     favorites,
-    //   }
-    // );
-    // if (res.data.status === 'success') {
-    //   showAlert('success', 'The tour added to favorites');
-    //   location.reload(true);
-    // }
   } catch (error) {
     showAlert('error', 'Please try later adding favortie tour');
+  }
+};
+
+export const displayFavorties = async () => {
+  try {
+    const favorites = JSON.parse(localStorage.getItem('favoriteTours')) || [];
+    console.log(favorites);
+
+    const response = await axios.post('/my-favorites', {
+      favorites,
+    });
+    document.body.innerHTML = response.data; // Replace the body content with the received HTML
+  } catch (error) {
+    console.log(error);
+    showAlert('error', 'Please try later');
   }
 };

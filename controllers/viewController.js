@@ -124,24 +124,24 @@ exports.getMyTours = async (req, res, next) => {
   }
 };
 
-//need to complete !
 exports.getMyFavorites = async (req, res, next) => {
+  const { favorites } = req.body;
   try {
     //1) get the localstorage data threw post req: when clicking button or link need to impelent a solution for displaying the favorites from local storage
-    const toursIDs = req.body.favorites;
 
-    if (!toursIDs) {
+    if (!favorites) {
       console.log('favorites not found ');
       return next();
     }
 
-    const tours = await Tour.find({ _id: { $in: toursIDs } });
-    console.log(tours);
+    const tours = await Tour.find({ _id: { $in: favorites } });
+
     res.status(200).render('overview', {
-      title: 'My Tours',
+      title: 'My Favorites',
       tours,
     });
   } catch (error) {
+    console.error('Error fetching favorite tours:', error);
     next(error);
   }
 };
