@@ -48,13 +48,17 @@ exports.getTour = async (req, res, next) => {
     if (!tour) {
       return next(new AppError('There is no tour with that name.', 404));
     }
+
     //check if the user bought the product
-    const booking = await Booking.find({
-      tour: tour.id,
-      user: res.locals.user._id,
-    });
-    if (booking.length > 0) {
-      res.locals.purchest = 'purchest';
+    if (res.locals.user) {
+      const booking = await Booking.find({
+        tour: tour.id,
+        user: res.locals.user._id,
+      });
+
+      if (booking.length > 0) {
+        res.locals.purchest = 'purchest';
+      }
     }
 
     //2) Build tamplate(pug tamplate)
