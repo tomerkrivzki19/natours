@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 
 const AppError = require('../utils/appError');
+const Review = require('../models/reviewModel');
 
 exports.alerts = (req, res, next) => {
   //a miidleware that checkes if there an succes in order so send to the client alert when the booking is succesed
@@ -171,6 +172,24 @@ exports.updateUserData = async (req, res, next) => {
       title: 'Your account',
       //need to pass the updated user:
       user: updatedUser,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getMyReviews = async (req, res, next) => {
+  try {
+    //1) get data from model - find the req.user.id in the reviews model
+    const reviews = await Review.find({ user: req.user.id }).populate('user');
+
+    if (!reviews)
+      return next(new AppError(`There no reviews sended,  ${req.user.name} `));
+
+    //2) render the  data on review page
+    res.status(200).render('clientReviews', {
+      title: 'My Favorites',
+      reviews,
     });
   } catch (error) {
     next(error);

@@ -1,0 +1,26 @@
+extends base
+include _reviewCard 
+
+
+
+block content
+ if reviews.length > 0
+  section.section-header
+    .header__hero
+      .header__hero-overlay &nbsp;
+        h1.heading-primary
+         span  my reviews
+    
+  section
+    .reviews
+      each review in reviews
+        +reviewCard(review)
+
+
+ else 
+  section.section-header
+    .header__hero
+      .header__hero-overlay &nbsp;
+        h1.heading-primary
+         span  no reviews at the moment 
+    

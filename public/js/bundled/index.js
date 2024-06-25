@@ -14148,7 +14148,10 @@ const sendReview = async (data)=>{
             rating,
             tour
         });
-        if (res.data.status === "success") (0, _alerts.showAlert)("success", "Review sended \uD83D\uDC4D");
+        if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "Review sended \uD83D\uDC4D");
+            location.reload(true);
+        }
     } catch (error) {
         console.log(error);
         (0, _alerts.showAlert)("error", error.response.data.message);

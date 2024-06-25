@@ -17,6 +17,7 @@ export const sendReview = async (data) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'Review sended 👍');
+      location.reload(true);
     }
   } catch (error) {
     console.log(error);
