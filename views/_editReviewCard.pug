@@ -9,3 +9,5 @@ mixin reviewCard(review)
        //- the check that we are doing is made to run on each element of the stars , and color which one is grey and which is not -by going each num in the array    
        svg.reviews__star(class=`reviews__star--${review.rating >= start ? 'active' : 'inactive '}`)
         use(xlink:href='/img/icons.svg#icon-star')
+    button.reviews__edit-button(id=`edit-review-${review._id}`, data-review-id=`${review._id}`) Edit
+

@@ -12,7 +12,7 @@ import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
-import { sendReview } from './sendReview';
+import { sendReview, editReview } from './sendReview';
 import { addFavoriteTour, displayFavorties } from './addFavoriteTour';
 // console.log('Hello from parcel'); -> check if the fille work
 
@@ -30,6 +30,8 @@ const reviewBtn = document.getElementById('leave-review');
 const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
 const iconFavorites = document.querySelector('a[href="/my-favorites"]');
+const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
+
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
 if (mapbox) {
@@ -144,8 +146,56 @@ if (Reviewform) {
     sendReview({ review, rating, tour });
   });
 }
-// Favorites
+// Edit review
+if (editReviewBtn) {
+  editReviewBtn.forEach((editButton) => {
+    editButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      //get the current review id  :
+      const reviewId = editButton.getAttribute('data-review-id');
+      // Find the parent review card of the clicked edit button
+      const reviewCard = editButton.closest('.reviews__card');
+
+      const p = reviewCard.getElementsByClassName('reviews__text');
+      const divStarClass = reviewCard.getElementsByClassName('reviews__rating');
+      //dom elements:
+      // input text
+      const input = document.createElement('input');
+      const inputNumber = document.createElement('input');
+      const btn = document.createElement('button');
+      input.type = 'text';
+      input.placeholder = 'Comment here';
+      input.name = 'reviewText';
+      // input number
+      inputNumber.type = 'number';
+      inputNumber.min = '0';
+      inputNumber.max = '5';
+      inputNumber.name = 'reviewNumber';
+      //button
+      btn.innerHTML = 'save';
+      btn.className = 'reviews__save-button';
+      btn.id = `${reviewId}`;
+      //replacment of elements:
+      p[0].replaceWith(input);
+      divStarClass[0].replaceWith(inputNumber);
+      editButton.replaceWith(btn);
+
+      //Checking if the user wrote an value is already at the backend err handler :
+
+      //Send the review
+      btn.addEventListener('click', (e) => {
+        const reviewId = btn.getAttribute('id');
+        // data:
+        const review = input.value;
+        const rating = inputNumber.value;
+        editReview(reviewId, { review, rating });
+      });
+    });
+  });
+}
+
 if (favorite) {
+  // Favorites
   favorite.addEventListener('click', (e) => {
     e.preventDefault();
     const tourId = bookBtn.dataset.tourId;

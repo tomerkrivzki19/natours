@@ -41,7 +41,7 @@ exports.createReview = async (req, res) => {
 
     const newReview = await Review.create(req.body);
 
-    console.log(newReview);
+    // console.log(newReview);
     res.status(201).json({
       status: 'success',
       data: {

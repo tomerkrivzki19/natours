@@ -24,3 +24,21 @@ export const sendReview = async (data) => {
     showAlert('error', error.response.data.message);
   }
 };
+
+export const editReview = async (reviewId, data) => {
+  try {
+    const { review, rating } = data;
+
+    const res = await axios.patch(`/api/v1/reviews/${reviewId}`, {
+      review,
+      rating,
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', ' Review updated 👍');
+      location.reload(true);
+    }
+  } catch (error) {
+    showAlert('error', error.response.data.message);
+  }
+};
