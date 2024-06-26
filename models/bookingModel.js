@@ -38,6 +38,10 @@ bookingSchema.pre(/^find/, function (next) {
   next();
 });
 
+//prevent duplicate bookings :
+bookingSchema.index({ tour: 1, user: 1 }, { unique: true }); //need to unique to have more then  1 tour and 1 user in the same model
+//*collection. If an attempt is made to insert a document with the same tour and user values as an existing document, MongoDB will throw a duplicate key error.
+
 const Booking = mongoose.model('Booking', bookingSchema);
 
 module.exports = Booking;

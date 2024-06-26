@@ -136,7 +136,7 @@ if (Reviewform) {
     const formData = new FormData(e.target);
     const review = formData.get('reviewText');
     const rating = formData.get('reviewNumber');
-    const tour = bookBtn.dataset.tourId;
+    const tour = reviewBtn.dataset.tourId;
     // console.log(tour);
     if (!review && !rating) {
       reviewBtn.textContent = 'SEND IT! ';

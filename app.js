@@ -272,10 +272,10 @@ module.exports = app;
 
 // *) implement a sign up form , similar to the login form 👍
 // *) on a tour detail page, if a user has taken a tour , allow them add a review directly on the website. Implement a from for this -> need to check if the logged in user has actually booked the current tour and  * FIXME:the first part was done in the get tour function => TODO: also if the time of the tour has already passed and if so we can add a form to the page that the user can then add a new review for example using our review API
-// *) hide the entire booking section on the tour detail page if current user has already booked the tour (also prevent duplicate bookings on the model ) =>
+// *) hide the entire booking section on the tour detail page if current user has already booked the tour   (also prevent duplicate bookings on the model ) => 👍
 // *) implement "like tour" functionality, with favourite tour page 👍
-// *) on the user account page, implement the "My Reviews" page , where all reviews are displayed 👍,TODO: and a user can edit them. (if you know React, this would be an amazing way to use the Natours API and train your skills! )
-// *) For the administrators, implement all the "Manage" pages,where they can CRUD(create,tead,update,delete)tours,users,reviews and bookings.
+// *) on the user account page, implement the "My Reviews" page , where all reviews are displayed , and a user can edit them. (if you know React, this would be an amazing way to use the Natours API and train your skills! )👍
+// *) For the administrators, implement all the "Manage" pages,where they can CRUD(create,read,update,delete)tours,users,reviews and bookings.
 // *)
 
 //MORE ARREGEND :
