@@ -36,6 +36,11 @@ router.get('/me', authController.protect, viewController.getAccount);
 router.get('/my-tours', authController.protect, viewController.getMyTours);
 
 router.get('/my-reviews', authController.protect, viewController.getMyReviews);
+router.get(
+  '/manage-tours',
+  authController.protect,
+  viewController.getManageToursDisplay
+);
 router.post(
   '/my-favorites',
   authController.protect,

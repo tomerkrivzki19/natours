@@ -14,6 +14,7 @@ import { bookTour } from './stripe';
 import { showAlert } from './alerts';
 import { sendReview, editReview } from './sendReview';
 import { addFavoriteTour, displayFavorties } from './addFavoriteTour';
+import { updateCurrentTour, deleteCurrentTour } from './administartion';
 // console.log('Hello from parcel'); -> check if the fille work
 
 // FIXEME: having problem with the mapbox when entering to a tour
@@ -31,6 +32,8 @@ const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
 const iconFavorites = document.querySelector('a[href="/my-favorites"]');
 const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
+const updateTour = document.getElementById('updateTour');
+const deleteTour = document.getElementById('deleteTour');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -211,3 +214,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 });
+//manage tours - admins:
+// update tour - not relevnt for now , becouse we need to figure it out how we want to display this option to the client ( like decide if we want to add uploaded images option , or what exactly we wan to display becouse we need to compaine preview all the tours and also what kind of stuuf to update TODO: )
+if (updateTour) {
+  updateTour.addEventListener('click', (e) => {
+    //make it optional to update
+
+    //  send the updated data with the current id
+    const tourId = updateTour.dataset.tourId;
+    updateCurrentTour(tourId, data);
+  });
+}
+
+if (deleteTour) {
+  deleteTour.addEventListener('click', (e) => {
+    //make it optional to update
+
+    //  send the updated data with the current id
+    const tourId = updateTour.dataset.tourId;
+    deleteCurrentTour(tourId);
+  });
+}

@@ -80,7 +80,7 @@ const tourSchema = new mongoose.Schema(
       //the time that the user created a tour
       type: Date, //js build in data type
       default: Date.now(), //give us a time stand in miliseconed -- then in mongo it will converted to a now date
-      select: false, //propaty to hide from the putpot
+      //select: false, //propaty to hide from the putpot
     },
     startDates: [Date],
     secretTour: {

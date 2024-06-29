@@ -42,7 +42,7 @@ exports.getTour = async (req, res, next) => {
     // we need to pupolate the reviews also.
 
     const tour = await Tour.findOne({ slug: req.params.slug }).populate({
-      path: 'reviews  ',
+      path: 'reviews',
       fields: 'review rating user',
     });
 
@@ -196,6 +196,18 @@ exports.getMyReviews = async (req, res, next) => {
     res.status(200).render('clientReviews', {
       title: 'My Favorites',
       reviews,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getManageToursDisplay = async (req, res, next) => {
+  try {
+    const tours = await Tour.find();
+
+    res.status(200).render('manageTours', {
+      tours,
     });
   } catch (error) {
     next(error);

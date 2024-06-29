@@ -1,0 +1,48 @@
+extends base
+
+block content
+  main.main
+      h2.heading-secondary.ma-bt-lg tours managment
+      table
+        tr
+          td &nbsp;
+          td.overview-box__label Max Group Size
+          td.overview-box__label Locations
+          td.overview-box__label Ccreated-At
+          td.overview-box__label Price
+          td.overview-box__label Options
+          
+            each tour in tours 
+                tr
+                td.overview-box__label= tour.name
+                td= tour.maxGroupSize
+                td= tour.locations.length 
+                td= tour.createdAt
+                td= `$${tour.price}`
+                td  
+                 button.btn.btn--green.btn--small#updateTour(data-tour-id=`${tour.id}` style:'') Update Tour 
+                 button.btn.btn--green.btn--small#deleteTour(style='background-color: red') Delete Tour 
+      
+      //- Get monthly plan 
+
+      //- h2.heading-secondary.ma-bt-lg tours managment
+      //- table
+      //-   tr
+      //-     td &nbsp;
+      //-     td.overview-box__label Max Group Size
+      //-     td.overview-box__label Locations
+      //-     td.overview-box__label Ccreated-At
+      //-     td.overview-box__label Price
+      //-     td.overview-box__label Options
+          
+      //-       each tour in tours 
+      //-           tr
+      //-           td.overview-box__label= tour.name
+      //-           td= tour.maxGroupSize
+      //-           td= tour.locations.length 
+      //-           td= tour.createdAt
+      //-           td= `$${tour.price}`
+      //-           td 
+      //-            button.btn.btn--green.btn--small Update Tour 
+      //-            button.btn.btn--green.btn--small Delete Tour 
+        
