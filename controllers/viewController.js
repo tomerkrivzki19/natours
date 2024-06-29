@@ -42,7 +42,7 @@ exports.getTour = async (req, res, next) => {
     // we need to pupolate the reviews also.
 
     const tour = await Tour.findOne({ slug: req.params.slug }).populate({
-      path: 'reviews',
+      path: 'reviews  ',
       fields: 'review rating user',
     });
 
@@ -50,14 +50,20 @@ exports.getTour = async (req, res, next) => {
       return next(new AppError('There is no tour with that name.', 404));
     }
 
-    //check if the user bought the product
+    //check if the user bought the product also if the time of the tour has already passed
     if (res.locals.user) {
       const booking = await Booking.find({
         tour: tour.id,
         user: res.locals.user._id,
       });
 
-      if (booking.length > 0) {
+      const date = new Date();
+
+      if (
+        booking.length > 0 &&
+        tour.startDates[0].toLocaleDateString('he-IL') <
+          date.toLocaleDateString('he-IL')
+      ) {
         res.locals.purchest = 'purchest';
       }
     }
