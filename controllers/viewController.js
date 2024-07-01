@@ -213,3 +213,17 @@ exports.getManageToursDisplay = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getTourDetaillsAdministrator = async (req, res, next) => {
+  try {
+    const tour = await Tour.findOne({ slug: req.params.slug });
+
+    if (tour) {
+      res.status(200).render('tourOverview', {
+        tour,
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};

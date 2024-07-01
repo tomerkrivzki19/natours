@@ -41,6 +41,11 @@ router.get(
   authController.protect,
   viewController.getManageToursDisplay
 );
+router.get(
+  '/manage-tour/:slug',
+  authController.protect,
+  viewController.getTourDetaillsAdministrator
+);
 router.post(
   '/my-favorites',
   authController.protect,
