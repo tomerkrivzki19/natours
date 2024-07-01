@@ -217,10 +217,12 @@ exports.getManageToursDisplay = async (req, res, next) => {
 exports.getTourDetaillsAdministrator = async (req, res, next) => {
   try {
     const tour = await Tour.findOne({ slug: req.params.slug });
-
     if (tour) {
+      const isEdit = req.query.edit === 'true';
+
       res.status(200).render('tourOverview', {
         tour,
+        isEdit,
       });
     }
   } catch (error) {

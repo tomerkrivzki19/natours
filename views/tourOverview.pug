@@ -1,5 +1,4 @@
-extends base
-
+extends base   
 mixin overviewBox(lable, text ,icon)
  .overview-box__detail
    svg.overview-box__icon
@@ -7,69 +6,144 @@ mixin overviewBox(lable, text ,icon)
    span.overview-box__label= lable 
    span.overview-box__text= text
 
+mixin overviewBoxEdit(lable, text ,icon)
+ .overview-box__detail
+   svg.overview-box__icon
+      use(xlink:href=`/img/icons.svg#icon-${icon}`)
+   span.overview-box__label= lable 
+   input.overview-box__text(type=`${ lable === 'Next date' ? 'date' : 'text'}`, placeholder=text)
+
 
 block content
-  main.main    
+ - if (isEdit === false)
+    main.main    
+      .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
+        h2.heading-secondary.ma-bt-lg tours management
+        a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}?edit=true` style='margin-bottom: 1em;') Edit
+
+      section.section-header
+        .header__hero
+          .header__hero-overlay &nbsp;
+          img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+
+        .heading-box
+          h1.heading-primary
+            span=`${tour.name} tour` 
+          .heading-box__group
+            .heading-box__detail
+              svg.heading-box__icon
+                use(xlink:href='/img/icons.svg#icon-clock')
+              span.heading-box__text= `${tour.duration} days`
+            .heading-box__detail
+              svg.heading-box__icon
+                use(xlink:href='/img/icons.svg#icon-map-pin')
+              span.heading-box__text= tour.startLocation.description
+
+      section.section-description
+        .overview-box
+          div
+            .overview-box__group
+              h2.heading-secondary.ma-bt-lg Quick facts
+
+              - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+              +overviewBox('Next date', date, 'calendar')
+              +overviewBox('Difficulty', tour.difficulty, 'trending-up')
+              +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
+              +overviewBox('Rating', `${tour.ratingsAverage} /5`, 'star')
+
+              svg.overview-box__icon
+                use(xlink:href='/img/icons.svg#icon-star')
+              span.overview-box__label Rating
+              span.overview-box__text 4.9 / 5
+
+            .overview-box__group
+              h2.heading-secondary.ma-bt-lg Your tour guides
+
+              each guide in tour.guides
+                .overview-box__detail
+                  img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+                  
+                  - if (guide.role === 'lead-guide')
+                    span.overview-box__label Lead guide
+                  - if (guide.role === 'guide')
+                    span.overview-box__label Tour guide
+                  span.overview-box__text= guide.name
+              
+        .description-box
+          h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
+          - const paragraphs = tour.description.split('\n')
+          each p in paragraphs
+            p.description__text= p
+
+      section.section-pictures
+        each img, i in tour.images
+          .picture-box
+            img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+
+ - else
+   main.main    
     .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
-     h2.heading-secondary.ma-bt-lg tours managment
+      h2.heading-secondary.ma-bt-lg add fields to the tour
+      a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}?edit=false` style='margin-bottom: 1em;') save
 
-     button.btn.btn--green.btn--small(style='margin-bottom: 1em;') Add tour ? edit Tour //-if there is an edit then all of the content will be replacible 
-     
-  section.section-header
-    .header__hero
-      .header__hero-overlay &nbsp;
-      img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
+    // Tour details sections
+    section.section-header
+      .header__hero
+        .header__hero-overlay &nbsp;
+        img.header__hero-img(src=`/img/tours/${tour.imageCover}`, alt=`${tour.name}`)
 
-    .heading-box
-      h1.heading-primary
-        span=`${tour.name} tour` 
-      .heading-box__group
-        .heading-box__detail
-          svg.heading-box__icon
-            use(xlink:href='/img/icons.svg#icon-clock')
-          span.heading-box__text= `${tour.duration} days`
-        .heading-box__detail
-          svg.heading-box__icon
-            use(xlink:href='/img/icons.svg#icon-map-pin')
-          span.heading-box__text= tour.startLocation.description
+      .heading-box
+        h1.heading-primary
+          input(type="text" placeholder=`${tour.name} tour`)
+        //-   span=`${tour.name} tour` 
+        .heading-box__group
+          .heading-box__detail
+            svg.heading-box__icon
+              use(xlink:href='/img/icons.svg#icon-clock')
+            input(type="text" placeholder=`${tour.duration} days`)
+            //- span.heading-box__text= `${tour.duration} days`
+          .heading-box__detail
+            svg.heading-box__icon
+              use(xlink:href='/img/icons.svg#icon-map-pin')
+            input(type="text" placeholder=`${tour.startLocation.description}`)  
+            //- span.heading-box__text= tour.startLocation.description
 
-  section.section-description
-    .overview-box
-      div
-        .overview-box__group
-          h2.heading-secondary.ma-bt-lg Quick facts
+    section.section-description
+      .overview-box
+        div
+          .overview-box__group
+            h2.heading-secondary.ma-bt-lg Quick facts
 
-            -const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
-          +overviewBox('Next date',date ,'calendar' )
-          +overviewBox('Difficulty', tour.difficulty ,'trending-up' )
-          +overviewBox('Participants',`${tour.maxGroupSize} people` ,'user' )
-          +overviewBox('Rating',`${tour.ratingsAverage} /5` ,'star' )
+            - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+            +overviewBoxEdit('Next date', date , 'calendar')
+            +overviewBoxEdit('Difficulty', tour.difficulty, 'trending-up')
+            +overviewBoxEdit('Participants', `${tour.maxGroupSize} people`, 'user')
 
-            svg.overview-box__icon
-             use(xlink:href='/img/icons.svg#icon-star')
-            span.overview-box__label Rating
-            span.overview-box__text 4.9 / 5
 
-        .overview-box__group
-          h2.heading-secondary.ma-bt-lg Your tour guides
+          .overview-box__group
+            h2.heading-secondary.ma-bt-lg Your tour guides
 
-          each guide in tour.guides
-           .overview-box__detail
-             img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+            each guide in tour.guides
+              .overview-box__detail
+                img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
+                
+                - if (guide.role === 'lead-guide')
+                  span.overview-box__label Lead guide
+                - if (guide.role === 'guide')
+                  span.overview-box__label Tour guide
+                span.overview-box__text= guide.name
+                button.btn.btn--small remove
+
+            button.btn.btn--green.btn--small Add Guide
             
-             - if (guide.role === 'lead-guide')
-              span.overview-box__label Lead guide
-             - if (guide.role === 'guide')
-              span.overview-box__label Tour guide
-             span.overview-box__text= guide.name
-         
-    .description-box
-      h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
-      - const parapraphs = tour.description.split('\n')
-      each p in parapraphs
-        p.description__text= p
-
-  section.section-pictures
-    each img,i in tour.images
-     .picture-box
-       img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+      .description-box
+        h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
+          - const paragraphs = tour.description.split('\n')
+          each p in paragraphs
+           
+           input.description__text(type="text" placeholder=p style='width: 100%;' )
+    section.section-pictures
+      each img, i in tour.images
+       button Remove Image
+        .picture-box
+          img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
