@@ -29,7 +29,27 @@ export const deleteCurrentTour = async (tourId) => {
       return showAlert('error', 'The delete of the tour was canceld');
     }
   } catch (error) {
-    console.log(error);
     showAlert('error', error.data.message);
+  }
+};
+
+exports.createTour = async (data) => {
+  try {
+    const formData = { ...data };
+    console.log('data from function', formData);
+
+    const res = await axios.post('/api/v1/tours', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', 'The Tour Has successfully uploaded');
+      location.assign('/manage-tours');
+    }
+  } catch (error) {
+    console.log(error);
+    // showAlert('error', error.data.message);
   }
 };

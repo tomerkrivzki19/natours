@@ -19,7 +19,9 @@ block content
     main.main    
       .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
         h2.heading-secondary.ma-bt-lg tours management
-        a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}?edit=true` style='margin-bottom: 1em;') Edit
+        .button-contaienr
+         a.btn.btn--green.btn--small( style='margin-bottom: 1em; margin-right:1em; background-color:red;') Delete
+         a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}?edit=true` style='margin-bottom: 1em;') Edit
 
       section.section-header
         .header__hero

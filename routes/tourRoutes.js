@@ -62,14 +62,13 @@ router
 // /tours-within/233/center/-40,45/unit/mi ---- > we pick that one becouse its looks more cleaner
 
 // api/v1/tours'
-router
-  .route('/')
-  .get(tourControllers.getAllTours)
-  .post(
-    authController.protect,
-    authController.restrictTo('admin', 'lead-guide'),
-    tourControllers.createTour
-  );
+router.route('/').get(tourControllers.getAllTours).post(
+  authController.protect,
+  authController.restrictTo('admin', 'lead-guide'),
+  tourControllers.uploadSingleImage, //
+  tourControllers.resizeTourImageCover, //
+  tourControllers.createTour
+);
 // tourControllers.checkBody -- > exmaple of middleware
 router
   .route('/:id')

@@ -229,3 +229,15 @@ exports.getTourDetaillsAdministrator = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.addTourTampalte = async (req, res, next) => {
+  try {
+    const guides = await User.find({ role: ['guide', 'lead-guide'] });
+
+    res.status(200).render('addTour', {
+      guides,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

@@ -46,6 +46,7 @@ router.get(
   authController.protect,
   viewController.getTourDetaillsAdministrator
 );
+router.get('/add-tour', authController.protect, viewController.addTourTampalte);
 router.post(
   '/my-favorites',
   authController.protect,

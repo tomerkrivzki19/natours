@@ -35,11 +35,40 @@ exports.uploadTourImages = upload.fields([
 // upload.array(' name of the field ', 5 => max number to upload images)
 // for single one
 // upload.single('name of the field ')
+exports.uploadSingleImage = upload.single('imageCover');
+
+exports.resizeTourImageCover = async (req, res, next) => {
+  //becouse something it the beloow middlware didnt work or catch the images
+  try {
+    // if we have multiply files itwill be stored at req.files and not req.file as in the other lectures
+
+    // console.log('file', req.file);
+    // console.log('body', req.body);
+    if (!req.file) return next();
+
+    //1) Cover image
+    // we saving the elemnt inside the req.body propartie becouse when we are using the update function we create the function that way it takes an elment from the req.body , this is why we deside to store it there
+    //unique file name |  i am sure that we check if there duplicate tour name in the model
+    req.body.imageCover = `tour--${Date.now()}-cover.jpeg`;
+
+    // we saw in the req.file that the actual images is saved as a buffer inside a buffer verible, and also the whole name of the type(imageCover | images ) saved as an array that contain object with all the data
+    await sharp(req.file.buffer) // => create an object then we can add some manipulation to that with sharp
+      .resize(2000, 1333) // Wpx |  Hpx |  (3 to 2 ratio what commen in image covers)
+      .toFormat('jpeg') // covert to ''
+      .jpeg({ quality: 90 }) //  for saving memory
+      .toFile(`public/img/tours/${req.body.imageCover}`); // need the entire path to the file
+
+    console.log('next niddleware');
+
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.resizeTourImages = async (req, res, next) => {
   try {
     // if we have multiply files itwill be stored at req.files and not req.file as in the other lectures
-    // console.log(req.files);
 
     if (!req.files.imageCover || !req.files.images) return next();
 
@@ -47,6 +76,7 @@ exports.resizeTourImages = async (req, res, next) => {
     // we saving the elemnt inside the req.body propartie becouse when we are using the update function we create the function that way it takes an elment from the req.body , this is why we deside to store it there
     //unique file name
     req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+
     // we saw in the req.files that the actual images is saved as a buffer inside a buffer verible, and also the whole name of the type(imageCover | images ) saved as an array that contain object with all the data
     await sharp(req.files.imageCover[0].buffer) // => create an object then we can add some manipulation to that with sharp
       .resize(2000, 1333) // Wpx |  Hpx |  (3 to 2 ratio what commen in image covers)

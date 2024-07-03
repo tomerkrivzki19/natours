@@ -14,7 +14,11 @@ import { bookTour } from './stripe';
 import { showAlert } from './alerts';
 import { sendReview, editReview } from './sendReview';
 import { addFavoriteTour, displayFavorties } from './addFavoriteTour';
-import { updateCurrentTour, deleteCurrentTour } from './administartion';
+import {
+  updateCurrentTour,
+  deleteCurrentTour,
+  createTour,
+} from './administartion';
 // console.log('Hello from parcel'); -> check if the fille work
 
 // FIXEME: having problem with the mapbox when entering to a tour
@@ -32,6 +36,7 @@ const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
 const iconFavorites = document.querySelector('a[href="/my-favorites"]');
 const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
+const createTourForm = document.getElementById('create-tour-form');
 const updateTour = document.getElementById('updateTour');
 const deleteTour = document.getElementById('deleteTour');
 
@@ -215,6 +220,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 //manage tours - admins:
+if (createTourForm) {
+  createTourForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // get all values
+    const inputs = document.querySelectorAll('.form__input');
+    const formData = new FormData();
+
+    inputs.forEach((input) => {
+      if (input.type === 'file') {
+        formData[input.name] = input.files[0]; // handle file inputs
+      } else {
+        formData[input.name] = input.value;
+      }
+    });
+    // const formData = new FormData(createTourForm);
+
+    // console.log(formData);
+    //send to a function that will send a post req to the server
+    createTour(formData);
+
+    //TODO: change the name of the inputs to create and send to the server relevnte data
+  });
+}
 // update tour - not relevnt for now , becouse we need to figure it out how we want to display this option to the client ( like decide if we want to add uploaded images option , or what exactly we wan to display becouse we need to compaine preview all the tours and also what kind of stuuf to update TODO: )
 if (updateTour) {
   updateTour.addEventListener('click', (e) => {
