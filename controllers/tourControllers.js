@@ -7,6 +7,7 @@ const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('../controllers/handlerFactory');
+const getMonthlyPlanFeature = require('../utils/getMonthlyPlanFeature');
 
 const multerStorage = multer.memoryStorage(); //saves as a buffer =   חוצץ הוא מקטע זיכרון המאחסן מידע באפן זמני בעת העברתו ממקום למקום
 
@@ -509,51 +510,13 @@ exports.getMonthlyPlan = async (req, res) => {
   try {
     const year = req.params.year * 1; //the trick to trasform this to a number
     //the year selceted 2021
-    const plan = await Tour.aggregate([
-      {
-        // what we are doing in here, we are distracting the startDates inside all the documnts , and instead of 9 documents elemnts we have now 27
-        $unwind: '$startDates', //$unwind => disconstract the array fields from the input documnets and then output one documnet for each elemnt of the array
-      },
-      {
-        $match: {
-          //we want to be between 2020 - 2022
-          startDates: {
-            $gte: new Date(`${year}-01-01`),
-            $lte: new Date(`${year}-12-31`), // we want it to be between the first day in the year and the last the day of the year
-            //less ten..
-          },
-        },
-      },
-      {
-        $group: {
-          _id: { $month: '$startDates' }, //$month =>extract the month out of our date, we have in mongoose documantation a"ton" of this type of pipe line oparetors
-          numTourStarts: { $sum: 1 }, //to count the number of tours
-          tours: { $push: '$name' }, //$push --> will make us an array and push to this array...
-        },
-      },
-      {
-        //addFields => just like his name , making us a new fields
-        $addFields: { month: '$_id' }, // add the vlue of the name _id , so in this case _id have the month value
-      },
-      {
-        //$project --> an stage that set the value of the current thing we want to display if it current to 0 => it will not longer show up if we definf the project as 1 -> it will project
-        $project: {
-          _id: 0, //0-> not showed up , 1 -> showing up
-        },
-      },
-      {
-        //we hade 1 before so 1 is for asending and -1 is for de-sending
-        $sort: { numTourStarts: -1 }, // we want it to sort with the hight number of tours to the lowest -> so we  will do if we want to display the deposite of that we will basiclly change it to 1
-        //inside the route call we could see that in month number 7 we having the most tours
-      },
-      {
-        $limit: 12, //limting us to only 12 outpots
-      },
-    ]);
+
+    const { plans } = await getMonthlyPlanFeature(year);
+
     res.status(200).json({
       status: 'success',
       data: {
-        plan,
+        plan: plans,
       },
     });
   } catch (error) {

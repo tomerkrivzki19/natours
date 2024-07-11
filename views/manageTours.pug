@@ -47,76 +47,26 @@ block content
                     span.card__footer-text= `rating (${tour.ratingsQuantity})`
             a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}`) edit
            
-   
-   
-   
-   
-   
-   
-   
-      //- table
-        tr
-          td &nbsp;
-          td.overview-box__label Max Group Size
-          td.overview-box__label Locations
-          td.overview-box__label Ccreated-At
-          td.overview-box__label Price
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
-            //- td.overview-box__label Options
     
-            each tour in tours 
-                tr
-                td.overview-box__label= tour.name
-                td= tour.maxGroupSize
-                td= tour.locations.length 
-                td= tour.createdAt
-                td= `$${tour.price}`
-                //- 
-                //- td= tour.startLocation
-                //- td= tour.guides
-                //- td= tour.startDates
-                //- td= tour.difficulty
-                //- td= tour.summary
-                //- td= tour.description
-                //- td= tour.duration
-                //- td= tour.description
-                //- td= tour.description
-                //- tasks
-                  //- images- ad an options to upload an image -- i think we have end point for that !
-                  //- imageCover -- ad an options to upload an image -- i think we have end point for that !
-                  //- locations -- need to think how to impelement that 
-                td  
-                 button.btn.btn--green.btn--small#updateTour(data-tour-id=`${tour.id}` style:'') Edit 
-                 button.btn.btn--green.btn--small#deleteTour(style='background-color: red') Delete Tour 
-      
-      //- Get monthly plan 
-
-      //- h2.heading-secondary.ma-bt-lg tours managment
-      //- table
-      //-   tr
-      //-     td &nbsp;
-      //-     td.overview-box__label Max Group Size
-      //-     td.overview-box__label Locations
-      //-     td.overview-box__label Ccreated-At
-      //-     td.overview-box__label Price
-      //-     td.overview-box__label Options
-          
-      //-       each tour in tours 
-      //-           tr
-      //-           td.overview-box__label= tour.name
-      //-           td= tour.maxGroupSize
-      //-           td= tour.locations.length 
-      //-           td= tour.createdAt
-      //-           td= `$${tour.price}`
-      //-           td 
-      //-            button.btn.btn--green.btn--small Update Tour 
-      //-            button.btn.btn--green.btn--small Delete Tour 
-        
+      br
+      br
+      br
+      h2.heading-secondary.ma-bt-lg Monthly plan
+      table
+        thead
+          tr
+            th.overview-box__label Month
+            th.overview-box__label Tours
+            th.overview-box__label Number of Tours
+        tbody
+          each plan in plans
+            tr
+              td.overview-box__data= plan.month
+              td.overview-box__data
+                ul
+                  each tour in plan.tours
+                    li= tour
+              td.overview-box__data= plan.numTourStarts
+   
+   
+  

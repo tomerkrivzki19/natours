@@ -18,6 +18,7 @@ import {
   updateCurrentTour,
   deleteCurrentTour,
   createTour,
+  getMonthlyPlan,
 } from './administartion';
 // console.log('Hello from parcel'); -> check if the fille work
 
@@ -35,6 +36,7 @@ const reviewBtn = document.getElementById('leave-review');
 const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
 const iconFavorites = document.querySelector('a[href="/my-favorites"]');
+const iconManageTours = document.querySelector('a[href="/manage-tours"]');
 const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
 const createTourForm = document.getElementById('create-tour-form');
 const updateTour = document.getElementById('updateTour');
@@ -220,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 //manage tours - admins:
+//create tour
 if (createTourForm) {
   createTourForm.addEventListener('submit', function (event) {
     event.preventDefault();

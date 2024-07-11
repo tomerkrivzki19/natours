@@ -4,6 +4,8 @@ const Booking = require('../models/bookingModel');
 
 const AppError = require('../utils/appError');
 const Review = require('../models/reviewModel');
+const { default: axios } = require('axios');
+const getMonthlyPlanFeature = require('../utils/getMonthlyPlanFeature');
 
 exports.alerts = (req, res, next) => {
   //a miidleware that checkes if there an succes in order so send to the client alert when the booking is succesed
@@ -206,8 +208,13 @@ exports.getManageToursDisplay = async (req, res, next) => {
   try {
     const tours = await Tour.find();
 
+    // Fetch monthly plan data using API call to /api/v1/tours/monthly-plan/:year
+    const year = 2021; // Replace with your desired year or logic to determine the year
+    const { plans } = await getMonthlyPlanFeature(year);
+
     res.status(200).render('manageTours', {
       tours,
+      plans,
     });
   } catch (error) {
     next(error);
