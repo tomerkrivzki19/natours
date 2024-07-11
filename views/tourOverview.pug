@@ -20,7 +20,7 @@ block content
       .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
         h2.heading-secondary.ma-bt-lg tours management
         .button-contaienr
-         a.btn.btn--green.btn--small( style='margin-bottom: 1em; margin-right:1em; background-color:red;') Delete
+         a.btn.btn--green.btn--small#deleteTour(data-tour-id=`${tour.id}` style='margin-bottom: 1em; margin-right:1em; background-color:red;') Delete
          a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}?edit=true` style='margin-bottom: 1em;') Edit
 
       section.section-header
@@ -83,8 +83,8 @@ block content
    main.main    
     .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
       h2.heading-secondary.ma-bt-lg add fields to the tour
-      a.btn.btn--green.btn--small(href=`/manage-tour/${tour.slug}?edit=false` style='margin-bottom: 1em;') save
-
+      a.btn.btn--green.btn--small#updateTour( data-tour-id=`${tour.id}+${tour.slug}`   style='margin-bottom: 1em;') save
+       //href=`/manage-tour/${tour.slug}?edit=false`
     // Tour details sections
     section.section-header
       .header__hero

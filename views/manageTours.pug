@@ -1,6 +1,8 @@
 extends base
 
 block content
+  - const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
   main.main
       .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
         h2.heading-secondary.ma-bt-lg tours managment
@@ -61,7 +63,7 @@ block content
         tbody
           each plan in plans
             tr
-              td.overview-box__data= plan.month
+              td.overview-box__data= monthNames[plan.month - 1]
               td.overview-box__data
                 ul
                   each tour in plan.tours

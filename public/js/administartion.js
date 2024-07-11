@@ -2,14 +2,21 @@ import axios from 'axios';
 import { showAlert } from './alerts';
 // import { decode } from 'decode-formdata';
 
-export const updateCurrentTour = async (tourId, data) => {
+export const updateCurrentTour = async (dataset, data) => {
   try {
+    const parts = dataset.split('+');
+
+    const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
+    const slug = parts[1]; // "the-wine-taster"
+
     const res = await axios.patch(`/api/v1/tours/${tourId}`, {
       data,
     });
     if (res.data.status === 'success') {
       showAlert('success', 'The tour has successfully updated');
-      location.reload(true);
+      //need to relocate to the this url href=`/manage-tour/${tour.slug}?edit=false`
+      location.assign(`/manage-tour/${slug}?edit=false`);
+      // location.reload(true);
     }
   } catch (error) {
     console.log(error);
@@ -24,7 +31,9 @@ export const deleteCurrentTour = async (tourId) => {
 
       if (res.data.status === 'success') {
         showAlert('success', 'The tour has successfully deleted');
-        location.reload(true);
+        // location.reload(true);
+        console.log('deleted');
+        location.assign(`/manage-tours`);
       }
     } else {
       return showAlert('error', 'The delete of the tour was canceld');

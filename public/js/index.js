@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 //manage tours - admins:
+
 //create tour
 if (createTourForm) {
   createTourForm.addEventListener('submit', function (event) {
@@ -292,11 +293,13 @@ if (createTourForm) {
 // update tour - not relevnt for now , becouse we need to figure it out how we want to display this option to the client ( like decide if we want to add uploaded images option , or what exactly we wan to display becouse we need to compaine preview all the tours and also what kind of stuuf to update TODO: )
 if (updateTour) {
   updateTour.addEventListener('click', (e) => {
-    //make it optional to update
-
+    //make it optional to update -get all data
+    const data = {
+      // message: GET - ALL - THE - DATA - FOR - UPDATE, TODO:
+    };
     //  send the updated data with the current id
-    const tourId = updateTour.dataset.tourId;
-    updateCurrentTour(tourId, data);
+    const dataset = updateTour.dataset.tourId;
+    updateCurrentTour(dataset, data);
   });
 }
 
@@ -305,7 +308,7 @@ if (deleteTour) {
     //make it optional to update
 
     //  send the updated data with the current id
-    const tourId = updateTour.dataset.tourId;
+    const tourId = deleteTour.dataset.tourId;
     deleteCurrentTour(tourId);
   });
 }
