@@ -96,7 +96,11 @@ const tourSchema = new mongoose.Schema(
         default: 'Point', // pligans|lines
         enum: ['Point'], // IT CAN BE ONLY POINT
       },
-      coordinates: [Number], // here we accepts an array of numbers
+      coordinates: {
+        type: [Number],
+        required: true,
+        default: [0, 0],
+      }, // here we accepts an array of numbers
       address: String,
       description: String,
     },

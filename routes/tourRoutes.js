@@ -65,8 +65,12 @@ router
 router.route('/').get(tourControllers.getAllTours).post(
   authController.protect,
   authController.restrictTo('admin', 'lead-guide'),
-  tourControllers.uploadSingleImage, //
-  tourControllers.resizeTourImageCover, //
+  // tourControllers.uploadSingleImage, //
+  // tourControllers.uploadTourImages,
+  // tourControllers.resizeTourImageCover, //
+  // tourControllers.resizeTourImages, //
+  tourControllers.uploadTourImages,
+  tourControllers.resizeTourImages,
   tourControllers.createTour
 );
 // tourControllers.checkBody -- > exmaple of middleware

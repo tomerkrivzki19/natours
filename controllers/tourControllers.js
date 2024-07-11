@@ -36,7 +36,6 @@ exports.uploadTourImages = upload.fields([
 // for single one
 // upload.single('name of the field ')
 exports.uploadSingleImage = upload.single('imageCover');
-
 exports.resizeTourImageCover = async (req, res, next) => {
   //becouse something it the beloow middlware didnt work or catch the images
   try {
@@ -68,9 +67,11 @@ exports.resizeTourImageCover = async (req, res, next) => {
 
 exports.resizeTourImages = async (req, res, next) => {
   try {
-    // if we have multiply files itwill be stored at req.files and not req.file as in the other lectures
-
-    if (!req.files.imageCover || !req.files.images) return next();
+    // if we have multiply files it will be stored at req.files and not req.file as in the other lectures
+    // if (!req.files.imageCover || !req.files.images) return next();
+    if (!req.files || !req.files.imageCover || !req.files.images) {
+      return next(new Error('Image files not provided.'));
+    }
 
     //1) Cover image
     // we saving the elemnt inside the req.body propartie becouse when we are using the update function we create the function that way it takes an elment from the req.body , this is why we deside to store it there

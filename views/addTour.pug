@@ -1,86 +1,78 @@
 extends base
 
 block content
-  form.form#create-tour-form(style='padding:5em  30%' enctype='multipart/form-data')
+  form.form#create-tour-form(style='padding:5em  30%' enctype="multipart/form-data")
     h2.heading-secondary.ma-bt-lg Create a Tour
     p * is a required 
 
-    label.form__label(for="") *Name Of the tour
-    input.form__input(name='name' type="text" placeholder='The Sea Explorer' required)
+    label.form__label(for="name") *Name Of the tour
+    input.form__input(name='name' type="text" placeholder='The Sea Explorer')
 
-    label.form__label(for="") *duration (in days)
-    input.form__input(name='duration' type="number" placeholder='7 days' required)
+    label.form__label(for="duration") *Duration (in days)
+    input.form__input(name='duration' min='1' type="number" placeholder='7 days')
 
-    label.form__label(for="") *maxGroupSize
-    input.form__input(name='maxGroupSize' type="number" min='1' max='50' placeholder='15' required)
+    label.form__label(for="maxGroupSize") *Max Group Size
+    input.form__input(name='maxGroupSize' type="number" min='1' max='50' placeholder='15')
 
     label.form__label(for="difficulty") *Choose a Difficulty
-    select#difficulty.form__input(name="difficulty" required)
+    select#difficulty.form__input(name="difficulty")
       option(value='easy') easy
       option(value='medium') medium
       option(value='difficult') difficult
 
-    label.form__label(for="") *price
-    .price-container(style='display:flex; justify-content: space-around; width:100%' required)
+    label.form__label(for="price") *Price
+    .price-container(style='display:flex; justify-content: space-around; width:100%')
       span(style='font-size:25px; align-items:center') $
-      input.form__input(name="price" type="number" min='1' placeholder='497 (tour price)' style='width:60%' required)
+      input.form__input(name="price" type="number" min='1' placeholder='497 (tour price)' style='width:60%')
 
-    label.form__label(for="") *summary
-    input.form__input(name="summary" type="text" placeholder='Exploring the jaw-dropping US east coast by foot and by boat' required)
+    label.form__label(for="summary") *Summary
+    input.form__input(name="summary" type="text" placeholder='Exploring the jaw-dropping US east coast by foot and by boat')
 
-    label.form__label(for="") description
-    textarea.form__input(name="description" placeholder='Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.')
+    label.form__label(for="description") Description
+    textarea.form__input(name="description" placeholder='Consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...')
 
-    label.form__label(for="") *imageCover
-    input.form__input(name="imageCover" type="file" required)
+    label.form__label(for="imageCover") *Image Cover
+    input.form__input(name="imageCover" type="file")
 
-    //- label.form__label(for="") Start Location
-    //- //- input.form__input(type="text" placeholder='Miami, USA')
-    //- label.form__label(for="") Coordinates
-    //-   input.form__input(name="latitude" type="text" placeholder='latitude (-80.185942)')
-    //-   input.form__input(name="longitude" type="text" placeholder='longitude (25.774772)')
+    label.form__label(for="startLocation.coordinates[0]") Start Location Coordinates
+    input.form__input(name="startLocation.coordinates[0]" type="text" placeholder='Latitude (-80.185942)')
+    input.form__input(name="startLocation.coordinates[1]" type="text" placeholder='Longitude (25.774772)')
+    
+    label.form__label(for="startLocation.description") Description
+    input.form__input(name="startLocation.description" type="text" placeholder='Miami, USA')
+    
+    label.form__label(for="startLocation.address") Address
+    input.form__input(name="startLocation.address" type="text" placeholder='Address')
 
-    //- label.form__label(for="") Description
-    //- input.form__input(name="locationDescription" type="text" placeholder='Miami, USA')
-    //- label.form__label(for="") Address
-    //- input.form__input(name="address" type="text" placeholder='address')
+    label.form__label(for="images[0].file") Images
+    input.form__input(name="images[0].file" type="file")
+    input.form__input(name="images[1].file" type="file")
+    input.form__input(name="images[2].file" type="file")
+    
+    br
+    br
+    br
+    label.heading-secondary.ma-bt-lg(for="startDates") Start Dates
+    label.form__label(for="startDates[0]") First Start Date
+    input.form__input(name="startDates[0]" type="date" placeholder='First start Date')
+    label.form__label(for="startDates[1]") Additional Dates
+    input.form__input(name="startDates[1]" type="date" placeholder='Second start Date')
+    input.form__input(name="startDates[2]" type="date" placeholder='Third start Date')
 
-    //- label.form__label(for="") images
-    //- input.form__input(name="image1" type='file' alt='image input')
-    //- input.form__input(name="image2" type='file' alt='image input')
-    //- input.form__input(name="image3" type='file' alt='image input')
-
-    //- label.form__label(for="") startDates
-    //- label.form__label(for="") first start Date
-    //- input.form__input(name="startDate1" type="date" placeholder='first start Date')
-    //- label.form__label(for="") if there more dates of tours so by the order
-    //- input.form__input(name="startDate2" type="date" placeholder='second start Date')
-    //- input.form__input(name="startDate3" type="date" placeholder='third start Date')
-
-    //- label.form__label(for='guides') Choose a guides:
-    //- select#guides.form__input(name="guides")
-    //-   each guide in guides
-    //-     option(value='')=`None`
-    //-     option(value=`${guide.name}: ${guide.role}`)=`${guide.name}: ${guide.role}`
-
-    //- br
-    //- label.form__label(for="") locations
-    //- label.form__label(for="") first location
-    //- label.form__label(for="") coordinates
-    //- input.form__input(name="locLatitude1" type="text" placeholder='latitude (-80.185942)')
-    //- input.form__input(name="locLongitude1" type="text" placeholder='longitude (25.774772)')
-    //- label.form__label(for="") description
-    //- input.form__input(name="locDescription1" type="text" placeholder='Lummus Park Beach')
-    //- label.form__label(for="") day
-    //- input.form__input(name="locDay1" type="number" min='0' max='20' placeholder='1')
-
-    //- label.form__label(for="") second location
-    //- label.form__label(for="") coordinates
-    //- input.form__input(name="locLatitude2" type="text" placeholder='latitude (-80.185942)')
-    //- input.form__input(name="locLongitude2" type="text" placeholder='longitude (25.774772)')
-    //- label.form__label(for="") description
-    //- input.form__input(name="locDescription2" type="text" placeholder='Lummus Park Beach')
-    //- label.form__label(for="") day
-    //- input.form__input(name="locDay2" type="number" min='0' max='20' placeholder='1')
-
-    button.btn.btn--green#createTour(style='align-items:center; width:100%; margin-top:3em') Create Tour
+    label.form__label(for="guides") Choose Guides
+    select#guides.form__input(name="guides[0]")
+      option(value='') None
+      each guide in guides
+        option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+    
+    select#guides.form__input(name="guides[1]")
+      option(value='') None
+      each guide in guides
+        option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+    
+    select#guides.form__input(name="guides[2]")
+      option(value='') None
+      each guide in guides
+        option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+    
+    button.btn.btn--green(type='submit') Create Tour

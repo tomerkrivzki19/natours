@@ -221,29 +221,71 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 //manage tours - admins:
 if (createTourForm) {
-  createTourForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+  createTourForm.addEventListener('submit', function (event) {
+    event.preventDefault();
 
-    // get all values
-    const inputs = document.querySelectorAll('.form__input');
-    const formData = new FormData();
+    const form = event.target;
+    const formData = new FormData(form);
 
-    inputs.forEach((input) => {
-      if (input.type === 'file') {
-        formData[input.name] = input.files[0]; // handle file inputs
+    // Ensure to append the files correctly to FormData
+    const tourData = {
+      name: formData.get('name'),
+      duration: formData.get('duration'),
+      maxGroupSize: formData.get('maxGroupSize'),
+      difficulty: formData.get('difficulty'),
+      price: formData.get('price'),
+      summary: formData.get('summary'),
+      description: formData.get('description'),
+      startLocation: {
+        type: 'Point',
+        coordinates: [
+          parseFloat(formData.get('startLocation.coordinates[0]')) || null,
+          parseFloat(formData.get('startLocation.coordinates[1]')) || null,
+        ],
+        description: formData.get('startLocation.description'),
+        address: formData.get('startLocation.address'),
+      },
+      startDates: [
+        formData.get('startDates[0]'),
+        formData.get('startDates[1]'),
+        formData.get('startDates[2]'),
+      ],
+      guides: [
+        formData.get('guides[0]'),
+        formData.get('guides[1]'),
+        formData.get('guides[2]'),
+      ],
+    };
+
+    // Append non-file fields to FormData
+    Object.keys(tourData).forEach((key) => {
+      if (typeof tourData[key] === 'object' && !Array.isArray(tourData[key])) {
+        // Handle nested objects like startLocation
+        Object.keys(tourData[key]).forEach((nestedKey) => {
+          formData.append(`${key}[${nestedKey}]`, tourData[key][nestedKey]);
+        });
+      } else if (Array.isArray(tourData[key])) {
+        // Handle arrays like startDates and guides
+        tourData[key].forEach((item, index) => {
+          formData.append(`${key}[${index}]`, item);
+        });
       } else {
-        formData[input.name] = input.value;
+        formData.append(key, tourData[key]);
       }
     });
-    // const formData = new FormData(createTourForm);
+
+    // Append files
+    formData.append('imageCover', formData.get('imageCover'));
+    formData.append('images', formData.get('images[0].file'));
+    formData.append('images', formData.get('images[1].file'));
+    formData.append('images', formData.get('images[2].file'));
 
     // console.log(formData);
-    //send to a function that will send a post req to the server
+    // Send the form data
     createTour(formData);
-
-    //TODO: change the name of the inputs to create and send to the server relevnte data
   });
 }
+
 // update tour - not relevnt for now , becouse we need to figure it out how we want to display this option to the client ( like decide if we want to add uploaded images option , or what exactly we wan to display becouse we need to compaine preview all the tours and also what kind of stuuf to update TODO: )
 if (updateTour) {
   updateTour.addEventListener('click', (e) => {

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { showAlert } from './alerts';
+// import { decode } from 'decode-formdata';
 
 export const updateCurrentTour = async (tourId, data) => {
   try {
@@ -33,10 +34,9 @@ export const deleteCurrentTour = async (tourId) => {
   }
 };
 
-exports.createTour = async (data) => {
+export const createTour = async (formData) => {
   try {
-    const formData = { ...data };
-    console.log('data from function', formData);
+    // console.log('Sending formData:', formData);
 
     const res = await axios.post('/api/v1/tours', formData, {
       headers: {
@@ -49,7 +49,13 @@ exports.createTour = async (data) => {
       location.assign('/manage-tours');
     }
   } catch (error) {
-    console.log(error);
-    // showAlert('error', error.data.message);
+    console.error(
+      'Error uploading tour:',
+      error.response ? error.response.data : error.message
+    );
+    showAlert('error', 'Error uploading tour');
   }
 };
+
+//class for the create tour:
+//

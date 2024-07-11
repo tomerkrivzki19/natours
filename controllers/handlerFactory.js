@@ -48,7 +48,8 @@ exports.updateOne = (Model) => async (req, res, next) => {
 
 exports.createOne = (Model) => async (req, res, next) => {
   try {
-    console.log('createOne', req.body);
+    console.log('Cover Image:', req.body.imageCover);
+    console.log('Other Images:', req.body.images);
     const doc = await Model.create(req.body);
 
     res.status(201).json({
@@ -58,7 +59,6 @@ exports.createOne = (Model) => async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log('error', error);
     next(error);
   }
 };
