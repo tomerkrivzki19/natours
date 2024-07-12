@@ -41,6 +41,7 @@ const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
 const createTourForm = document.getElementById('create-tour-form');
 const updateTour = document.getElementById('updateTour');
 const deleteTour = document.getElementById('deleteTour');
+const updateUserDataAdminBtn = document.getElementById('updateUserDataAdmin');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -86,13 +87,9 @@ if (singupForm) {
 if (logOutBtn) logOutBtn.addEventListener('click', logout);
 
 if (updateUserForm) {
-  //not sending nothing and recives nothing err
   updateUserForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    // const name = document.getElementById('name').value;
-    // const email = document.getElementById('email').value;
-    // we change it becouse we want to use also the upload photo setting and that is inside that form
-    const form = new FormData(); //FormData - recreate multipart form data
+    const form = new FormData();
     form.append('name', document.getElementById('name').value);
     form.append('email', document.getElementById('email').value);
     form.append('photo', document.getElementById('photo').files[0]); //that comes as an array , in for that we need to collect only the first fille that is the image the user uploaded
@@ -222,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 //manage tours - admins:
-
 //create tour
 if (createTourForm) {
   createTourForm.addEventListener('submit', function (event) {
@@ -310,5 +306,18 @@ if (deleteTour) {
     //  send the updated data with the current id
     const tourId = deleteTour.dataset.tourId;
     deleteCurrentTour(tourId);
+  });
+}
+
+//manage users -admins
+if (updateUserDataAdminBtn) {
+  updateUserDataAdminBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const role = document.getElementById('role').value;
+    const tourId = updateUserDataAdminBtn.getAttribute('data-user');
+
+    updateSettings({ name, email, role }, 'admin', tourId);
   });
 }

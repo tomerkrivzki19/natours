@@ -1,0 +1,25 @@
+extends base
+
+block content
+ main.main
+    h2.heading-secondary.ma-bt-lg Manage Users 
+    .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
+      p Click edit to get more user details , from there you can edit them remove them and so on..
+      button
+       a(href=`/add-user`) Add User
+    
+    table
+     tr
+      th name
+      th email
+      th role
+     each user in users
+      tr
+       td=user.name
+       td=user.email 
+       td=user.role 
+       td 
+        button
+        a(href=`/edit-user/${user.id}`)  Edit
+//- (href=`/manage-tour/${tour.slug}`)
+ 

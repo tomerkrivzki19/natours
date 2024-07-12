@@ -35,7 +35,22 @@ router.get('/singup', authController.isLoggedIn, viewController.getSingupForm);
 router.get('/me', authController.protect, viewController.getAccount);
 router.get('/my-tours', authController.protect, viewController.getMyTours);
 
+//User
+// user  reviews
 router.get('/my-reviews', authController.protect, viewController.getMyReviews);
+// user favorites
+router.post(
+  '/my-favorites',
+  authController.protect,
+  viewController.getMyFavorites
+);
+router.post(
+  '/submit-user-data',
+  authController.protect,
+  viewController.updateUserData
+);
+//Admins
+//manage tours
 router.get(
   '/manage-tours',
   authController.protect,
@@ -47,17 +62,18 @@ router.get(
   viewController.getTourDetaillsAdministrator
 );
 router.get('/add-tour', authController.protect, viewController.addTourTampalte);
-router.post(
-  '/my-favorites',
+//manage users
+router.get(
+  '/manage-users',
   authController.protect,
-  viewController.getMyFavorites
+  viewController.getMnageUsers
 );
-
-router.post(
-  '/submit-user-data',
+router.get(
+  '/edit-user/:slug',
   authController.protect,
-  viewController.updateUserData
+  viewController.getEditUserForm
 );
+router.get('/add-user', authController.protect, viewController.getSingupForm);
 
 module.exports = router;
 

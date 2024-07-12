@@ -248,3 +248,38 @@ exports.addTourTampalte = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getMnageUsers = async (req, res, next) => {
+  try {
+    const users = await User.find({});
+
+    res.status(200).render('manageUsers', {
+      users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// TODO:
+exports.getEditUserForm = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.slug);
+
+    res.status(200).render('editusers', {
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+//TODO:
+exports.getSingupForm = async (req, res, next) => {
+  // try {
+  //   const users = await User.find({});
+  //   res.status(200).render('manageUsers', {
+  //     users,
+  //   });
+  // } catch (error) {
+  //   next(error);
+  // }
+};

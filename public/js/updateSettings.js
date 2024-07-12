@@ -5,13 +5,22 @@ import { showAlert } from './alerts';
 
 //update both data and the password
 //type is either 'password' or 'data' , data => an object with al the data to update
-export const updateSettings = async (data, type) => {
+export const updateSettings = async (data, type, userId = 'default') => {
   try {
-    const url =
-      type === 'password'
-        ? '/api/v1/users/updateMyPassword'
-        : '/api/v1/users/updateMe';
-
+    // const url =
+    //   type === 'password'
+    //     ? '/api/v1/users/updateMyPassword'
+    //     : '/api/v1/users/updateMe';
+    console.log(userId);
+    console.log(data);
+    let url = '';
+    if (type === 'password') {
+      url = '/api/v1/users/updateMyPassword';
+    } else if (type === 'admin') {
+      url = `/api/v1/users/${userId}`;
+    } else {
+      url = '/api/v1/users/updateMe';
+    }
     //WHY THIS WAY DIDNT WOKR!
     // const res = await axios.patch(url, {
     //   data,
@@ -36,6 +45,7 @@ export const updateSettings = async (data, type) => {
 
     if (res.data.status === 'success') {
       showAlert('success', `${type.toUpperCase()} updated successfully!`);
+      location.reload(true);
     }
     return;
   } catch (error) {

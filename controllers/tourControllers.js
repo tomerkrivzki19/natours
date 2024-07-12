@@ -36,9 +36,12 @@ exports.uploadTourImages = upload.fields([
 // upload.array(' name of the field ', 5 => max number to upload images)
 // for single one
 // upload.single('name of the field ')
+
+// FIXME:
 exports.uploadSingleImage = upload.single('imageCover');
 exports.resizeTourImageCover = async (req, res, next) => {
   //becouse something it the beloow middlware didnt work or catch the images
+
   try {
     // if we have multiply files itwill be stored at req.files and not req.file as in the other lectures
 
