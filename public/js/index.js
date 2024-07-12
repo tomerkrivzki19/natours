@@ -19,6 +19,7 @@ import {
   deleteCurrentTour,
   createTour,
   getMonthlyPlan,
+  singupAdmin,
 } from './administartion';
 // console.log('Hello from parcel'); -> check if the fille work
 
@@ -36,12 +37,12 @@ const reviewBtn = document.getElementById('leave-review');
 const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
 const iconFavorites = document.querySelector('a[href="/my-favorites"]');
-const iconManageTours = document.querySelector('a[href="/manage-tours"]');
 const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
 const createTourForm = document.getElementById('create-tour-form');
 const updateTour = document.getElementById('updateTour');
 const deleteTour = document.getElementById('deleteTour');
 const updateUserDataAdminBtn = document.getElementById('updateUserDataAdmin');
+const singupFormAdmin = document.querySelector('.form--singup-admin');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -319,5 +320,29 @@ if (updateUserDataAdminBtn) {
     const tourId = updateUserDataAdminBtn.getAttribute('data-user');
 
     updateSettings({ name, email, role }, 'admin', tourId);
+  });
+}
+
+if (singupFormAdmin) {
+  singupFormAdmin.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    //1) Get all the values from inputs  -append the filles in to the form data
+    const passwordConfirm = document.getElementById('passwordConfirm').value;
+    const password = document.getElementById('password').value;
+
+    //2) Check if the password and passwordConfirm is match =>
+    if (password !== passwordConfirm) {
+      return showAlert('error', 'Password and Password Confirm are not match!');
+    }
+    //apepend
+    formData.append('role', document.getElementById('role').value);
+    formData.append('name', document.getElementById('name').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('photo', document.getElementById('photo').files[0]);
+    formData.append('passwordConfirm', passwordConfirm);
+    formData.append('password', password);
+    //3) Send the data to funciton that will proccess the post operation
+    singupAdmin(formData);
   });
 }

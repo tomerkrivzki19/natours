@@ -273,13 +273,11 @@ exports.getEditUserForm = async (req, res, next) => {
   }
 };
 //TODO:
-exports.getSingupForm = async (req, res, next) => {
-  // try {
-  //   const users = await User.find({});
-  //   res.status(200).render('manageUsers', {
-  //     users,
-  //   });
-  // } catch (error) {
-  //   next(error);
-  // }
+exports.getAddUserForm = async (req, res, next) => {
+  try {
+    //when using the same pug tamplate and trying to send sing up there a problem with duplicte code "duplicate user "
+    res.status(200).render('singUpUsersAdmin');
+  } catch (error) {
+    next(error);
+  }
 };

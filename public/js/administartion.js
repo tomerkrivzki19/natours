@@ -66,5 +66,18 @@ export const createTour = async (formData) => {
   }
 };
 
-//class for the create tour:
-//
+export const singupAdmin = async (formData) => {
+  try {
+    const res = await axios.post('/api/v1/users', formData, {
+      headers: {
+        // 'Content-Type': 'multipart/form-data',
+      },
+    });
+    if (res.data.status === 'success') {
+      showAlert('success', 'The user Has successfully uploaded');
+      location.assign('/manage-users');
+    }
+  } catch (error) {
+    showAlert('error', error.response.data.message);
+  }
+};

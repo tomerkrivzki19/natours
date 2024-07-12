@@ -73,7 +73,7 @@ router.get(
   authController.protect,
   viewController.getEditUserForm
 );
-router.get('/add-user', authController.protect, viewController.getSingupForm);
+router.get('/add-user', authController.protect, viewController.getAddUserForm);
 
 module.exports = router;
 

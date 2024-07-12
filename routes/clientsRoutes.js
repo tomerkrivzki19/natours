@@ -34,10 +34,11 @@ router.route('/:id/bookings').get(clientControllers.getAllBookingByClientId);
 
 router.use(authController.restrictTo('admin'));
 ///api/v1/users
-router
-  .route('/')
-  .get(clientControllers.getAllClients)
-  .post(clientControllers.createClient);
+router.route('/').get(clientControllers.getAllClients).post(
+  clientControllers.uploadUserPhoto,
+  clientControllers.resizeUserPhoto, // manipulate user images that uploaded
+  clientControllers.createClient
+);
 router
   .route('/:id')
   .get(clientControllers.getClient)

@@ -172,17 +172,25 @@ exports.updateMe = async (req, res, next) => {
   }
 };
 
-exports.createClient = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not defined! Please use /singup instead',
-  });
+exports.createClient = async (req, res, next) => {
+  try {
+    //create clients for the administaration - meaning we need to access for all details
+    console.log(req.body);
+    const tour = await User.create(req.body);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        data: tour,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 exports.deleteMe = async (req, res, next) => {
-  //                                    the data we want to update
-  await User.findByIdAndUpdate(req.user.id, { active: false });
-
+  await User.findByIdAndUpdate(req.user.id, { active: false }); // we want to 'delete',hide the user in order to stil be abale to keep it in our db
   res.status(204).json({
     status: 'success',
     message: null,

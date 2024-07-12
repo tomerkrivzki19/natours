@@ -63,12 +63,12 @@ block content
         tbody
           each plan in plans
             tr
-              td.overview-box__data= monthNames[plan.month - 1]
-              td.overview-box__data
+              td.card__text= monthNames[plan.month - 1]
+              td.card__text
                 ul
                   each tour in plan.tours
                     li= tour
-              td.overview-box__data= plan.numTourStarts
+              td.card__text= plan.numTourStarts
    
    
   
