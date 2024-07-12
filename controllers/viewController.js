@@ -265,7 +265,7 @@ exports.getEditUserForm = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.slug);
 
-    res.status(200).render('editusers', {
+    res.status(200).render('editUsers', {
       user,
     });
   } catch (error) {
