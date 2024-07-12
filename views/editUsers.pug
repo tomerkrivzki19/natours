@@ -14,5 +14,6 @@ block content
         .form__group.ma-bt-md
             label.form__label(for='role') Role (user/guide/lead-guide/admin)
             input#role.form__input(type='text', value=`${user.role}`, required, name='role')       
-        .form__group.right
+        .form__group.right(style='display: flex; justify-content: space-between; width: 100%;')
+            button.btn.btn--small.btn--green#deleteUserDataAdmin(style='white:blue; text-decoration:none; font-weight: bold; background-color:red;' )  Delete User 
             button.btn.btn--small.btn--green#updateUserDataAdmin(data-user=`${user.id}`) Save settings

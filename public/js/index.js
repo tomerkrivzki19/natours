@@ -19,6 +19,7 @@ import {
   deleteCurrentTour,
   createTour,
   getMonthlyPlan,
+  deleteUserAdmin,
   singupAdmin,
 } from './administartion';
 // console.log('Hello from parcel'); -> check if the fille work
@@ -43,6 +44,7 @@ const updateTour = document.getElementById('updateTour');
 const deleteTour = document.getElementById('deleteTour');
 const updateUserDataAdminBtn = document.getElementById('updateUserDataAdmin');
 const singupFormAdmin = document.querySelector('.form--singup-admin');
+const deleteUserAdminBtn = document.getElementById('deleteUserDataAdmin');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -344,5 +346,12 @@ if (singupFormAdmin) {
     formData.append('password', password);
     //3) Send the data to funciton that will proccess the post operation
     singupAdmin(formData);
+  });
+}
+if (deleteUserAdminBtn) {
+  deleteUserAdminBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    const tourId = updateUserDataAdminBtn.getAttribute('data-user');
+    deleteUserAdmin(tourId);
   });
 }

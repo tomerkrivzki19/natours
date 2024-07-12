@@ -81,3 +81,20 @@ export const singupAdmin = async (formData) => {
     showAlert('error', error.response.data.message);
   }
 };
+
+export const deleteUserAdmin = async (tourId) => {
+  try {
+    if (confirm('are you sure?!')) {
+      const res = await axios.delete(`/api/v1/users/${tourId}`);
+
+      if (res.data.status === 'success') {
+        showAlert('success', 'The user Has successfully uploaded');
+        location.assign('/manage-users');
+      }
+    } else {
+      return showAlert('error', 'The delete of the user was canceld');
+    }
+  } catch (error) {
+    showAlert('error', error.response.data.message);
+  }
+};
