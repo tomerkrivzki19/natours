@@ -80,4 +80,10 @@ router.get(
   authController.protect,
   viewController.getAllClientReviews
 );
+//manage bookings
+router.get(
+  '/all-bookings',
+  authController.protect,
+  viewController.getAllClientBookings
+);
 module.exports = router;

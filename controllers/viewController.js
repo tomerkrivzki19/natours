@@ -296,3 +296,43 @@ exports.getAllClientReviews = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.getAllClientBookings = async (req, res, next) => {
+  try {
+    //to find all the bookings for the currently logged-in users ,which will then give us a bunch of tours IDs and then we will find those tours with their IDs
+    //1) Find all bookings |     tour most be equal to req.user.id ( current user id)
+    const bookings = await Booking.find(); //each user have  a user id (in the booking model)
+
+    // canculate full price
+    const bookingPrice = bookings.map((el) => el.price);
+    const totalPrice = bookingPrice.reduce(
+      (accumulator, currentValue) => accumulator + currentValue,
+      0
+    );
+
+    // canculate percentageIncrease
+    let initialValue = 1;
+    let finalValue = 22940;
+
+    // Calculate the percentage increase or handle the special case
+    let formattedIncrease;
+
+    if (initialValue === 0) {
+      formattedIncrease = 'Infinite increase'; // or any specific representation you prefer
+    } else {
+      let percentageIncrease =
+        ((finalValue - initialValue) / initialValue) * 100;
+      formattedIncrease = percentageIncrease.toFixed(2) + '%';
+    }
+    console.log(formattedIncrease);
+
+    res.status(200).render('bookingsManagment', {
+      title: 'My Tours',
+      bookings,
+      totalPrice,
+      formattedIncrease,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
