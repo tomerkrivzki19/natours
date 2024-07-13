@@ -260,7 +260,6 @@ exports.getMnageUsers = async (req, res, next) => {
     next(error);
   }
 };
-// TODO:
 exports.getEditUserForm = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.slug);
@@ -272,11 +271,27 @@ exports.getEditUserForm = async (req, res, next) => {
     next(error);
   }
 };
-//TODO:
 exports.getAddUserForm = async (req, res, next) => {
   try {
-    //when using the same pug tamplate and trying to send sing up there a problem with duplicte code "duplicate user "
     res.status(200).render('singUpUsersAdmin');
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getAllClientReviews = async (req, res, next) => {
+  try {
+    //1) get data from model - find the req.user.id in the reviews model
+    const reviews = await Review.find();
+
+    if (!reviews)
+      return next(new AppError(`There no reviews sended,  ${req.user.name} `));
+
+    //2) render the  data on review page
+    res.status(200).render('clientReviews', {
+      title: 'Client Reviews',
+      reviews,
+    });
   } catch (error) {
     next(error);
   }

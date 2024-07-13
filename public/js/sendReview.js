@@ -42,3 +42,20 @@ export const editReview = async (reviewId, data) => {
     showAlert('error', error.response.data.message);
   }
 };
+
+export const deleteReview = async (reviewId) => {
+  try {
+    if (confirm('are you sure?!')) {
+      const res = await axios.delete(`/api/v1/reviews/${reviewId}`);
+
+      if (res.data.status === 'success') {
+        showAlert('success', ' Review deleted successfully 👍');
+        location.reload(true);
+      }
+    } else {
+      return showAlert('error', 'The delete of the review was canceled');
+    }
+  } catch (error) {
+    showAlert('error', error.response.data.message);
+  }
+};

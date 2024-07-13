@@ -12,7 +12,7 @@ import { displayMap } from './mapbox';
 import { updateSettings } from './updateSettings';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
-import { sendReview, editReview } from './sendReview';
+import { sendReview, editReview, deleteReview } from './sendReview';
 import { addFavoriteTour, displayFavorties } from './addFavoriteTour';
 import {
   updateCurrentTour,
@@ -39,6 +39,7 @@ const Reviewform = document.getElementById('review-data');
 const favorite = document.getElementById('favorite');
 const iconFavorites = document.querySelector('a[href="/my-favorites"]');
 const editReviewBtn = document.querySelectorAll('.reviews__edit-button');
+const deleteReviewBtn = document.querySelectorAll('.reviews__delete-button');
 const createTourForm = document.getElementById('create-tour-form');
 const updateTour = document.getElementById('updateTour');
 const deleteTour = document.getElementById('deleteTour');
@@ -168,11 +169,17 @@ if (editReviewBtn) {
 
       const p = reviewCard.getElementsByClassName('reviews__text');
       const divStarClass = reviewCard.getElementsByClassName('reviews__rating');
+
+      //saving the values to present them after cancel
+      const reviewLorem = p[0];
+      const startContaier = divStarClass[0];
+
       //dom elements:
       // input text
       const input = document.createElement('input');
       const inputNumber = document.createElement('input');
       const btn = document.createElement('button');
+      const cancelBtn = document.createElement('button');
       input.type = 'text';
       input.placeholder = 'Comment here';
       input.name = 'reviewText';
@@ -182,6 +189,7 @@ if (editReviewBtn) {
       inputNumber.max = '5';
       inputNumber.name = 'reviewNumber';
       //button
+      cancelBtn.innerHTML = 'cancel';
       btn.innerHTML = 'save';
       btn.className = 'reviews__save-button';
       btn.id = `${reviewId}`;
@@ -189,9 +197,16 @@ if (editReviewBtn) {
       p[0].replaceWith(input);
       divStarClass[0].replaceWith(inputNumber);
       editButton.replaceWith(btn);
-
+      reviewCard.append(cancelBtn);
       //Checking if the user wrote an value is already at the backend err handler :
 
+      //cancel button:
+      cancelBtn.addEventListener('click', (e) => {
+        input.replaceWith(reviewLorem);
+        inputNumber.replaceWith(startContaier);
+        btn.replaceWith(editButton);
+        reviewCard.removeChild(cancelBtn);
+      });
       //Send the review
       btn.addEventListener('click', (e) => {
         const reviewId = btn.getAttribute('id');
@@ -203,9 +218,18 @@ if (editReviewBtn) {
     });
   });
 }
-
+if (deleteReviewBtn) {
+  deleteReviewBtn.forEach((deleteButton) => {
+    deleteButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      const reviewId = deleteButton.getAttribute('data-review-id');
+      // console.log(reviewId);
+      deleteReview(reviewId);
+    });
+  });
+}
+// Favorites
 if (favorite) {
-  // Favorites
   favorite.addEventListener('click', (e) => {
     e.preventDefault();
     const tourId = bookBtn.dataset.tourId;

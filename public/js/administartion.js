@@ -36,7 +36,7 @@ export const deleteCurrentTour = async (tourId) => {
         location.assign(`/manage-tours`);
       }
     } else {
-      return showAlert('error', 'The delete of the tour was canceld');
+      return showAlert('error', 'The delete of the tour was canceled');
     }
   } catch (error) {
     showAlert('error', error.data.message);
@@ -92,7 +92,7 @@ export const deleteUserAdmin = async (tourId) => {
         location.assign('/manage-users');
       }
     } else {
-      return showAlert('error', 'The delete of the user was canceld');
+      return showAlert('error', 'The delete of the user was canceled');
     }
   } catch (error) {
     showAlert('error', error.response.data.message);

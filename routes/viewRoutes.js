@@ -74,8 +74,10 @@ router.get(
   viewController.getEditUserForm
 );
 router.get('/add-user', authController.protect, viewController.getAddUserForm);
-
+//manage reviews
+router.get(
+  '/all-reviews',
+  authController.protect,
+  viewController.getAllClientReviews
+);
 module.exports = router;
-
-// TASKS:
-// mission: create a /login route => controller => tamplate - (the tamplate located at the tamplate folder named login tamplate )
