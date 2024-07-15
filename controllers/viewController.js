@@ -303,34 +303,71 @@ exports.getAllClientBookings = async (req, res, next) => {
     //1) Find all bookings |     tour most be equal to req.user.id ( current user id)
     const bookings = await Booking.find(); //each user have  a user id (in the booking model)
 
-    // canculate full price
-    const bookingPrice = bookings.map((el) => el.price);
-    const totalPrice = bookingPrice.reduce(
-      (accumulator, currentValue) => accumulator + currentValue,
-      0
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth(); // 0-11
+    const currentYear = currentDate.getFullYear();
+
+    const result = bookings.reduce(
+      (acc, el) => {
+        const bookingPrice = el.price;
+        const bookingDate = new Date(el.createdAt);
+        const bookingMonth = bookingDate.getMonth();
+        const bookingYear = bookingDate.getFullYear();
+
+        // Add to total price
+        acc.totalPrice += bookingPrice;
+
+        // Check if the booking date is in the current month and year
+        if (bookingMonth === currentMonth && bookingYear === currentYear) {
+          acc.currentMonthBookings.push(bookingPrice);
+          acc.totalCurrentMonth += bookingPrice;
+        } else {
+          acc.otherBookings.push(bookingPrice);
+          acc.totalOtherBookings += bookingPrice;
+        }
+
+        return acc;
+      },
+      {
+        currentMonthBookings: [],
+        otherBookings: [],
+        totalPrice: 0,
+        totalCurrentMonth: 0,
+        totalOtherBookings: 0,
+      }
     );
-
-    // canculate percentageIncrease
-    let initialValue = 1;
-    let finalValue = 22940;
-
-    // Calculate the percentage increase or handle the special case
-    let formattedIncrease;
-
-    if (initialValue === 0) {
-      formattedIncrease = 'Infinite increase'; // or any specific representation you prefer
-    } else {
-      let percentageIncrease =
-        ((finalValue - initialValue) / initialValue) * 100;
-      formattedIncrease = percentageIncrease.toFixed(2) + '%';
+    //calculation of yield - Per Month
+    function calculateSimpleYield(principal, interestEarned) {
+      if (principal === 0 || interestEarned === 0) {
+        return 0; // If either principal or interest earned is zero, return 0%
+      }
+      return (interestEarned / principal) * 100;
     }
-    console.log(formattedIncrease);
+    const PRINCIPAL = result.totalPrice; //TOTAL AMOUNT
+    const interestEarned = result.totalCurrentMonth; //THE INCOME -- current month
+
+    const yield = calculateSimpleYield(PRINCIPAL, interestEarned);
+    console.log(`Simple Interest Yield: ${yield.toFixed(1)}%`);
+
+    //-------------------------------------------------------------------
+
+    //calculation of yield - Per Full year
+    function calculateAPY(annualInterestRate, compoundingPeriodsPerYear) {
+      const r = annualInterestRate / 100;
+      const n = compoundingPeriodsPerYear;
+      return ((1 + r / n) ** n - 1) * 100;
+    }
+
+    const compoundingPeriodsPerYear = 12; // Monthly compounding
+    const apy = calculateAPY(yield, compoundingPeriodsPerYear);
+    console.log(`Annual Percentage Yield (APY): ${apy.toFixed(2)}%`);
 
     res.status(200).render('bookingsManagment', {
-      title: 'My Tours',
+      title: 'All Bookings',
       bookings,
-      totalPrice,
-      formattedIncrease,
+      totalPrice: PRINCIPAL.toLocaleString(), //PRINCIPAL - connects as total ammount
+      yield, //calculation of yield - Per Month
+      apy, //Annual Percentage Yield (APY) -Per Full year
     });
   } catch (error) {
     next(error);

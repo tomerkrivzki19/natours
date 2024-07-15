@@ -3,11 +3,20 @@ extends base
 block content
  main.main
     h2.heading-secondary.ma-bt-lg Bookings
-    .topic-container(style='display: flex;  flex-direction:column;  width: 50%; padding:1em 0.5em 4em; border-right: 1rem solid; border-bottom: 1rem solid;')
-     h3.heading-secondary Revenue:
-     h3.heading-secondary= formattedIncrease
-     p.overview-box__label(style='font-size:30px; padding-left:1em;')=`$${totalPrice} 📈`
-    
+    .first-section-container(style='display: flex; width:100%;' )
+     .topic-container(style='display: flex;  flex-direction:column;  width: 50%; padding:1em 0.5em 4em; border-right: 10px solid; border-bottom: 1rem solid;')
+      .revenue-container(style='display: flex; justify-content:space-between;  width: 65%;')
+       h3.heading-secondary Revenue:
+       .yield-container(style='display: flex;  flex-direction:column;')
+        p(style='color:green; font-size:15px')= `⤴️${yield.toFixed(1)}%`
+       p(style='color:green; font-size:15px')= `⤴️${apy.toFixed(2)}%`
+      h3.heading-secondary= formattedIncrease
+      p.overview-box__label(style='font-size:30px; padding-left:1em;')=`$${totalPrice} 📈`
+     
+     .image-container(style='display:flex; width:50%; justify-content:center; aling-items:center; border-bottom: 1rem solid; ')
+      
+       img(src='/img/logo-green.png' alt='Natours logo' style='font-size:50px; padding-bottom:3em;  ' )
+
      
     h2.heading-secondary.ma-bt-lg Recent activity
     table
