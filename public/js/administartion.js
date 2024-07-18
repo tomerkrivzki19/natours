@@ -27,7 +27,7 @@ export const updateCurrentTour = async (dataset, data) => {
 export const deleteCurrentTour = async (tourId) => {
   try {
     if (confirm('are you sure?!')) {
-      const res = await axios.delete(`api/v1/tours/${tourId}`);
+      const res = await axios.delete(`/api/v1/tours/${tourId}`);
 
       if (res.data.status === 'success') {
         showAlert('success', 'The tour has successfully deleted');
@@ -43,13 +43,15 @@ export const deleteCurrentTour = async (tourId) => {
   }
 };
 
-export const createTour = async (formData) => {
+//TODO: --the err is that there a data is falling when sending with axios.post , - with post man the req working good
+export const createTour = async (data) => {
   try {
-    // console.log('Sending formData:', formData);
+    console.log('Sending data:', data);
 
-    const res = await axios.post('/api/v1/tours', formData, {
+    const res = await axios.post('/api/v1/tours', data, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        accept: 'application/json',
+        'content-type': 'multipart/form-data',
       },
     });
 
@@ -58,11 +60,9 @@ export const createTour = async (formData) => {
       location.assign('/manage-tours');
     }
   } catch (error) {
-    console.error(
-      'Error uploading tour:',
-      error.response ? error.response.data : error.message
-    );
-    showAlert('error', 'Error uploading tour');
+    console.log(error);
+
+    showAlert('error', error.response.data.message);
   }
 };
 

@@ -246,28 +246,34 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 //manage tours - admins:
-//create tour
+//TODO: create tour
 if (createTourForm) {
   createTourForm.addEventListener('submit', function (event) {
     event.preventDefault();
 
     const form = event.target;
     const formData = new FormData(form);
+    const images = document.getElementById('file-input');
+    console.log(images.files);
 
     // Ensure to append the files correctly to FormData
     const tourData = {
       name: formData.get('name'),
-      duration: formData.get('duration'),
-      maxGroupSize: formData.get('maxGroupSize'),
+      duration: Number(formData.get('duration')),
+      maxGroupSize: Number(formData.get('maxGroupSize')),
       difficulty: formData.get('difficulty'),
-      price: formData.get('price'),
+      price: Number(formData.get('price')),
       summary: formData.get('summary'),
       description: formData.get('description'),
+      imageCover: formData.get('imageCover'),
+      // images: formData.getAll('images[].file'),
+      // formData.get('images[1].file'),
+      // formData.get('images[2].file'),
+      images: images.files,
       startLocation: {
-        type: 'Point',
         coordinates: [
-          parseFloat(formData.get('startLocation.coordinates[0]')) || null,
-          parseFloat(formData.get('startLocation.coordinates[1]')) || null,
+          parseFloat(formData.get('startLocation.coordinates[0]')),
+          parseFloat(formData.get('startLocation.coordinates[1]')),
         ],
         description: formData.get('startLocation.description'),
         address: formData.get('startLocation.address'),
@@ -283,33 +289,37 @@ if (createTourForm) {
         formData.get('guides[2]'),
       ],
     };
+    //location we moved for now !
+    // TODO: check the same methods of sending threw post-man, and then send it here ! THIS IS THE SOLUTION TO THIS TASK !
+    // const newFormData = new FormData();
+    // newFormData.append('tourData', tourData);
+    // console.log(tourData);
+    // // Append non-file fields to FormData
+    // // Object.keys(tourData).forEach((key) => {
+    // //   if (typeof tourData[key] === 'object' && !Array.isArray(tourData[key])) {
+    // //     // Handle nested objects like startLocation
+    // //     Object.keys(tourData[key]).forEach((nestedKey) => {
+    // //       formData.append(`${key}[${nestedKey}]`, tourData[key][nestedKey]);
+    // //     });
+    // //   } else if (Array.isArray(tourData[key])) {
+    // //     // Handle arrays like startDates and guides
+    // //     tourData[key].forEach((item, index) => {
+    // //       formData.append(`${key}[${index}]`, item);
+    // //     });
+    // //   } else {
+    // //     formData.append(key, tourData[key]);
+    // //   }
+    // // });
 
-    // Append non-file fields to FormData
-    Object.keys(tourData).forEach((key) => {
-      if (typeof tourData[key] === 'object' && !Array.isArray(tourData[key])) {
-        // Handle nested objects like startLocation
-        Object.keys(tourData[key]).forEach((nestedKey) => {
-          formData.append(`${key}[${nestedKey}]`, tourData[key][nestedKey]);
-        });
-      } else if (Array.isArray(tourData[key])) {
-        // Handle arrays like startDates and guides
-        tourData[key].forEach((item, index) => {
-          formData.append(`${key}[${index}]`, item);
-        });
-      } else {
-        formData.append(key, tourData[key]);
-      }
-    });
+    // // // Append files
+    // // formData.append('imageCover', formData.get('imageCover'));
+    // // formData.append('images', formData.get('images[0].file'));
+    // // formData.append('images', formData.get('images[1].file'));
+    // // formData.append('images', formData.get('images[2].file'));
 
-    // Append files
-    formData.append('imageCover', formData.get('imageCover'));
-    formData.append('images', formData.get('images[0].file'));
-    formData.append('images', formData.get('images[1].file'));
-    formData.append('images', formData.get('images[2].file'));
-
-    // console.log(formData);
-    // Send the form data
-    createTour(formData);
+    // // console.log(formData);
+    // // Send the form data
+    createTour(tourData);
   });
 }
 

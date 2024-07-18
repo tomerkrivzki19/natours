@@ -140,7 +140,7 @@ block content
           - const paragraphs = tour.description.split('\n')
           each p in paragraphs
            
-           input.description__text(type="text" placeholder=p style='width: 100%;' )
+           textarea.description__text(type="text" placeholder=p style='width: 100%; height: 250px;' )
     section.section-pictures
       each img, i in tour.images
        button Remove Image

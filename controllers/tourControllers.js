@@ -73,8 +73,11 @@ exports.resizeTourImages = async (req, res, next) => {
   try {
     // if we have multiply files it will be stored at req.files and not req.file as in the other lectures
     // if (!req.files.imageCover || !req.files.images) return next();
+    console.log('req.files', req.files);
     if (!req.files || !req.files.imageCover || !req.files.images) {
-      return next(new Error('Image files not provided.'));
+      // return next(new Error('Image files not provided.'));
+      console.log('exit');
+      return next();
     }
 
     //1) Cover image

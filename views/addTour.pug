@@ -1,5 +1,6 @@
 extends base
 
+
 block content
   form.form#create-tour-form(style='padding:5em  30%' enctype="multipart/form-data")
     h2.heading-secondary.ma-bt-lg Create a Tour
@@ -44,10 +45,11 @@ block content
     label.form__label(for="startLocation.address") Address
     input.form__input(name="startLocation.address" type="text" placeholder='Address')
 
-    label.form__label(for="images[0].file") Images
-    input.form__input(name="images[0].file" type="file")
-    input.form__input(name="images[1].file" type="file")
-    input.form__input(name="images[2].file" type="file")
+    label.form__label(for="images[].file") Images
+    //- input.form__input(name="images[].file" type="file" multipart)
+    //- input.form__input(name="images[].file" type="file" multipart)
+    //- input.form__input(name="images[].file" type="file" multipart)
+    input.form__input(name="images[].file" id='file-input' type="file" multiple)
     
     br
     br
@@ -76,3 +78,4 @@ block content
         option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
     
     button.btn.btn--green(type='submit') Create Tour
+
