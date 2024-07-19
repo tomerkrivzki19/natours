@@ -62,6 +62,11 @@ router.get(
   viewController.getTourDetaillsAdministrator
 );
 router.get('/add-tour', authController.protect, viewController.addTourTampalte);
+router.get(
+  '/add-tour/:id',
+  authController.protect,
+  viewController.addTourTampalteSeconed
+);
 //manage users
 router.get(
   '/manage-users',

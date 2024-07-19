@@ -69,6 +69,47 @@ exports.resizeTourImageCover = async (req, res, next) => {
   }
 };
 
+//for create tour
+exports.resizeCreateTourImages = async (req, res, next) => {
+  try {
+    // if we have multiply files it will be stored at req.files and not req.file as in the other lectures
+    console.log('req.files', req.files);
+    if (!req.files) {
+      // return next(new Error('Image files not provided.'));
+      console.log('exit');
+      return next();
+    }
+    req.body.imageCover = `tour-${Date.now()}-cover.jpeg`;
+
+    await sharp(req.files.imageCover[0].buffer) // => create an object then we can add some manipulation to that with sharp
+      .resize(2000, 1333) // Wpx |  Hpx |  (3 to 2 ratio what commen in image covers)
+      .toFormat('jpeg') // covert to ''
+      .jpeg({ quality: 90 }) //  for saving memory
+      .toFile(`public/img/tours/${req.body.imageCover}`);
+
+    req.body.images = [];
+
+    if (req.files.images) {
+      await Promise.all(
+        req.files.images.map(async (file, i) => {
+          //                                                     how to cout the num of the img?=> becouse index( i ) is set to 0 and from there we counting each and each elemnt (img fot this exmaple)
+          const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
+          await sharp(file.buffer) // => create an object then we can add some manipulation to that with sharp
+            .resize(2000, 1333) // Wpx |  Hpx |  (3 to 2 ratio what commen in image covers)
+            .toFormat('jpeg') // covert to ''
+            .jpeg({ quality: 90 }) //  for saving memory
+            .toFile(`public/img/tours/${filename}`); // need the entire path to the file
+
+          req.body.images.push(filename);
+        })
+      );
+    }
+    next();
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.resizeTourImages = async (req, res, next) => {
   try {
     // if we have multiply files it will be stored at req.files and not req.file as in the other lectures

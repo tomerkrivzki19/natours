@@ -1,0 +1,62 @@
+extends base
+
+block content
+  form.form#create-tour-form-seconed(style='' enctype="multipart/form-data")
+    .images-container(style='padding:5em  30%')
+     h2.heading-secondary.ma-bt-lg Tour Detaills 
+     label.form__label(for="images[].file") Images
+     //- input.form__input(name="images[].file" type="file" multipart)
+     //- input.form__input(name="images[].file" type="file" multipart)
+     //- input.form__input(name="images[].file" type="file" multipart)
+     input.form__input(name="images[].file" id='file-input' type="file" multiple)
+    
+    .guides-container(style='padding:5em  30%')  
+     label.form__label(for="guides") Choose Guides
+     select#guides.form__input(name="guides[0]")
+       option(value='') None
+       each guide in guides
+         option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+    
+     select#guides.form__input(name="guides[1]")
+       option(value='') None
+       each guide in guides
+         option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+    
+     select#guides.form__input(name="guides[2]")
+       option(value='') None
+       each guide in guides
+         option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+    
+    .start-dates-container(style='display:flex;  justify-content:space-evenly;')
+     .start-dates-sub-container(style='width:30%')
+      label.heading-secondary.ma-bt-lg(for="startDates") Start Dates 1
+      label.form__label(for="startDates[0]") First Start Date
+      input.form__input(name="startDates[0]" type="date" placeholder='First start Date')
+      
+     .start-dates-sub-container(style='width:30%')
+      label.heading-secondary.ma-bt-lg(for="startDates") Start Dates 2
+      label.form__label(for="startDates[1]") Seconed Start Date
+      input.form__input(name="startDates[1]" type="date" placeholder='Seconed start Date')
+      
+     .start-dates-sub-container(style='width:30%')
+      label.heading-secondary.ma-bt-lg(for="startDates") Start Dates 3
+      label.form__label(for="startDates[2]") third Start Date
+      input.form__input(name="startDates[2]" type="date" placeholder='third start Date')
+      
+    .locations-container#locations(style='display:flex;  justify-content:space-evenly; margin-top:15em; flex-wrap:wrap;')
+     .locations-sub-container(style='width:30%')
+      label.heading-secondary.ma-bt-lg(for=" ") locations
+      label.form__label(for="startLocation.coordinates[0]") Start Location Coordinates
+      input.form__input(name="startLocation.coordinates[0]" type="text" placeholder='Latitude (-80.185942)')
+      input.form__input(name="startLocation.coordinates[1]" type="text" placeholder='Longitude (25.774772)')
+      
+      label.form__label(for="startLocation.description") Description
+      input.form__input(name="startLocation.description" type="text" placeholder='Miami, USA')
+      
+      label.form__label(for="startLocation.address") Address
+      input.form__input(name="startLocation.address" type="text" placeholder='Address')
+     
+    button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
+ 
+    
+    button.btn.btn--green#create( tourId=`${id}+${slug}` type='submit') Create Tour

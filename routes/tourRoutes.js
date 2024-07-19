@@ -69,7 +69,7 @@ router
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
     tourControllers.uploadTourImages,
-    tourControllers.resizeTourImages,
+    tourControllers.resizeCreateTourImages,
     tourControllers.createTour
   );
 // tourControllers.checkBody -- > exmaple of middleware

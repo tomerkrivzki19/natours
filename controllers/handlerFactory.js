@@ -48,8 +48,6 @@ exports.updateOne = (Model) => async (req, res, next) => {
 
 exports.createOne = (Model) => async (req, res, next) => {
   try {
-    console.log('Cover Image:', req.body.imageCover);
-    console.log('body:', req.body);
     const doc = await Model.create(req.body);
 
     res.status(201).json({

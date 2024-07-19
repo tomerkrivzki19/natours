@@ -175,6 +175,8 @@ const iconFavorites = document.querySelector('a[href="/my-favorites"]');
 const editReviewBtn = document.querySelectorAll(".reviews__edit-button");
 const deleteReviewBtn = document.querySelectorAll(".reviews__delete-button");
 const createTourForm = document.getElementById("create-tour-form");
+const createTourFormSeconed = document.getElementById("create-tour-form-seconed");
+const addLocationBtn = document.getElementById("addLocationContainer");
 const updateTour = document.getElementById("updateTour");
 const deleteTour = document.getElementById("deleteTour");
 const updateUserDataAdminBtn = document.getElementById("updateUserDataAdmin");
@@ -350,30 +352,69 @@ if (createTourForm) createTourForm.addEventListener("submit", function(event) {
     event.preventDefault();
     const form = event.target;
     const formData = new FormData(form);
-    const images = document.getElementById("file-input");
-    console.log(images.files);
+    // const images = document.getElementById('file-input');
+    // console.log(images.files);
     // Ensure to append the files correctly to FormData
     const tourData = {
         name: formData.get("name"),
-        duration: Number(formData.get("duration")),
-        maxGroupSize: Number(formData.get("maxGroupSize")),
+        duration: Number(formData.get("duration")) || "",
+        maxGroupSize: Number(formData.get("maxGroupSize")) || "",
         difficulty: formData.get("difficulty"),
-        price: Number(formData.get("price")),
+        price: Number(formData.get("price")) || "",
         summary: formData.get("summary"),
         description: formData.get("description"),
         imageCover: formData.get("imageCover"),
         // images: formData.getAll('images[].file'),
         // formData.get('images[1].file'),
         // formData.get('images[2].file'),
-        images: images.files,
+        // images: images.files, //
         startLocation: {
             coordinates: [
-                parseFloat(formData.get("startLocation.coordinates[0]")),
-                parseFloat(formData.get("startLocation.coordinates[1]"))
+                parseFloat(formData.get("startLocation.coordinates[0]")) || 1.1,
+                parseFloat(formData.get("startLocation.coordinates[1]")) || 1.1
             ],
             description: formData.get("startLocation.description"),
             address: formData.get("startLocation.address")
-        },
+        }
+    };
+    // // Send the form data
+    (0, _administartion.createTour)(tourData);
+});
+//SECONED PART:
+//Adding another container for the locations
+if (addLocationBtn) addLocationBtn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    const container = document.getElementById("locations");
+    const locationContainers = document.getElementsByClassName("locations-sub-container");
+    if (locationContainers.length < 6) {
+        const subContainer = document.createElement("div");
+        subContainer.className = "locations-sub-container";
+        subContainer.style.width = "30%";
+        subContainer.style.marginBottom = "15em";
+        subContainer.innerHTML = `
+          <label class="heading-secondary ma-bt-lg" for=" ">locations</label>
+          <label class="form__label" for="startLocation.coordinates[0]">Start Location Coordinates</label>
+          <input class="form__input" name="startLocation.coordinates[0]" type="text" placeholder="Latitude (-80.185942)">
+          <input class="form__input" name="startLocation.coordinates[1]" type="text" placeholder="Longitude (25.774772)">
+          
+          <label class="form__label" for="startLocation.description">Description</label>
+          <input class="form__input" name="startLocation.description" type="text" placeholder="Miami, USA">
+          
+          <label class="form__label" for="startLocation.address">Address</label>
+          <input class="form__input" name="startLocation.address" type="text" placeholder="Address">
+        `;
+        container.appendChild(subContainer);
+    } else (0, _alerts.showAlert)("error", "You have cross the limite");
+});
+if (createTourFormSeconed) createTourFormSeconed.addEventListener("submit", (e)=>{
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const images = document.getElementById("file-input");
+    const tourData = {
+        // images: formData.getAll('images[].file'),
+        // formData.get('images[1].file'),
+        // formData.get('images[2].file'),
+        images: images.files,
         startDates: [
             formData.get("startDates[0]"),
             formData.get("startDates[1]"),
@@ -383,41 +424,21 @@ if (createTourForm) createTourForm.addEventListener("submit", function(event) {
             formData.get("guides[0]"),
             formData.get("guides[1]"),
             formData.get("guides[2]")
-        ]
+        ],
+        // location we moved for now !
+        location: []
     };
-    //location we moved for now !
-    // TODO: check the same methods of sending threw post-man, and then send it here ! THIS IS THE SOLUTION TO THIS TASK !
-    // const newFormData = new FormData();
-    // newFormData.append('tourData', tourData);
-    // console.log(tourData);
-    // // Append non-file fields to FormData
-    // // Object.keys(tourData).forEach((key) => {
-    // //   if (typeof tourData[key] === 'object' && !Array.isArray(tourData[key])) {
-    // //     // Handle nested objects like startLocation
-    // //     Object.keys(tourData[key]).forEach((nestedKey) => {
-    // //       formData.append(`${key}[${nestedKey}]`, tourData[key][nestedKey]);
-    // //     });
-    // //   } else if (Array.isArray(tourData[key])) {
-    // //     // Handle arrays like startDates and guides
-    // //     tourData[key].forEach((item, index) => {
-    // //       formData.append(`${key}[${index}]`, item);
-    // //     });
-    // //   } else {
-    // //     formData.append(key, tourData[key]);
-    // //   }
-    // // });
-    // // // Append files
-    // // formData.append('imageCover', formData.get('imageCover'));
-    // // formData.append('images', formData.get('images[0].file'));
-    // // formData.append('images', formData.get('images[1].file'));
-    // // formData.append('images', formData.get('images[2].file'));
-    // // console.log(formData);
-    // // Send the form data
-    (0, _administartion.createTour)(tourData);
+    console.log(tourData);
+    const create = document.getElementById("create");
+    const dataset = create.getAttribute("tourid");
+    (0, _administartion.updateCurrentTour)(dataset, tourData);
+//send the data
 });
 // update tour - not relevnt for now , becouse we need to figure it out how we want to display this option to the client ( like decide if we want to add uploaded images option , or what exactly we wan to display becouse we need to compaine preview all the tours and also what kind of stuuf to update TODO: )
 if (updateTour) updateTour.addEventListener("click", (e)=>{
     //make it optional to update -get all data
+    e.preventDefault();
+    const form = new FormData(e.target);
     const data = {
     };
     //  send the updated data with the current id
@@ -14446,8 +14467,11 @@ const updateCurrentTour = async (dataset, data)=>{
         const parts = dataset.split("+");
         const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
         const slug = parts[1]; // "the-wine-taster"
-        const res = await (0, _axiosDefault.default).patch(`/api/v1/tours/${tourId}`, {
-            data
+        const res = await (0, _axiosDefault.default).patch(`/api/v1/tours/${tourId}`, data, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            timeout: 10000
         });
         if (res.data.status === "success") {
             (0, _alerts.showAlert)("success", "The tour has successfully updated");
@@ -14457,7 +14481,7 @@ const updateCurrentTour = async (dataset, data)=>{
         }
     } catch (error) {
         console.log(error);
-        (0, _alerts.showAlert)("error", error.data.message);
+        (0, _alerts.showAlert)("error", error.response.data.message);
     }
 };
 const deleteCurrentTour = async (tourId)=>{
@@ -14477,21 +14501,42 @@ const deleteCurrentTour = async (tourId)=>{
 };
 const createTour = async (data)=>{
     try {
-        console.log("Sending data:", data);
         const res = await (0, _axiosDefault.default).post("/api/v1/tours", data, {
             headers: {
-                accept: "application/json",
                 "content-type": "multipart/form-data"
             }
         });
         if (res.data.status === "success") {
+            const id = res.data.data.tour.id;
             (0, _alerts.showAlert)("success", "The Tour Has successfully uploaded");
-            location.assign("/manage-tours");
+            location.assign(`/add-tour/${id}`);
         }
     } catch (error) {
         console.log(error);
         (0, _alerts.showAlert)("error", error.response.data.message);
     }
+// try {
+//   console.log(tourData);
+//   const response = await axios.post('/api/v1/tours', tourData, {
+//     headers: {
+//       //       accept: 'application/json',
+//       'content-type': 'multipart/form-data',
+//     },
+//   });
+//   console.log(response.data);
+// } catch (error) {
+//   if (error.response) {
+//     // Server responded with a status other than 2xx
+//     console.error('Error response:', error.response.data);
+//   } else if (error.request) {
+//     // No response was received
+//     console.error('Error request:', error.request);
+//   } else {
+//     // Something else happened
+//     console.error('Error message:', error.message);
+//   }
+//   console.error('Error config:', error.config);
+// }
 };
 const singupAdmin = async (formData)=>{
     try {

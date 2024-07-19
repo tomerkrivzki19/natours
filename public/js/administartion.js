@@ -9,8 +9,11 @@ export const updateCurrentTour = async (dataset, data) => {
     const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
     const slug = parts[1]; // "the-wine-taster"
 
-    const res = await axios.patch(`/api/v1/tours/${tourId}`, {
-      data,
+    const res = await axios.patch(`/api/v1/tours/${tourId}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 10000,
     });
     if (res.data.status === 'success') {
       showAlert('success', 'The tour has successfully updated');
@@ -20,7 +23,7 @@ export const updateCurrentTour = async (dataset, data) => {
     }
   } catch (error) {
     console.log(error);
-    showAlert('error', error.data.message);
+    showAlert('error', error.response.data.message);
   }
 };
 
@@ -46,24 +49,45 @@ export const deleteCurrentTour = async (tourId) => {
 //TODO: --the err is that there a data is falling when sending with axios.post , - with post man the req working good
 export const createTour = async (data) => {
   try {
-    console.log('Sending data:', data);
-
     const res = await axios.post('/api/v1/tours', data, {
       headers: {
-        accept: 'application/json',
         'content-type': 'multipart/form-data',
       },
     });
 
     if (res.data.status === 'success') {
+      const id = res.data.data.tour.id;
+
       showAlert('success', 'The Tour Has successfully uploaded');
-      location.assign('/manage-tours');
+      location.assign(`/add-tour/${id}`);
     }
   } catch (error) {
     console.log(error);
-
     showAlert('error', error.response.data.message);
   }
+
+  // try {
+  //   console.log(tourData);
+  //   const response = await axios.post('/api/v1/tours', tourData, {
+  //     headers: {
+  //       //       accept: 'application/json',
+  //       'content-type': 'multipart/form-data',
+  //     },
+  //   });
+  //   console.log(response.data);
+  // } catch (error) {
+  //   if (error.response) {
+  //     // Server responded with a status other than 2xx
+  //     console.error('Error response:', error.response.data);
+  //   } else if (error.request) {
+  //     // No response was received
+  //     console.error('Error request:', error.request);
+  //   } else {
+  //     // Something else happened
+  //     console.error('Error message:', error.message);
+  //   }
+  //   console.error('Error config:', error.config);
+  // }
 };
 
 export const singupAdmin = async (formData) => {

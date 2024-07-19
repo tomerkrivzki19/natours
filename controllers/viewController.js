@@ -239,11 +239,36 @@ exports.getTourDetaillsAdministrator = async (req, res, next) => {
 
 exports.addTourTampalte = async (req, res, next) => {
   try {
-    const guides = await User.find({ role: ['guide', 'lead-guide'] });
+    // const id = req.params.id;
+    // console.log(id);
+    // const guides = await User.find({ role: ['guide', 'lead-guide'] });
 
+    // const createData = req.query.data === 'false';
     res.status(200).render('addTour', {
-      guides,
+      // guides,
+      // createData,
+      // id,
     });
+  } catch (error) {
+    next(error);
+  }
+};
+exports.addTourTampalteSeconed = async (req, res, next) => {
+  try {
+    //find the current tour name - params.slug =>   if exist:
+    const tour = await Tour.find({ _id: req.params.id });
+    // console.log(tour);
+    const { slug } = tour[0];
+    console.log(slug);
+    if (tour) {
+      //get the guides from the result
+      const guides = await User.find({ role: ['guide', 'lead-guide'] });
+      res.status(200).render('addTourContinue', {
+        guides,
+        id: req.params.id,
+        slug: slug,
+      });
+    }
   } catch (error) {
     next(error);
   }

@@ -154,12 +154,12 @@ app.post(
 );
 
 //Body parser, reading data from the body into req.body
-app.use(express.json({ limit: '10mb' })); //here we set the limit for parsering files to max of 10 kb , what will happeend id there are a file more then 10 kb , simpily he will not be accepted
+app.use(express.json({ limit: '50mb' })); //here we set the limit for parsering files to max of 10 kb , what will happeend id there are a file more then 10 kb , simpily he will not be accepted
 //an build express package that parse url encoded form, urlencoded is also called on the form way of sending data  is also called urlencoded - what is doing is to parse that type of urlencoded form!
 app.use(
   express.urlencoded({
     extended: true,
-    limit: '10mb',
+    limit: '50mb',
   })
 );
 //cookie-parser => an middleware that parse us all the cookies that come form the request
