@@ -259,7 +259,7 @@ exports.addTourTampalteSeconed = async (req, res, next) => {
     const tour = await Tour.find({ _id: req.params.id });
     // console.log(tour);
     const { slug } = tour[0];
-    console.log(slug);
+
     if (tour) {
       //get the guides from the result
       const guides = await User.find({ role: ['guide', 'lead-guide'] });

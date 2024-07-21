@@ -8,12 +8,11 @@ export const updateCurrentTour = async (dataset, data) => {
 
     const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
     const slug = parts[1]; // "the-wine-taster"
-
+    console.log('data from function', data);
     const res = await axios.patch(`/api/v1/tours/${tourId}`, data, {
       headers: {
-        'Content-Type': 'multipart/form-data',
+        'content-type': 'multipart/form-data',
       },
-      timeout: 10000,
     });
     if (res.data.status === 'success') {
       showAlert('success', 'The tour has successfully updated');
@@ -46,7 +45,6 @@ export const deleteCurrentTour = async (tourId) => {
   }
 };
 
-//TODO: --the err is that there a data is falling when sending with axios.post , - with post man the req working good
 export const createTour = async (data) => {
   try {
     const res = await axios.post('/api/v1/tours', data, {
@@ -65,29 +63,6 @@ export const createTour = async (data) => {
     console.log(error);
     showAlert('error', error.response.data.message);
   }
-
-  // try {
-  //   console.log(tourData);
-  //   const response = await axios.post('/api/v1/tours', tourData, {
-  //     headers: {
-  //       //       accept: 'application/json',
-  //       'content-type': 'multipart/form-data',
-  //     },
-  //   });
-  //   console.log(response.data);
-  // } catch (error) {
-  //   if (error.response) {
-  //     // Server responded with a status other than 2xx
-  //     console.error('Error response:', error.response.data);
-  //   } else if (error.request) {
-  //     // No response was received
-  //     console.error('Error request:', error.request);
-  //   } else {
-  //     // Something else happened
-  //     console.error('Error message:', error.message);
-  //   }
-  //   console.error('Error config:', error.config);
-  // }
 };
 
 export const singupAdmin = async (formData) => {

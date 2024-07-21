@@ -79,10 +79,11 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
-    tourControllers.uploadTourImages,
+    tourControllers.uploadImges,
     tourControllers.resizeTourImages,
     tourControllers.updateTour
   )
+
   .delete(
     //a middleware function that check if there valid JWT
     authController.protect,

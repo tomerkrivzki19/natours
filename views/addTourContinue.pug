@@ -4,11 +4,11 @@ block content
   form.form#create-tour-form-seconed(style='' enctype="multipart/form-data")
     .images-container(style='padding:5em  30%')
      h2.heading-secondary.ma-bt-lg Tour Detaills 
-     label.form__label(for="images[].file") Images
+     label.form__label(for="images") Images 
      //- input.form__input(name="images[].file" type="file" multipart)
      //- input.form__input(name="images[].file" type="file" multipart)
      //- input.form__input(name="images[].file" type="file" multipart)
-     input.form__input(name="images[].file" id='file-input' type="file" multiple)
+     input.form__input(name="images" id='file-input' type="file" multiple)
     
     .guides-container(style='padding:5em  30%')  
      label.form__label(for="guides") Choose Guides
@@ -53,8 +53,8 @@ block content
       label.form__label(for="startLocation.description") Description
       input.form__input(name="startLocation.description" type="text" placeholder='Miami, USA')
       
-      label.form__label(for="startLocation.address") Address
-      input.form__input(name="startLocation.address" type="text" placeholder='Address')
+      label.form__label(for="startLocation.day") day
+      input.form__input(name="startLocation.day" type="text" placeholder='day')
      
     button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
  

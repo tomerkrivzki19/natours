@@ -250,15 +250,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 //manage tours - admins:
-//TODO: create tour
+//create tour
 if (createTourForm) {
   createTourForm.addEventListener('submit', function (event) {
     event.preventDefault();
 
     const form = event.target;
     const formData = new FormData(form);
-    // const images = document.getElementById('file-input');
-    // console.log(images.files);
 
     // Ensure to append the files correctly to FormData
     const tourData = {
@@ -270,10 +268,6 @@ if (createTourForm) {
       summary: formData.get('summary'),
       description: formData.get('description'),
       imageCover: formData.get('imageCover'),
-      // images: formData.getAll('images[].file'),
-      // formData.get('images[1].file'),
-      // formData.get('images[2].file'),
-      // images: images.files, //
       startLocation: {
         coordinates: [
           parseFloat(formData.get('startLocation.coordinates[0]')) || 1.1,
@@ -282,17 +276,6 @@ if (createTourForm) {
         description: formData.get('startLocation.description'),
         address: formData.get('startLocation.address'),
       },
-      // startDates: [
-      //   formData.get('startDates[0]'),
-      //   formData.get('startDates[1]'),
-      //   formData.get('startDates[2]'),
-      // ],
-      // guides: [
-      //   formData.get('guides[0]'),
-      //   formData.get('guides[1]'),
-      //   formData.get('guides[2]'),
-      // ],
-      //location we moved for now !
     };
     // // Send the form data
     createTour(tourData);
@@ -323,8 +306,8 @@ if (addLocationBtn) {
           <label class="form__label" for="startLocation.description">Description</label>
           <input class="form__input" name="startLocation.description" type="text" placeholder="Miami, USA">
           
-          <label class="form__label" for="startLocation.address">Address</label>
-          <input class="form__input" name="startLocation.address" type="text" placeholder="Address">
+          <label class="form__label" for="startLocation.day">day</label>
+          <input class="form__input" name="startLocation.day" type="text" placeholder="day"/>
         `;
       container.appendChild(subContainer);
     } else {
@@ -337,13 +320,46 @@ if (createTourFormSeconed) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const images = document.getElementById('file-input');
+    const files = images.files;
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    let allFilesValid = true;
 
+    for (let file of files) {
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`File ${file.name} is too large. Maximum size allowed is 5MB.`);
+        allFilesValid = false;
+        break;
+      }
+    }
+    const locations = [];
+
+    // Select all location sub-containers - add
+    document
+      .querySelectorAll('.locations-sub-container')
+      .forEach((container) => {
+        const coordinates = [
+          parseFloat(
+            container.querySelector(
+              'input[name="startLocation.coordinates[0]"]'
+            ).value
+          ) || 1.1,
+          parseFloat(
+            container.querySelector(
+              'input[name="startLocation.coordinates[1]"]'
+            ).value
+          ) || 1.1,
+        ];
+        const description = container.querySelector(
+          'input[name="startLocation.description"]'
+        ).value;
+        const day = container.querySelector(
+          'input[name="startLocation.day"]'
+        ).value;
+
+        locations.push({ coordinates, description, day });
+      });
     const tourData = {
-      // images: formData.getAll('images[].file'),
-      // formData.get('images[1].file'),
-      // formData.get('images[2].file'),
-      images: images.files,
-
+      images: images.files || '', //TODO: need to adjust stiing before sending + fix the multer options to accept this filles
       startDates: [
         formData.get('startDates[0]'),
         formData.get('startDates[1]'),
@@ -354,35 +370,17 @@ if (createTourFormSeconed) {
         formData.get('guides[1]'),
         formData.get('guides[2]'),
       ],
-      // location we moved for now !
-      location: [
-        // startLocation: {
-        //   coordinates: [
-        //     parseFloat(formData.get('startLocation.coordinates[0]')) || 1.1,
-        //     parseFloat(formData.get('startLocation.coordinates[1]')) || 1.1,
-        //   ],
-        //   description: formData.get('startLocation.description'),
-        //   address: formData.get('startLocation.address'),
-        // },
-      ],
-      // startLocation: {
-      //   coordinates: [
-      //     parseFloat(formData.get('startLocation.coordinates[0]')) || 1.1,
-      //     parseFloat(formData.get('startLocation.coordinates[1]')) || 1.1,
-      //   ],
-      //   description: formData.get('startLocation.description'),
-      //   address: formData.get('startLocation.address'),
-      // },
+      locations,
     };
     console.log(tourData);
 
     const create = document.getElementById('create');
     const dataset = create.getAttribute('tourid');
-    updateCurrentTour(dataset, tourData);
     //send the data
+    updateCurrentTour(dataset, tourData);
   });
 }
-// update tour - not relevnt for now , becouse we need to figure it out how we want to display this option to the client ( like decide if we want to add uploaded images option , or what exactly we wan to display becouse we need to compaine preview all the tours and also what kind of stuuf to update TODO: )
+// update tour
 if (updateTour) {
   updateTour.addEventListener('click', (e) => {
     //make it optional to update -get all data
