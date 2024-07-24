@@ -11,7 +11,7 @@ block content
      input.form__input(name="images" id='file-input' type="file" multiple)
     
     .guides-container(style='padding:5em  30%')  
-     label.form__label(for="guides") Choose Guides
+     label.form__label(for="guides[0]") Choose Guides
      select#guides.form__input(name="guides[0]")
        option(value='') None
        each guide in guides

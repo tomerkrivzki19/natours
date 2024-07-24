@@ -1,6 +1,7 @@
-// const fs = require('fs');
+const fs = require('fs');
 const sharp = require('sharp');
 const multer = require('multer');
+const path = require('path');
 const Tour = require('../models/tourModel');
 const Booking = require('../models/bookingModel');
 const APIFeatures = require('../utils/apiFeatures');
@@ -80,31 +81,36 @@ exports.resizeCreateTourImages = async (req, res, next) => {
 };
 
 // Update Tours API
-
 // Update Tours -- images array
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    console.log(file);
-    console.log(req);
-    cb(null, 'public/img/tours');
+
+exports.uploadImages = multer({
+  storage: multerStorage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Limit file size to 10MB
   },
-  filename: function (req, file, cb) {
+  fileFilter: (req, file, cb) => {
+    const fileTypes = /jpeg|jpg|png/;
+    const mimeType = fileTypes.test(file.mimetype);
+    const extname = fileTypes.test(
+      path.extname(file.originalname).toLowerCase()
+    );
+
+    if (mimeType && extname) {
+      return cb(null, true);
+    }
     cb(
-      null,
-      file.fieldname + '-' + Date.now() + path.extname(file.originalname)
+      new Error(
+        'File upload only supports the following filetypes - ' + fileTypes
+      )
     );
   },
-});
-exports.uploadImges = multer({
-  storage: storage,
-}).array('images', 3);
+}).array('images', 3); // Handle only 'images' array with maxCount 3
 
 exports.resizeTourImages = async (req, res, next) => {
   try {
     // if we have multiply files it will be stored at req.files and not req.file as in the other lectures
     // if (!req.files.imageCover || !req.files.images) return next();
-    console.log('req.files', req.files);
-    if (!req.files.images) {
+    if (!req.files || req.files.length === 0) {
       // return next(new Error('Image files not provided.'));
       return next();
     }
@@ -112,14 +118,14 @@ exports.resizeTourImages = async (req, res, next) => {
     //1) Cover image
     // we saving the elemnt inside the req.body propartie becouse when we are using the update function we create the function that way it takes an elment from the req.body , this is why we deside to store it there
     //unique file name
-    req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
+    // req.body.imageCover = `tour-${req.params.id}-${Date.now()}-cover.jpeg`;
 
-    // we saw in the req.files that the actual images is saved as a buffer inside a buffer verible, and also the whole name of the type(imageCover | images ) saved as an array that contain object with all the data
-    await sharp(req.files.imageCover[0].buffer) // => create an object then we can add some manipulation to that with sharp
-      .resize(2000, 1333) // Wpx |  Hpx |  (3 to 2 ratio what commen in image covers)
-      .toFormat('jpeg') // covert to ''
-      .jpeg({ quality: 90 }) //  for saving memory
-      .toFile(`public/img/tours/${req.body.imageCover}`); // need the entire path to the file
+    // // we saw in the req.files that the actual images is saved as a buffer inside a buffer verible, and also the whole name of the type(imageCover | images ) saved as an array that contain object with all the data
+    // await sharp(req.files.imageCover[0].buffer) // => create an object then we can add some manipulation to that with sharp
+    //   .resize(2000, 1333) // Wpx |  Hpx |  (3 to 2 ratio what commen in image covers)
+    //   .toFormat('jpeg') // covert to ''
+    //   .jpeg({ quality: 90 }) //  for saving memory
+    //   .toFile(`public/img/tours/${req.body.imageCover}`); // need the entire path to the file
 
     // imageCover => becouse this is the name that called in our schema definision
     //2) Images
@@ -133,7 +139,7 @@ exports.resizeTourImages = async (req, res, next) => {
     //becouse this function is a async funtion we will return a new promise , and if we do map  we can actually save an array of all of those promises what five us the option to use promise.all(), and wait to the rest of the calles to finish
     //after all was finished we can move to the rest of the code succesfully
     await Promise.all(
-      req.files.images.map(async (file, i) => {
+      req.files.map(async (file, i) => {
         //                                                     how to cout the num of the img?=> becouse index( i ) is set to 0 and from there we counting each and each elemnt (img fot this exmaple)
         const filename = `tour-${req.params.id}-${Date.now()}-${i + 1}.jpeg`;
         await sharp(file.buffer) // => create an object then we can add some manipulation to that with sharp
@@ -148,6 +154,7 @@ exports.resizeTourImages = async (req, res, next) => {
     // console.log(req.body);
     next();
   } catch (error) {
+    console.error('ResizeTourImages Error:', error);
     next(error);
   }
 };

@@ -318,25 +318,58 @@ if (addLocationBtn) {
 if (createTourFormSeconed) {
   createTourFormSeconed.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const images = document.getElementById('file-input');
-    const files = images.files;
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    let allFilesValid = true;
+    const formElement = e.target;
+    const formData = new FormData();
 
-    for (let file of files) {
-      if (file.size > MAX_FILE_SIZE) {
-        alert(`File ${file.name} is too large. Maximum size allowed is 5MB.`);
-        allFilesValid = false;
-        break;
-      }
+    // Append images
+    const images = document.getElementById('file-input').files;
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
     }
-    const locations = [];
 
-    // Select all location sub-containers - add
+    // Helper function to safely get form element values
+    const getFormElementValue = (selector) => {
+      const element = formElement.querySelector(selector);
+      if (element) {
+        return element.value;
+      } else {
+        console.error(`Element not found for selector: ${selector}`);
+        return '';
+      }
+    };
+
+    // Append startDates
+    formData.append(
+      'startDates[0]',
+      getFormElementValue('input[name="startDates[0]"]')
+    );
+    formData.append(
+      'startDates[1]',
+      getFormElementValue('input[name="startDates[1]"]')
+    );
+    formData.append(
+      'startDates[2]',
+      getFormElementValue('input[name="startDates[2]"]')
+    );
+
+    // Append guides
+    formData.append(
+      'guides[0]',
+      getFormElementValue('select[name="guides[0]"]')
+    );
+    formData.append(
+      'guides[1]',
+      getFormElementValue('select[name="guides[1]"]')
+    );
+    formData.append(
+      'guides[2]',
+      getFormElementValue('select[name="guides[2]"]')
+    );
+
+    // Append locations
     document
       .querySelectorAll('.locations-sub-container')
-      .forEach((container) => {
+      .forEach((container, index) => {
         const coordinates = [
           parseFloat(
             container.querySelector(
@@ -349,35 +382,23 @@ if (createTourFormSeconed) {
             ).value
           ) || 1.1,
         ];
-        const description = container.querySelector(
-          'input[name="startLocation.description"]'
-        ).value;
-        const day = container.querySelector(
-          'input[name="startLocation.day"]'
-        ).value;
+        const description =
+          container.querySelector('input[name="startLocation.description"]')
+            .value || '';
+        const day =
+          container.querySelector('input[name="startLocation.day"]').value ||
+          '';
 
-        locations.push({ coordinates, description, day });
+        formData.append(`locations[${index}][coordinates][0]`, coordinates[0]);
+        formData.append(`locations[${index}][coordinates][1]`, coordinates[1]);
+        formData.append(`locations[${index}][description]`, description);
+        formData.append(`locations[${index}][day]`, day);
       });
-    const tourData = {
-      images: images.files || '', //TODO: need to adjust stiing before sending + fix the multer options to accept this filles
-      startDates: [
-        formData.get('startDates[0]'),
-        formData.get('startDates[1]'),
-        formData.get('startDates[2]'),
-      ],
-      guides: [
-        formData.get('guides[0]'),
-        formData.get('guides[1]'),
-        formData.get('guides[2]'),
-      ],
-      locations,
-    };
-    console.log(tourData);
 
     const create = document.getElementById('create');
     const dataset = create.getAttribute('tourid');
     //send the data
-    updateCurrentTour(dataset, tourData);
+    updateCurrentTour(dataset, formData);
   });
 }
 // update tour

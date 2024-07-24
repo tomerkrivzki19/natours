@@ -263,7 +263,14 @@ app.all('*', (req, res, next) => {
 //all --> for all the urls // * ==> means for all simiilar in react-router
 
 //err handaling middleware
-app.use(globalErrorHandler);
+// app.use(globalErrorHandler);
+app.use((err, req, res, next) => {
+  console.error('Error:', err.stack);
+  res.status(err.status || 500).json({
+    status: 'error',
+    message: err.message,
+  });
+});
 
 //START THE SERVER
 // (inside the server js file)

@@ -10,15 +10,15 @@ export const updateCurrentTour = async (dataset, data) => {
     const slug = parts[1]; // "the-wine-taster"
     console.log('data from function', data);
     const res = await axios.patch(`/api/v1/tours/${tourId}`, data, {
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
+      // headers: {
+      //   'content-type': 'multipart/form-data',
+      // },
     });
+
     if (res.data.status === 'success') {
       showAlert('success', 'The tour has successfully updated');
       //need to relocate to the this url href=`/manage-tour/${tour.slug}?edit=false`
       location.assign(`/manage-tour/${slug}?edit=false`);
-      // location.reload(true);
     }
   } catch (error) {
     console.log(error);
@@ -33,8 +33,6 @@ export const deleteCurrentTour = async (tourId) => {
 
       if (res.data.status === 'success') {
         showAlert('success', 'The tour has successfully deleted');
-        // location.reload(true);
-        console.log('deleted');
         location.assign(`/manage-tours`);
       }
     } else {
