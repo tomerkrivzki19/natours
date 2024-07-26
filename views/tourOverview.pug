@@ -11,7 +11,16 @@ mixin overviewBoxEdit(lable, text ,icon)
    svg.overview-box__icon
       use(xlink:href=`/img/icons.svg#icon-${icon}`)
    span.overview-box__label= lable 
-   input.overview-box__text(type=`${ lable === 'Next date' ? 'date' : 'text'}`, placeholder=text)
+   //input.overview-box__text#quickFacts(type=`${lable === 'Next date' ? 'date' : 'text'}`, placeholder=text)
+   - if (lable === 'Difficulty')
+      select#difficulty.overview-box__text(name="difficulty")
+        option(value='easy' selected=(text === 'easy')) easy
+        option(value='medium' selected=(text === 'medium')) medium
+        option(value='difficult' selected=(text === 'difficult')) difficult
+   - else if (lable === 'Next date')
+         input.overview-box__text(type='date' name='startDates[]' value=text.split('T')[0] placeholder=text.split('T')[0])
+   - else 
+      input.overview-box__text(type='text' name='maxGroupSize' value=text  placeholder=text)
 
 
 block content
@@ -80,11 +89,12 @@ block content
             img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
 
  - else
-   main.main    
+  main.main    
+   form#updateTourForm
     .topic-container(style='display: flex; justify-content: space-between; width: 100%;')
       h2.heading-secondary.ma-bt-lg add fields to the tour
-      a.btn.btn--green.btn--small#updateTour( data-tour-id=`${tour.id}+${tour.slug}`   style='margin-bottom: 1em;') save
-       //href=`/manage-tour/${tour.slug}?edit=false`
+       //-  a( data-tour-id=`${tour.id}+${tour.slug}`   style='margin-bottom: 1em;')
+      button.btn.btn--green.btn--small#updateTour(type="submit" tourId=`${tour.id}+${tour.slug}` style='margin-bottom: 3em;') save
     // Tour details sections
     section.section-header
       .header__hero
@@ -113,16 +123,17 @@ block content
           .overview-box__group
             h2.heading-secondary.ma-bt-lg Quick facts
 
-            - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+            //- - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+            - const date = tour.startDates[tour.startDates.length - 1].toISOString().split('T')[0]
             +overviewBoxEdit('Next date', date , 'calendar')
             +overviewBoxEdit('Difficulty', tour.difficulty, 'trending-up')
-            +overviewBoxEdit('Participants', `${tour.maxGroupSize} people`, 'user')
+            +overviewBoxEdit('Participants', `${tour.maxGroupSize} `, 'user')
 
 
           .overview-box__group
             h2.heading-secondary.ma-bt-lg Your tour guides
 
-            each guide in tour.guides
+            each guide, index in tour.guides
               .overview-box__detail
                 img.overview-box__img(src=`/img/users/${guide.photo}`, alt=`${guide.name}`)
                 
@@ -131,10 +142,53 @@ block content
                 - if (guide.role === 'guide')
                   span.overview-box__label Tour guide
                 span.overview-box__text= guide.name
-                button.btn.btn--small remove
+                button.btn.btn--small.remove(data-guide-id=`${guide._id}` data-guide-index=`${index}`) Remove
 
-            button.btn.btn--green.btn--small Add Guide
-            
+            //- button.btn.btn--green.btn--small.add Add Guide
+          h2.heading-secondary.ma-bt-lg add guide
+          .guides-container(style='display:flex')  
+            label.form__label(for="guides") Choose Guides
+            select#guides.form__input(name="guides")
+              option(value='') None
+              each guide in guides
+                option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
+              
+          //- .overview-box__group(style='margin-top:4em')
+          //-  h2.heading-secondary.ma-bt-lg(for=" ") Locations
+          //-  button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
+          //-  .locations-container#locations(style='display:flex;  justify-content:space-evenly;  flex-wrap:wrap;')
+          //-   each location, index in tour.locations
+          //-    .locations-sub-container(style='width:30%')
+          //-     label.heading-secondary.ma-bt-lg #{index + 1}
+              
+          //-     label.form__label(for=`startLocation.coordinates[0]`) Start Location Coordinates
+          //-     input.form__input(name=`startLocation.coordinates[0]` type="text" placeholder='Latitude (-80.185942)' value=location.coordinates[0])
+          //-     input.form__input(name=`startLocation.coordinates[1]` type="text" placeholder='Longitude (25.774772)' value=location.coordinates[1])
+
+          //-     label.form__label(for=`startLocation.description`) Description
+          //-     input.form__input(name=`startLocation.description` type="text" placeholder='Description' value=location.description)
+
+          //-     label.form__label(for=`startLocation.day`) Day
+          //-     input.form__input(name=`startLocation.day` type="text" placeholder='Day' value=location.day)
+
+          .overview-box__group(style='margin-top:4em')
+           h2.heading-secondary.ma-bt-lg(for=" ") locations
+           button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
+           .locations-container#locations(style='display:flex;  justify-content:space-evenly;  flex-wrap:wrap; ')
+            each location, index  in tour.locations
+             .locations-sub-container(style='width:30%')
+              label.heading-secondary.ma-bt-lg #{index + 1}
+              label.form__label(for=`location.coordinates[0]`) Start Location Coordinates
+              input.form__input(name=`location.coordinates[1]` type="text" placeholder='Longitude (25.774772)' value=location.coordinates[1])
+              input.form__input(name=`location.coordinates[0]` type="text" placeholder='Latitude (-80.185942)' value=location.coordinates[0])
+
+              label.form__label(for=`location.description`) Description
+              input.form__input(name=`location.description` type="text" placeholder='Description' value=location.description)
+              
+              label.form__label(for=`location.day`) Day
+              input.form__input(name=`location.day` type="text" placeholder='Day' value=location.day)
+
+
       .description-box
         h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
           - const paragraphs = tour.description.split('\n')

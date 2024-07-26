@@ -224,12 +224,15 @@ exports.getManageToursDisplay = async (req, res, next) => {
 exports.getTourDetaillsAdministrator = async (req, res, next) => {
   try {
     const tour = await Tour.findOne({ slug: req.params.slug });
+    const guides = await User.find({ role: ['guide', 'lead-guide'] });
     if (tour) {
       const isEdit = req.query.edit === 'true';
 
       res.status(200).render('tourOverview', {
+        title: 'Update Tour',
         tour,
         isEdit,
+        guides,
       });
     }
   } catch (error) {

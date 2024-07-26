@@ -46,15 +46,15 @@ block content
     .locations-container#locations(style='display:flex;  justify-content:space-evenly; margin-top:15em; flex-wrap:wrap;')
      .locations-sub-container(style='width:30%')
       label.heading-secondary.ma-bt-lg(for=" ") locations
-      label.form__label(for="startLocation.coordinates[0]") Start Location Coordinates
-      input.form__input(name="startLocation.coordinates[0]" type="text" placeholder='Latitude (-80.185942)')
-      input.form__input(name="startLocation.coordinates[1]" type="text" placeholder='Longitude (25.774772)')
+      label.form__label(for="location.coordinates[0]") Start Location Coordinates
+      input.form__input(name="location.coordinates[1]" type="text" placeholder='Longitude (25.774772)')
+      input.form__input(name="location.coordinates[0]" type="text" placeholder='Latitude (-80.185942)')
       
-      label.form__label(for="startLocation.description") Description
-      input.form__input(name="startLocation.description" type="text" placeholder='Miami, USA')
+      label.form__label(for="location.description") Description
+      input.form__input(name="location.description" type="text" placeholder='Miami, USA')
       
-      label.form__label(for="startLocation.day") day
-      input.form__input(name="startLocation.day" type="text" placeholder='day')
+      label.form__label(for="location.day") day
+      input.form__input(name="location.day" type="text" placeholder='day')
      
     button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
  

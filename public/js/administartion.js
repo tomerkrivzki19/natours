@@ -4,11 +4,13 @@ import { showAlert } from './alerts';
 
 export const updateCurrentTour = async (dataset, data) => {
   try {
+    console.log('data from function', data);
+    console.log('dataset', dataset);
+
     const parts = dataset.split('+');
 
     const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
     const slug = parts[1]; // "the-wine-taster"
-    console.log('data from function', data);
     const res = await axios.patch(`/api/v1/tours/${tourId}`, data, {
       // headers: {
       //   'content-type': 'multipart/form-data',
@@ -17,8 +19,8 @@ export const updateCurrentTour = async (dataset, data) => {
 
     if (res.data.status === 'success') {
       showAlert('success', 'The tour has successfully updated');
-      //need to relocate to the this url href=`/manage-tour/${tour.slug}?edit=false`
       location.assign(`/manage-tour/${slug}?edit=false`);
+      // location.reload();
     }
   } catch (error) {
     console.log(error);

@@ -297,17 +297,21 @@ if (addLocationBtn) {
       subContainer.style.width = '30%';
       subContainer.style.marginBottom = '15em';
 
+      const newIndex = locationContainers.length;
+
       subContainer.innerHTML = `
-          <label class="heading-secondary ma-bt-lg" for=" ">locations</label>
-          <label class="form__label" for="startLocation.coordinates[0]">Start Location Coordinates</label>
-          <input class="form__input" name="startLocation.coordinates[0]" type="text" placeholder="Latitude (-80.185942)">
-          <input class="form__input" name="startLocation.coordinates[1]" type="text" placeholder="Longitude (25.774772)">
+          <label class="heading-secondary ma-bt-lg" for=" ">${
+            newIndex + 1
+          }</label>
+          <label class="form__label" for="location.coordinates[0]">Start Location Coordinates</label>
+          <input class="form__input" name="location.coordinates[1]" type="text" placeholder="Longitude (25.774772)">
+          <input class="form__input" name="location.coordinates[0]" type="text" placeholder="Latitude (-80.185942)">
           
-          <label class="form__label" for="startLocation.description">Description</label>
-          <input class="form__input" name="startLocation.description" type="text" placeholder="Miami, USA">
+          <label class="form__label" for="location.description">Description</label>
+          <input class="form__input" name="location.description" type="text" placeholder="Miami, USA">
           
-          <label class="form__label" for="startLocation.day">day</label>
-          <input class="form__input" name="startLocation.day" type="text" placeholder="day"/>
+          <label class="form__label" for="location.day">day</label>
+          <input class="form__input" name="location.day" type="text" placeholder="day"/>
         `;
       container.appendChild(subContainer);
     } else {
@@ -372,22 +376,19 @@ if (createTourFormSeconed) {
       .forEach((container, index) => {
         const coordinates = [
           parseFloat(
-            container.querySelector(
-              'input[name="startLocation.coordinates[0]"]'
-            ).value
+            container.querySelector('input[name="location.coordinates[0]"]')
+              .value
           ) || 1.1,
           parseFloat(
-            container.querySelector(
-              'input[name="startLocation.coordinates[1]"]'
-            ).value
+            container.querySelector('input[name="location.coordinates[1]"]')
+              .value
           ) || 1.1,
         ];
         const description =
-          container.querySelector('input[name="startLocation.description"]')
-            .value || '';
-        const day =
-          container.querySelector('input[name="startLocation.day"]').value ||
+          container.querySelector('input[name="location.description"]').value ||
           '';
+        const day =
+          container.querySelector('input[name="location.day"]').value || '';
 
         formData.append(`locations[${index}][coordinates][0]`, coordinates[0]);
         formData.append(`locations[${index}][coordinates][1]`, coordinates[1]);
@@ -402,17 +403,141 @@ if (createTourFormSeconed) {
   });
 }
 // update tour
+//Remove Guide
+const guideRemoveButtons = document.querySelectorAll('.btn.remove');
+const guideAddBtn = document.querySelector('.btn.add');
+if (guideRemoveButtons) {
+  guideRemoveButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
+      e.preventDefault();
+      const guideId = e.target.getAttribute('data-guide-id');
+      const guideIndex = e.target.getAttribute('data-guide-index');
+
+      // Find the guide element to remove (assuming the button is a child of .overview-box__detail)
+      const guideDetailElement = e.target.closest('.overview-box__detail');
+
+      // Remove the guide element from the DOM
+      guideDetailElement.remove();
+    });
+  });
+}
+
 if (updateTour) {
   updateTour.addEventListener('click', (e) => {
     //make it optional to update -get all data
     e.preventDefault();
-    const form = new FormData(e.target);
-    const data = {
-      // message: GET - ALL - THE - DATA - FOR - UPDATE, TODO:
-    };
+    const form = document.getElementById('updateTourForm');
+    const formData = new FormData(form);
+
+    const formElement = e.target;
+
+    //Append quick facts
+
+    const nextDate = document.querySelector('input[type="date"]').value;
+    const elementGuides = document.getElementById('guides');
+    const guidesValue = elementGuides.value;
+
+    //if there no guides:
+    if (guidesValue === '') {
+      formData.delete('guides'); // Use the name of the input field, not its value
+    }
+
+    formData.append('startDates[]', nextDate);
+    // formData.append('maxGroupSize', participants);
+    //Append guides
+    function getGuideIds() {
+      const guideIds = [];
+      document
+        .querySelectorAll('.overview-box__detail .remove')
+        .forEach((button) => {
+          const guideId = button.getAttribute('data-guide-id');
+          if (guideId) {
+            guideIds.push(guideId);
+          }
+        });
+      return guideIds;
+    }
+    const guideIds = getGuideIds();
+    guideIds.forEach((guideId) => {
+      formData.append('guides', guideId);
+    });
+    // Append locations
+    // document
+    //   .querySelectorAll('.locations-sub-container')
+    //   .forEach((container, index) => {
+    //     ['coordinates[0]', 'coordinates[1]', 'description', 'day'].forEach(
+    //       (field) => {
+    //         const name = `locations[${index}].${field}`;
+    //         const input = container.querySelector(`input[name="${name}"]`);
+    //         const value = input ? input.value : 'formData.delete(name)'; // Handle the case where the input might not be found
+
+    //         formData.append(name, value);
+    //       }
+    //     );
+    //   });
+    // Append locations
+    // document
+    //   .querySelectorAll('.locations-sub-container')
+    //   .forEach((container, index) => {
+    //     const coordinates = [
+    //       parseFloat(
+    //         container.querySelector(
+    //           'input[name="startLocation.coordinates[0]"]'
+    //         ).value
+    //       ) || 0,
+    //       parseFloat(
+    //         container.querySelector(
+    //           'input[name="startLocation.coordinates[1]"]'
+    //         ).value
+    //       ) || 0,
+    //     ];
+    //     const description =
+    //       container.querySelector('input[name="startLocation.description"]')
+    //         .value || '';
+    //     const day =
+    //       container.querySelector('input[name="startLocation.day"]').value ||
+    //       '';
+
+    //     formData.append(`locations[${index}][coordinates][0]`, coordinates[0]);
+    //     formData.append(`locations[${index}][coordinates][1]`, coordinates[1]);
+    //     formData.append(`locations[${index}][description]`, description);
+    //     formData.append(`locations[${index}][day]`, day);
+    //   });
+    document
+      .querySelectorAll('.locations-sub-container')
+      .forEach((container, index) => {
+        const coordinates = [
+          parseFloat(
+            container.querySelector('input[name="location.coordinates[0]"]')
+              .value
+          ) || 0,
+          parseFloat(
+            container.querySelector('input[name="location.coordinates[1]"]')
+              .value
+          ) || 0,
+        ];
+        const description =
+          container.querySelector('input[name="location.description"]').value ||
+          '';
+        const day = Number(
+          container.querySelector('input[name="location.day"]').value || 0
+        );
+
+        formData.append(`locations[${index}][coordinates][0]`, coordinates[0]);
+        formData.append(`locations[${index}][coordinates][1]`, coordinates[1]);
+        formData.append(`locations[${index}][description]`, description);
+        formData.append(`locations[${index}][day]`, day);
+      });
+
+    //Appends ;
+
+    // Debug: Log the FormData entries
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ': ' + pair[1]);
+    // }
     //  send the updated data with the current id
-    const dataset = updateTour.dataset.tourId;
-    updateCurrentTour(dataset, data);
+    const dataset = updateTour.getAttribute('tourId');
+    updateCurrentTour(dataset, formData);
   });
 }
 
