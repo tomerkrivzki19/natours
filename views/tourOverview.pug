@@ -103,18 +103,16 @@ block content
 
       .heading-box
         h1.heading-primary
-          input(type="text" placeholder=`${tour.name} tour`)
-        //-   span=`${tour.name} tour` 
+          input(type="text" placeholder=tour.name value=tour.name name='name')
         .heading-box__group
           .heading-box__detail
             svg.heading-box__icon
               use(xlink:href='/img/icons.svg#icon-clock')
-            input(type="text" placeholder=`${tour.duration} days`)
-            //- span.heading-box__text= `${tour.duration} days`
+            input(type="text" placeholder=`${tour.duration} days` value=tour.duration name='duration')
           .heading-box__detail
             svg.heading-box__icon
               use(xlink:href='/img/icons.svg#icon-map-pin')
-            input(type="text" placeholder=`${tour.startLocation.description}`)  
+            input(type="text" placeholder=`${tour.startLocation.description}` value=tour.startLocation.description name='startLocation.description')  
             //- span.heading-box__text= tour.startLocation.description
 
     section.section-description
@@ -144,7 +142,6 @@ block content
                 span.overview-box__text= guide.name
                 button.btn.btn--small.remove(data-guide-id=`${guide._id}` data-guide-index=`${index}`) Remove
 
-            //- button.btn.btn--green.btn--small.add Add Guide
           h2.heading-secondary.ma-bt-lg add guide
           .guides-container(style='display:flex')  
             label.form__label(for="guides") Choose Guides
@@ -152,28 +149,11 @@ block content
               option(value='') None
               each guide in guides
                 option(value=`${guide._id}`)=`${guide.name}: ${guide.role}`
-              
-          //- .overview-box__group(style='margin-top:4em')
-          //-  h2.heading-secondary.ma-bt-lg(for=" ") Locations
-          //-  button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
-          //-  .locations-container#locations(style='display:flex;  justify-content:space-evenly;  flex-wrap:wrap;')
-          //-   each location, index in tour.locations
-          //-    .locations-sub-container(style='width:30%')
-          //-     label.heading-secondary.ma-bt-lg #{index + 1}
-              
-          //-     label.form__label(for=`startLocation.coordinates[0]`) Start Location Coordinates
-          //-     input.form__input(name=`startLocation.coordinates[0]` type="text" placeholder='Latitude (-80.185942)' value=location.coordinates[0])
-          //-     input.form__input(name=`startLocation.coordinates[1]` type="text" placeholder='Longitude (25.774772)' value=location.coordinates[1])
-
-          //-     label.form__label(for=`startLocation.description`) Description
-          //-     input.form__input(name=`startLocation.description` type="text" placeholder='Description' value=location.description)
-
-          //-     label.form__label(for=`startLocation.day`) Day
-          //-     input.form__input(name=`startLocation.day` type="text" placeholder='Day' value=location.day)
 
           .overview-box__group(style='margin-top:4em')
-           h2.heading-secondary.ma-bt-lg(for=" ") locations
-           button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
+           .location-topic-container(style='display:flex; flex-direction:column;  ') 
+            h2.heading-secondary.ma-bt-lg locations
+            button.heading-secondary.ma-bt-lg#addLocationContainer Add new location Section +
            .locations-container#locations(style='display:flex;  justify-content:space-evenly;  flex-wrap:wrap; ')
             each location, index  in tour.locations
              .locations-sub-container(style='width:30%')
@@ -192,11 +172,14 @@ block content
       .description-box
         h2.heading-secondary.ma-bt-lg= `About ${tour.name} tour`
           - const paragraphs = tour.description.split('\n')
-          each p in paragraphs
-           
+          each p in paragraphs   
            textarea.description__text(type="text" placeholder=p style='width: 100%; height: 250px;' )
     section.section-pictures
       each img, i in tour.images
-       button Remove Image
+        //- button Remove Image
         .picture-box
           img.picture-box__img(src=`/img/tours/${img}`, alt=`The Park Camper Tour ${i + 1}`, class=`picture-box__img--${i + 1}`)
+  .images-container(style='padding:5em  30%')    
+    label.heading-secondary.ma-bt-lg(for="images") select new images
+    input.form__input(name="images" id='file-input' type="file" multiple)
+    

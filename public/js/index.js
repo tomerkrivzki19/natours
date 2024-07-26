@@ -461,48 +461,8 @@ if (updateTour) {
     guideIds.forEach((guideId) => {
       formData.append('guides', guideId);
     });
-    // Append locations
-    // document
-    //   .querySelectorAll('.locations-sub-container')
-    //   .forEach((container, index) => {
-    //     ['coordinates[0]', 'coordinates[1]', 'description', 'day'].forEach(
-    //       (field) => {
-    //         const name = `locations[${index}].${field}`;
-    //         const input = container.querySelector(`input[name="${name}"]`);
-    //         const value = input ? input.value : 'formData.delete(name)'; // Handle the case where the input might not be found
 
-    //         formData.append(name, value);
-    //       }
-    //     );
-    //   });
-    // Append locations
-    // document
-    //   .querySelectorAll('.locations-sub-container')
-    //   .forEach((container, index) => {
-    //     const coordinates = [
-    //       parseFloat(
-    //         container.querySelector(
-    //           'input[name="startLocation.coordinates[0]"]'
-    //         ).value
-    //       ) || 0,
-    //       parseFloat(
-    //         container.querySelector(
-    //           'input[name="startLocation.coordinates[1]"]'
-    //         ).value
-    //       ) || 0,
-    //     ];
-    //     const description =
-    //       container.querySelector('input[name="startLocation.description"]')
-    //         .value || '';
-    //     const day =
-    //       container.querySelector('input[name="startLocation.day"]').value ||
-    //       '';
-
-    //     formData.append(`locations[${index}][coordinates][0]`, coordinates[0]);
-    //     formData.append(`locations[${index}][coordinates][1]`, coordinates[1]);
-    //     formData.append(`locations[${index}][description]`, description);
-    //     formData.append(`locations[${index}][day]`, day);
-    //   });
+    //Append locations
     document
       .querySelectorAll('.locations-sub-container')
       .forEach((container, index) => {
@@ -528,13 +488,28 @@ if (updateTour) {
         formData.append(`locations[${index}][description]`, description);
         formData.append(`locations[${index}][day]`, day);
       });
-
-    //Appends ;
+    //text-area append
+    let description = '';
+    document.querySelectorAll('.description__text').forEach((el) => {
+      //get thier values
+      const value = el.value;
+      if (value === '') return;
+      //get them inside one verible
+      description += value + '\n'; // Add '\n' for line breaks
+    });
+    if (description) {
+      formData.append('description', description);
+    }
+    // Append images
+    const images = document.getElementById('file-input').files;
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i]);
+    }
 
     // Debug: Log the FormData entries
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0] + ': ' + pair[1]);
-    // }
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
     //  send the updated data with the current id
     const dataset = updateTour.getAttribute('tourId');
     updateCurrentTour(dataset, formData);
