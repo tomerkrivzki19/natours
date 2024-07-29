@@ -82,7 +82,23 @@ const tourSchema = new mongoose.Schema(
       default: Date.now(), //give us a time stand in miliseconed -- then in mongo it will converted to a now date
       //select: false, //propaty to hide from the putpot
     },
-    startDates: [Date],
+    startDates: [
+      {
+        date: {
+          type: Date,
+          required: true,
+        },
+        participants: {
+          type: Number, //when someone bookeed this tour i need add 1 to it intill it hits the soldout verible
+          default: 0,
+        },
+        soldOut: {
+          //the participants will be cconted intil it will get to the soldout field  (participants > maxGroupSize) -> inside the pre-hooke
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
     secretTour: {
       typeof: Boolean,
       default: false,
@@ -141,7 +157,7 @@ const tourSchema = new mongoose.Schema(
 //tourSchema.index({ price: 1 }); //after this operation we can see in the executionStats options , the totalDocsExamined  was 3 . instead of 9 (written all the documents ), this stuff ( indexes )is good for better prtformence . making the mongoose engine mutch faster!
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
-tourSchema.index({ startLocation: '2dsphere' }); //diffrent index we need -- 2dsphere earh fere?  -- this index if ment to the getTourWithin radius function
+tourSchema.index({ startLocation: '2dsphere' }); //diffrent index we need -- 2dsphere earh fere?  -- this index is ment to the getTourWithin radius function
 //how to we decide which fields should contain index and why we dont set indexes on all the fields?
 // answer:
 //* we need to carfully studie the access paderen of our application in order to figure out whitch fiels are query the most then set the indexes for this fiedlds, exampe i dont make a fields to a group size- becouse i dont belive that many people should query that pormater
@@ -185,6 +201,19 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
+//chevking for the participants will be cconted intil it will get to the soldout field  (participants > maxGroupSize)
+tourSchema.pre('save', function (next) {
+  this.startDates.forEach((startDate) => {
+    // Use the maxGroupSize from the root schema
+    if (startDate.participants >= this.maxGroupSize) {
+      startDate.soldOut = true;
+    } else {
+      startDate.soldOut = false;
+    }
+  });
+
+  next();
+});
 // // TODO:Embedding tour guides EXAMPLE :
 // //only work for creating an tour
 // tourSchema.pre('save', async function (next) {
@@ -196,6 +225,7 @@ tourSchema.pre('save', function (next) {
 
 //   next();
 // });
+
 //pre- save hook
 // tourSchema.pre('save', function (next) {
 //   console.log('Will save document ....');

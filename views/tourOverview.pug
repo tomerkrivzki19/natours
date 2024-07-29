@@ -18,7 +18,7 @@ mixin overviewBoxEdit(lable, text ,icon)
         option(value='medium' selected=(text === 'medium')) medium
         option(value='difficult' selected=(text === 'difficult')) difficult
    - else if (lable === 'Next date')
-         input.overview-box__text(type='date' name='startDates[]' value=text.split('T')[0] placeholder=text.split('T')[0])
+      input.overview-box__text(type='date' name='startDates[2].date' value=text placeholder=text.split('T')[0])
    - else 
       input.overview-box__text(type='text' name='maxGroupSize' value=text  placeholder=text)
 
@@ -56,7 +56,7 @@ block content
             .overview-box__group
               h2.heading-secondary.ma-bt-lg Quick facts
 
-              - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+              - const date = tour.startDates[0].date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
               +overviewBox('Next date', date, 'calendar')
               +overviewBox('Difficulty', tour.difficulty, 'trending-up')
               +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
@@ -122,7 +122,7 @@ block content
             h2.heading-secondary.ma-bt-lg Quick facts
 
             //- - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
-            - const date = tour.startDates[tour.startDates.length - 1].toISOString().split('T')[0]
+            - const date = tour.startDates[tour.startDates.length - 1].date.toISOString().split('T')[0]
             +overviewBoxEdit('Next date', date , 'calendar')
             +overviewBoxEdit('Difficulty', tour.difficulty, 'trending-up')
             +overviewBoxEdit('Participants', `${tour.maxGroupSize} `, 'user')

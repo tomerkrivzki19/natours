@@ -43,8 +43,9 @@ block content
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Quick facts
 
-          - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
-          +overviewBox('Next date',date ,'calendar' )
+          //- - const date = tour.startDates[0].date.toLocaleString('en-us', {month: 'long', year: 'numeric'})
+          //- - const date = tour.startDates[0] ? [tour.startDates[0].date.toLocaleDateString('en-us',{month: 'long', year: 'numeric'})]: []
+          +overviewBox('Next date',dates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'}) ,'calendar' )
           +overviewBox('Difficulty', tour.difficulty ,'trending-up' )
           +overviewBox('Participants',`${tour.maxGroupSize} people` ,'user' )
           +overviewBox('Rating',`${tour.ratingsAverage} /5` ,'star' )
@@ -109,7 +110,11 @@ block content
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
         //- we added that becouse ; the api endpoint that we created need the tour id , and the tour id need to come somewhere ,and for now we need to put that information on the btn element so then our js file can grab it from that element and send it along with the request to the checkout session route -for that we are going to use data atribute  
         if user 
-         button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+         .book-container(style='display:flex; flex-direction:column; justify-content:space-even; padding-top:5em')
+          select#tourDate(name="tourDate")
+           each date in dates
+            option(value=date)=date.toLocaleString("en-GB")
+          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
          button.btn.btn--green.span-all-rows#favorite ⭐Add To Favorite!
         else 
          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour !

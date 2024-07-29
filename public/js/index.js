@@ -133,8 +133,9 @@ if (updateUserPasswordForm) {
 if (bookBtn) {
   bookBtn.addEventListener('click', (e) => {
     e.target.textContent = 'Processing...';
+    const date = document.getElementById('tourDate').value;
     const { tourId } = e.target.dataset; //e.target=> the element that was clicked - will be the button element
-    bookTour(tourId);
+    bookTour(tourId, date);
   });
 }
 
@@ -343,18 +344,16 @@ if (createTourFormSeconed) {
     };
 
     // Append startDates
-    formData.append(
-      'startDates[0]',
-      getFormElementValue('input[name="startDates[0]"]')
-    );
-    formData.append(
-      'startDates[1]',
-      getFormElementValue('input[name="startDates[1]"]')
-    );
-    formData.append(
-      'startDates[2]',
-      getFormElementValue('input[name="startDates[2]"]')
-    );
+
+    document
+      .querySelectorAll('.start-dates-sub-container')
+      .forEach((container, index) => {
+        const date = container.querySelector(
+          'input[name^="startDates"][name$=".date"]'
+        ).value;
+
+        formData.append(`startDates[${index}][date]`, date);
+      });
 
     // Append guides
     formData.append(
@@ -433,7 +432,7 @@ if (updateTour) {
 
     //Append quick facts
 
-    const nextDate = document.querySelector('input[type="date"]').value;
+    // const nextDate = document.querySelector('input[type="date"]').value;
     const elementGuides = document.getElementById('guides');
     const guidesValue = elementGuides.value;
 
@@ -441,9 +440,19 @@ if (updateTour) {
     if (guidesValue === '') {
       formData.delete('guides'); // Use the name of the input field, not its value
     }
-
-    formData.append('startDates[]', nextDate);
+    // console.log(nextDate);
+    // formData.append('startDates[2].date', nextDate);
     // formData.append('maxGroupSize', participants);
+
+    //Append startDates:
+    const dateInput = document.querySelector(
+      'input[name="startDates[2].date"]'
+    );
+    const date = dateInput.value;
+    console.log('Date:', date);
+
+    // Append the date to FormData
+    formData.append('startDates[0][date]', date);
     //Append guides
     function getGuideIds() {
       const guideIds = [];
@@ -506,10 +515,10 @@ if (updateTour) {
       formData.append('images', images[i]);
     }
 
-    // Debug: Log the FormData entries
-    for (let pair of formData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
+    // // Debug: Log the FormData entries
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0] + ': ' + pair[1]);
+    // }
     //  send the updated data with the current id
     const dataset = updateTour.getAttribute('tourId');
     updateCurrentTour(dataset, formData);

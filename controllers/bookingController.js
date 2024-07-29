@@ -7,12 +7,32 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const APIFeatures = require('../utils/apiFeatures');
 const factory = require('../controllers/handlerFactory');
-const AppError = require('../utils/appError');
+const appError = require('../utils/appError');
 
 exports.getCheckoutSession = async (req, res, next) => {
   try {
+    const { tourId } = req.params;
+    const { tourDate } = req.body;
+    const dateToBook = new Date(tourDate);
+
     //1) Get the currently booked tour
-    const tour = await Tour.findById(req.params.tourId); //the name we gave it ay the url paramater
+    const tour = await Tour.findOne({
+      _id: tourId,
+      // 'startDates.date': { $eq: dateToBook },
+    }); //the name we gave it ay the url paramater
+
+    if (!tour) return next(new appError('Tour or date not found', 404));
+
+    //check if avaible:
+    const startDate = tour.startDates.find(
+      (dateObj) => dateObj.date.getTime() === dateToBook.getTime()
+    );
+    console.log(startDate); //-> undifiend
+
+    if (!startDate) return next(new appError('Date not available', 400));
+    if (startDate.soldOut)
+      return next(new appError('This date is sold out', 400));
+
     //2) Create checkout session
     //*) information about the session itself: | create => we need to await becouse the create is returning a promise becouse its sending an API call (with all the settings)  to stripe , this is for why its a async function that we need to wait
     // const session = await stripe.checkout.session.create({
@@ -64,6 +84,20 @@ exports.getCheckoutSession = async (req, res, next) => {
       ],
       mode: 'payment',
     });
+
+    // Update the participants count if all procceed !
+    const update = {
+      'startDates.$.participants': startDate.participants + 1,
+    };
+    // Check if soldOut should be set
+    if (update['startDates.$.participants'] > tour.maxGroupSize) {
+      update['startDates.$.soldOut'] = true;
+    }
+    await Tour.updateOne(
+      { _id: tourId, 'startDates.date': dateToBook },
+      { $set: update }
+    );
+
     //3) Create session as response
     res.status(200).json({
       status: 'success',

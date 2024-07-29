@@ -7,14 +7,19 @@ import axios from 'axios';
 import { showAlert } from './alerts';
 import { loadStripe } from '@stripe/stripe-js';
 
-export const bookTour = async (tourId) => {
+export const bookTour = async (tourId, tourDate) => {
   try {
     const stripe = await loadStripe(
       'pk_test_51POKHYITotoxTOIR7OiWCh0dpgMYHwuTJi7KKmS5dCN3Vu381hkLpjnnrbB7WkWQpYfFLtkwOstv9HtWLolTvaAh00zJytBK7N'
     );
     //the object we get from the script in the pug tamplate
     //1) Get checkout session from API
-    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
+    const session = await axios.post(
+      `/api/v1/bookings/checkout-session/${tourId}`,
+      {
+        tourDate,
+      }
+    );
     //needs to return a checkout session
     // console.log(session);
 

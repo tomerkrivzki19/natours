@@ -25,7 +25,6 @@ exports.getOverview = async (req, res, next) => {
     const tours = await Tour.find();
     // 2) Build template --> we need to pass all the tours in to the pug page ,and how we do that?
     //we basiclly passing the tours object to the response (see in a example bellow).
-
     // 3) Render that tamplate using tour data from step 1
 
     res.status(200).render('overview', {
@@ -47,10 +46,13 @@ exports.getTour = async (req, res, next) => {
       path: 'reviews',
       fields: 'review rating user',
     });
-
     if (!tour) {
       return next(new AppError('There is no tour with that name.', 404));
     }
+
+    const dates = tour.startDates.map((el) => {
+      return el.date.toLocaleDateString('he-IL');
+    });
 
     //check if the user bought the product also if the time of the tour has already passed
     if (res.locals.user) {
@@ -61,11 +63,7 @@ exports.getTour = async (req, res, next) => {
 
       const date = new Date();
 
-      if (
-        booking.length > 0 &&
-        tour.startDates[0].toLocaleDateString('he-IL') <
-          date.toLocaleDateString('he-IL')
-      ) {
+      if (booking.length > 0 && dates < date.toLocaleDateString('he-IL')) {
         res.locals.purchest = 'purchest';
       }
     }
@@ -75,6 +73,7 @@ exports.getTour = async (req, res, next) => {
     res.status(200).render('tour', {
       title: `${tour.name} Tour`,
       tour,
+      dates,
     });
   } catch (error) {
     next(error);
@@ -227,7 +226,9 @@ exports.getTourDetaillsAdministrator = async (req, res, next) => {
     const guides = await User.find({ role: ['guide', 'lead-guide'] });
     if (tour) {
       const isEdit = req.query.edit === 'true';
-
+      // console.log(tour.startDates);
+      // // const turDate = tour.startDates.slice(0, 1);
+      // console.log(tour.startDates[tour.startDates.length - 1].date); //finding the  last one
       res.status(200).render('tourOverview', {
         title: 'Update Tour',
         tour,
