@@ -51,19 +51,19 @@ exports.getTour = async (req, res, next) => {
     }
 
     const dates = tour.startDates.map((el) => {
-      return el.date.toLocaleDateString('he-IL');
+      return el.date;
     });
 
-    //check if the user bought the product also if the time of the tour has already passed
+    //check if the user bought the product also if the time of the tour that was booked has already passed
     if (res.locals.user) {
       const booking = await Booking.find({
         tour: tour.id,
         user: res.locals.user._id,
       });
-
+      //TODO: need to fix this function -> becouse we need to see if the tour that have been bought -have thr current date that have been passed ot not
+      //meaning that we need to add to the booking model the date that the tour was purchest for !!!
       const date = new Date();
-
-      if (booking.length > 0 && dates < date.toLocaleDateString('he-IL')) {
+      if (booking.length > 0 /* && dates < date.toLocaleDateString('he-IL')*/) {
         res.locals.purchest = 'purchest';
       }
     }
@@ -224,6 +224,7 @@ exports.getTourDetaillsAdministrator = async (req, res, next) => {
   try {
     const tour = await Tour.findOne({ slug: req.params.slug });
     const guides = await User.find({ role: ['guide', 'lead-guide'] });
+
     if (tour) {
       const isEdit = req.query.edit === 'true';
       // console.log(tour.startDates);

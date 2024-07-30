@@ -113,7 +113,7 @@ block content
          .book-container(style='display:flex; flex-direction:column; justify-content:space-even; padding-top:5em')
           select#tourDate(name="tourDate")
            each date in dates
-            option(value=date)=date.toLocaleString("en-GB")
+            option(value= date)=date.toLocaleString("en-GB")
           button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
          button.btn.btn--green.span-all-rows#favorite ⭐Add To Favorite!
         else 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
+const AppError = require('../utils/appError');
 // const User = require('./userModel');
 
 const tourSchema = new mongoose.Schema(
@@ -201,19 +202,32 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-//chevking for the participants will be cconted intil it will get to the soldout field  (participants > maxGroupSize)
+//checking for the participants will be cconted intil it will get to the soldout field  (participants > maxGroupSize)
 tourSchema.pre('save', function (next) {
   this.startDates.forEach((startDate) => {
-    // Use the maxGroupSize from the root schema
+    console.log(
+      `Participants: ${startDate.participants}, Max Group Size: ${this.maxGroupSize}`
+    );
     if (startDate.participants >= this.maxGroupSize) {
-      startDate.soldOut = true;
-    } else {
       startDate.soldOut = false;
+    } else {
+      startDate.soldOut = true;
     }
   });
+  tourSchema.pre('save', function (next) {
+    console.log('Pre-save hook running');
+    next();
+  });
+  // this.startDates.forEach((startDate) => {
+  //   console.log('Processing startDate:', startDate);
+
+  //   // Set soldOut to true if participants are greater than or equal to maxGroupSize
+  //   startDate.soldOut = startDate.participants >= this.maxGroupSize + 1;
+  // });
 
   next();
 });
+
 // // TODO:Embedding tour guides EXAMPLE :
 // //only work for creating an tour
 // tourSchema.pre('save', async function (next) {

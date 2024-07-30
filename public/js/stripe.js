@@ -36,6 +36,6 @@ export const bookTour = async (tourId, tourDate) => {
     //we have the option in sprite to send emails for success payments -meaning we dont have to manually emails when the purchest is succesfull
   } catch (error) {
     console.log(error);
-    showAlert('error', error);
+    showAlert('error', error.response.data.message);
   }
 };

@@ -13,25 +13,27 @@ exports.getCheckoutSession = async (req, res, next) => {
   try {
     const { tourId } = req.params;
     const { tourDate } = req.body;
-    const dateToBook = new Date(tourDate);
 
+    const dateToBook = new Date(tourDate);
     //1) Get the currently booked tour
     const tour = await Tour.findOne({
       _id: tourId,
-      // 'startDates.date': { $eq: dateToBook },
+      'startDates.date': tourDate,
     }); //the name we gave it ay the url paramater
 
-    if (!tour) return next(new appError('Tour or date not found', 404));
+    if (!tour) return next(new appError('Tour or Date was not found', 404));
 
     //check if avaible:
-    const startDate = tour.startDates.find(
-      (dateObj) => dateObj.date.getTime() === dateToBook.getTime()
-    );
-    console.log(startDate); //-> undifiend
+    const startDate = tour.startDates.find((dateObj) => {
+      return dateObj.date.getTime() === dateToBook.getTime();
+    });
 
-    if (!startDate) return next(new appError('Date not available', 400));
+    if (!startDate)
+      return next(
+        new appError('Date not available , Please choose other dates ', 400)
+      );
     if (startDate.soldOut)
-      return next(new appError('This date is sold out', 400));
+      return next(new appError('This current date is sold out 😞', 400));
 
     //2) Create checkout session
     //*) information about the session itself: | create => we need to await becouse the create is returning a promise becouse its sending an API call (with all the settings)  to stripe , this is for why its a async function that we need to wait
