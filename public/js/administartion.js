@@ -27,7 +27,23 @@ export const updateCurrentTour = async (dataset, data) => {
     showAlert('error', error.response.data.message);
   }
 };
+export const updateCurrentDateTour = async (dataset, data) => {
+  try {
+    console.log('data from function', data);
+    const parts = dataset.split('+');
+    const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
+    const slug = parts[1]; // "the-wine-taster"
+    const res = await axios.patch(`/api/v1/tours/${tourId}`, data);
 
+    if (res.data.status === 'success') {
+      showAlert('success', 'The tour has successfully updated');
+      location.reload();
+    }
+  } catch (error) {
+    console.log(error);
+    showAlert('error', error.response.data.message);
+  }
+};
 export const deleteCurrentTour = async (tourId) => {
   try {
     if (confirm('are you sure?!')) {

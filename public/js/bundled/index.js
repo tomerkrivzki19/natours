@@ -182,6 +182,7 @@ const deleteTour = document.getElementById("deleteTour");
 const updateUserDataAdminBtn = document.getElementById("updateUserDataAdmin");
 const singupFormAdmin = document.querySelector(".form--singup-admin");
 const deleteUserAdminBtn = document.getElementById("deleteUserDataAdmin");
+const newDateInput = document.getElementById("newDate");
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
 if (mapbox) {
@@ -475,12 +476,18 @@ if (updateTour) updateTour.addEventListener("click", (e)=>{
     // console.log(nextDate);
     // formData.append('startDates[2].date', nextDate);
     // formData.append('maxGroupSize', participants);
-    //Append startDates:
-    const dateInput = document.querySelector('input[name="startDates[2].date"]');
-    const date = dateInput.value;
-    console.log("Date:", date);
-    // Append the date to FormData
-    formData.append("startDates[0][date]", date);
+    //Append startDates
+    const dateInputs = document.querySelectorAll('input[name^="startDates["][name$="].date"]');
+    const participantInputs = document.querySelectorAll('input[name^="startDates["][name$="].participants"]');
+    // Append existing startDates
+    dateInputs.forEach((dateInput, index)=>{
+        const date = dateInput.value;
+        const participants = participantInputs[index] ? participantInputs[index].placeholder.replace("Participants: ", "") : 0;
+        if (date) {
+            formData.append(`startDates[${index}].date`, date);
+            formData.append(`startDates[${index}].participants`, participants || 0);
+        }
+    });
     //Append guides
     function getGuideIds() {
         const guideIds = [];
@@ -520,13 +527,42 @@ if (updateTour) updateTour.addEventListener("click", (e)=>{
     // Append images
     const images = document.getElementById("file-input").files;
     for(let i = 0; i < images.length; i++)formData.append("images", images[i]);
-    // // Debug: Log the FormData entries
+    // Debug: Log the FormData entries
     // for (let pair of formData.entries()) {
     //   console.log(pair[0] + ': ' + pair[1]);
     // }
     //  send the updated data with the current id
     const dataset = updateTour.getAttribute("tourId");
     (0, _administartion.updateCurrentTour)(dataset, formData);
+});
+// Get the new date value
+if (newDateInput) newDateInput.addEventListener("click", (e)=>{
+    // Initialize FormData
+    const formData = new FormData();
+    // Collect all existing startDates inputs
+    const dateInputs = document.querySelectorAll('input[name^="startDates["][name$="].date"]');
+    const participantInputs = document.querySelectorAll('input[name^="startDates["][name$="].participants"]');
+    // Prepare the startDates array
+    const startDatesArray = [];
+    // Append existing startDates
+    dateInputs.forEach((dateInput, index)=>{
+        const date = dateInput.value;
+        const participants = participantInputs[index] ? participantInputs[index].placeholder.replace("Participants: ", "") : 0;
+        if (date) startDatesArray.push({
+            date,
+            participants: Number(participants)
+        });
+    });
+    // Append the new date
+    // Append the entire startDates array to FormData
+    // formData.append('startDates', JSON.stringify(startDatesArray));
+    const jsonData = {
+        startDates: startDatesArray
+    };
+    // Log FormData contents for debugging
+    console.log(jsonData);
+    const dataset = updateTour.getAttribute("tourId");
+    (0, _administartion.updateCurrentDateTour)(dataset, jsonData);
 });
 if (deleteTour) deleteTour.addEventListener("click", (e)=>{
     //make it optional to update
@@ -14540,6 +14576,7 @@ const displayFavorties = async ()=>{
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "updateCurrentTour", ()=>updateCurrentTour);
+parcelHelpers.export(exports, "updateCurrentDateTour", ()=>updateCurrentDateTour);
 parcelHelpers.export(exports, "deleteCurrentTour", ()=>deleteCurrentTour);
 parcelHelpers.export(exports, "createTour", ()=>createTour);
 parcelHelpers.export(exports, "singupAdmin", ()=>singupAdmin);
@@ -14560,6 +14597,22 @@ const updateCurrentTour = async (dataset, data)=>{
             (0, _alerts.showAlert)("success", "The tour has successfully updated");
             location.assign(`/manage-tour/${slug}?edit=false`);
         // location.reload();
+        }
+    } catch (error) {
+        console.log(error);
+        (0, _alerts.showAlert)("error", error.response.data.message);
+    }
+};
+const updateCurrentDateTour = async (dataset, data)=>{
+    try {
+        console.log("data from function", data);
+        const parts = dataset.split("+");
+        const tourId = parts[0]; // "5c88fa8cf4afda39709c296c"
+        const slug = parts[1]; // "the-wine-taster"
+        const res = await (0, _axiosDefault.default).patch(`/api/v1/tours/${tourId}`, data);
+        if (res.data.status === "success") {
+            (0, _alerts.showAlert)("success", "The tour has successfully updated");
+            location.reload();
         }
     } catch (error) {
         console.log(error);

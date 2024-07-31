@@ -227,9 +227,7 @@ exports.getTourDetaillsAdministrator = async (req, res, next) => {
 
     if (tour) {
       const isEdit = req.query.edit === 'true';
-      // console.log(tour.startDates);
-      // // const turDate = tour.startDates.slice(0, 1);
-      // console.log(tour.startDates[tour.startDates.length - 1].date); //finding the  last one
+
       res.status(200).render('tourOverview', {
         title: 'Update Tour',
         tour,

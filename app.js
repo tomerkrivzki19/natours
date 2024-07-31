@@ -279,7 +279,7 @@ module.exports = app;
 //challenges: (lecture 217)
 // *) implement restriction that users can onlt review a tour that they have actually booked 👍
 // *) implement nested booking routes , for example getting all the bookigs for a certin tour and getting all the bookings for a certing user based on ids , routes: /tours/:id/bookings and /users/:id/bookings👍
-// *)TODO: improve tour dates: add a participants and a soldOut feld to each date. a date then bacomes like an instance of the tour. then ,when a user book, they need to select on of the dates. A new booking will increase the number of participants in the date, until it is booked out (participants > maxGroupSize). so when a user wants to book, you need to check if tour on the selected date is still available TODO:
+// *) improve tour dates: add a participants and a soldOut feld to each date. a date then bacomes like an instance of the tour. then ,when a user book, they need to select on of the dates. A new booking will increase the number of participants in the date, until it is booked out (participants > maxGroupSize). so when a user wants to book, you need to check if tour on the selected date is still available 👍
 // *)TODO: implement advanced authentication features : conform user email, keep users logged in with refresh token ,two-factor authentication - when a user logged in they recive a text message to the phonewith a text message that they need to implement to proccied,etc.. TODO:
 
 // *) implement a sign up form , similar to the login form 👍

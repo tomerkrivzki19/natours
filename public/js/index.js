@@ -16,6 +16,7 @@ import { sendReview, editReview, deleteReview } from './sendReview';
 import { addFavoriteTour, displayFavorties } from './addFavoriteTour';
 import {
   updateCurrentTour,
+  updateCurrentDateTour,
   deleteCurrentTour,
   createTour,
   getMonthlyPlan,
@@ -50,6 +51,7 @@ const deleteTour = document.getElementById('deleteTour');
 const updateUserDataAdminBtn = document.getElementById('updateUserDataAdmin');
 const singupFormAdmin = document.querySelector('.form--singup-admin');
 const deleteUserAdminBtn = document.getElementById('deleteUserDataAdmin');
+const newDateInput = document.getElementById('newDate');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -444,15 +446,26 @@ if (updateTour) {
     // formData.append('startDates[2].date', nextDate);
     // formData.append('maxGroupSize', participants);
 
-    //Append startDates:
-    const dateInput = document.querySelector(
-      'input[name="startDates[2].date"]'
+    //Append startDates
+    const dateInputs = document.querySelectorAll(
+      'input[name^="startDates["][name$="].date"]'
     );
-    const date = dateInput.value;
-    console.log('Date:', date);
+    const participantInputs = document.querySelectorAll(
+      'input[name^="startDates["][name$="].participants"]'
+    );
+    // Append existing startDates
+    dateInputs.forEach((dateInput, index) => {
+      const date = dateInput.value;
+      const participants = participantInputs[index]
+        ? participantInputs[index].placeholder.replace('Participants: ', '')
+        : 0;
 
-    // Append the date to FormData
-    formData.append('startDates[0][date]', date);
+      if (date) {
+        formData.append(`startDates[${index}].date`, date);
+        formData.append(`startDates[${index}].participants`, participants || 0);
+      }
+    });
+
     //Append guides
     function getGuideIds() {
       const guideIds = [];
@@ -515,13 +528,58 @@ if (updateTour) {
       formData.append('images', images[i]);
     }
 
-    // // Debug: Log the FormData entries
+    // Debug: Log the FormData entries
     // for (let pair of formData.entries()) {
     //   console.log(pair[0] + ': ' + pair[1]);
     // }
     //  send the updated data with the current id
     const dataset = updateTour.getAttribute('tourId');
     updateCurrentTour(dataset, formData);
+  });
+}
+// Get the new date value
+if (newDateInput) {
+  newDateInput.addEventListener('click', (e) => {
+    // Initialize FormData
+    const formData = new FormData();
+
+    // Collect all existing startDates inputs
+    const dateInputs = document.querySelectorAll(
+      'input[name^="startDates["][name$="].date"]'
+    );
+    const participantInputs = document.querySelectorAll(
+      'input[name^="startDates["][name$="].participants"]'
+    );
+
+    // Prepare the startDates array
+    const startDatesArray = [];
+
+    // Append existing startDates
+    dateInputs.forEach((dateInput, index) => {
+      const date = dateInput.value;
+      const participants = participantInputs[index]
+        ? participantInputs[index].placeholder.replace('Participants: ', '')
+        : 0;
+
+      if (date) {
+        startDatesArray.push({
+          date,
+          participants: Number(participants),
+        });
+      }
+    });
+
+    // Append the new date
+
+    // Append the entire startDates array to FormData
+    // formData.append('startDates', JSON.stringify(startDatesArray));
+    const jsonData = {
+      startDates: startDatesArray,
+    };
+    // Log FormData contents for debugging
+    console.log(jsonData);
+    const dataset = updateTour.getAttribute('tourId');
+    updateCurrentDateTour(dataset, jsonData);
   });
 }
 

@@ -6,7 +6,7 @@ mixin overviewBox(lable, text ,icon)
    span.overview-box__label= lable 
    span.overview-box__text= text
 
-mixin overviewBoxEdit(lable, text ,icon)
+mixin overviewBoxEdit(lable, text ,icon,index,participants)
  .overview-box__detail
    svg.overview-box__icon
       use(xlink:href=`/img/icons.svg#icon-${icon}`)
@@ -18,7 +18,8 @@ mixin overviewBoxEdit(lable, text ,icon)
         option(value='medium' selected=(text === 'medium')) medium
         option(value='difficult' selected=(text === 'difficult')) difficult
    - else if (lable === 'Next date')
-      input.overview-box__text(type='date' name='startDates[2].date' value=text placeholder=text.split('T')[0])
+      input.overview-box__text(type='date' name=`startDates[${index}].date` value=text placeholder=text.split('T')[0] disabled=true)
+      input(style='padding-left:1em; border:none' type='disable' name=`startDates[${index}].participants` placeholder=`Participants: ${participants}` disabled=true) 
    - else 
       input.overview-box__text(type='text' name='maxGroupSize' value=text  placeholder=text)
 
@@ -120,14 +121,25 @@ block content
         div
           .overview-box__group
             h2.heading-secondary.ma-bt-lg Quick facts
-
+           
             //- - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
-            - const date = tour.startDates[tour.startDates.length - 1].date.toISOString().split('T')[0]
-            +overviewBoxEdit('Next date', date , 'calendar')
+            //- - const date = tour.startDates[tour.startDates.length - 1].date.toISOString().split('T')[0]
+
+            each dateObject,i in tour.startDates
+             - const formattedDate = dateObject.date.toISOString().split('T')[0]
+              +overviewBoxEdit('Next date', formattedDate , 'calendar',i ,dateObject.participants)
+            .mixed-dates-container
+             .overview-box__detail(style='padding-bottom:2em')
+              svg.overview-box__icon
+               use(xlink:href='/img/icons.svg#icon-calendar') // Adjust icon as needed
+              span.overview-box__label Add new date
+              input.overview-box__text(type='date' name='startDates["][name$="].date' )
+              button#newDate.btn.btn--small(type='button' ) Add Date
+
             +overviewBoxEdit('Difficulty', tour.difficulty, 'trending-up')
             +overviewBoxEdit('Participants', `${tour.maxGroupSize} `, 'user')
 
-
+          
           .overview-box__group
             h2.heading-secondary.ma-bt-lg Your tour guides
 
