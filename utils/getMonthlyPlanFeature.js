@@ -8,15 +8,17 @@ module.exports = async (year) => {
       },
       {
         $match: {
-          startDates: {
+          'startDates.date': {
             $gte: new Date(`${year}-01-01`),
             $lte: new Date(`${year}-12-31`),
+            // $gte: new Date(`${year}-01-01T00:00:00.000Z`),
+            // $lte: new Date(`${year}-12-31T23:59:59.999Z`),
           },
         },
       },
       {
         $group: {
-          _id: { $month: '$startDates' },
+          _id: { $month: '$startDates.date' },
           numTourStarts: { $sum: 1 },
           tours: { $push: '$name' },
         },

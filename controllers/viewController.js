@@ -214,6 +214,7 @@ exports.getManageToursDisplay = async (req, res, next) => {
     res.status(200).render('manageTours', {
       tours,
       plans,
+      year,
     });
   } catch (error) {
     next(error);
