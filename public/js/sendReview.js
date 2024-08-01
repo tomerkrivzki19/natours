@@ -20,8 +20,10 @@ export const sendReview = async (data) => {
       location.reload(true);
     }
   } catch (error) {
-    console.log(error);
     showAlert('error', error.response.data.message);
+    setTimeout(() => {
+      location.reload(true);
+    }, 3000);
   }
 };
 

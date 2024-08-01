@@ -14502,8 +14502,10 @@ const sendReview = async (data)=>{
             location.reload(true);
         }
     } catch (error) {
-        console.log(error);
         (0, _alerts.showAlert)("error", error.response.data.message);
+        setTimeout(()=>{
+            location.reload(true);
+        }, 3000);
     }
 };
 const editReview = async (reviewId, data)=>{

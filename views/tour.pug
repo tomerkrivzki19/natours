@@ -90,16 +90,17 @@ block content
  
   //- purchest is inside req.locals when entering the page , find out if there is an tour user was purchest
   if purchest
-    section.section-cta
+    section
       .cta
         .cta__content
           h2.heading-secondary Leave an Rating? 
-          form#review-data(action="") 
-            input(type="text" placeholder="Comment here" name='reviewText' )
-            input(type="number" min="0" max="5" name='reviewNumber')
-            button.btn.btn--green.span-all-rows#leave-review(data-tour-id=`${tour.id}`) Send It!
-  else 
-    section.section-cta
+          form#review-data(action="" )
+            textarea(style="resize:none; width:90%"  type="text" placeholder="Comment here" name='reviewText' )
+            .bottom-conatiner(style='display:flex; justify-content: space-between')
+             input(style='padding:1em; ' type="number" min="0" max="5" name='reviewNumber')
+             button.btn.btn--green.span-all-rows#leave-review(data-tour-id=`${tour.id}`) Send It!
+  
+  section.section-cta
     .cta
       .cta__img.cta__img--logo
         img(src='/img/logo-white.png', alt='Natours logo')

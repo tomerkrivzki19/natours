@@ -149,7 +149,6 @@ if (alertMessage) showAlert('success', alertMessage, 20);
 if (Reviewform) {
   Reviewform.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     reviewBtn.textContent = 'Updating...';
     const formData = new FormData(e.target);
     const review = formData.get('reviewText');
