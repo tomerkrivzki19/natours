@@ -84,21 +84,11 @@ exports.getCheckoutSession = async (req, res, next) => {
           quantity: 1,
         },
       ],
+      metadata: {
+        tourDate: dateToBook, // Include the tour date in metadata
+      },
       mode: 'payment',
     });
-
-    // Update the participants count if all procceed !
-    const update = {
-      'startDates.$.participants': startDate.participants + 1,
-    };
-    // Check if soldOut should be set
-    if (update['startDates.$.participants'] > tour.maxGroupSize) {
-      update['startDates.$.soldOut'] = true;
-    }
-    await Tour.updateOne(
-      { _id: tourId, 'startDates.date': dateToBook },
-      { $set: update }
-    );
 
     //3) Create session as response
     res.status(200).json({
@@ -146,6 +136,18 @@ const createBookingCheckout = async (session) => {
   const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
   // information about the price => unit_amount
   const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
+
+  // Update the participants count if all procceed !
+  const update = {
+    'startDates.$.participants': startDate.participants + 1,
+  };
+  await Tour.updateOne(
+    {
+      _id_: session.client_referenceid,
+      'startDates.date': session.metadata.tourDate,
+    },
+    { $set: update }
+  );
   await Booking.create({ tour, user, price });
 };
 exports.webhookCheckout = (req, res, next) => {
