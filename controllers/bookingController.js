@@ -152,7 +152,7 @@ const createBookingCheckout = async (session) => {
     await Tour.updateOne(
       {
         _id_: session.client_reference_id,
-        'startDates.date': session.metadata.tourDate,
+        'startDates.date': tourDate,
       },
       { $set: update }
     );
