@@ -127,7 +127,22 @@ app.use(
     },
   })
 );
-
+app.use((req, res, next) => {
+  res.setHeader(
+    'Content-Security-Policy',
+    "default-src 'self'; " +
+      "script-src 'self' https://unpkg.com/ https://tile.openstreetmap.org https://cdnjs.cloudflare.com https://js.stripe.com/v3 https://js.stripe.com/v3/fingerprinted/js/ 'unsafe-inline' 'unsafe-eval'; " +
+      "style-src 'self' 'unsafe-inline' https://unpkg.com/ https://tile.openstreetmap.org https://fonts.googleapis.com/ https://www.myfonts.com/fonts/radomir-tinkov/gilroy/*; " +
+      "connect-src 'self' https://unpkg.com https://tile.openstreetmap.org http://127.0.0.1:3000 http://127.0.0.1:52191 *.stripe.com https://*.cloudflare.com; " +
+      "font-src 'self' fonts.googleapis.com fonts.gstatic.com; " +
+      "img-src 'self' blob: data: https:; " +
+      'frame-src *.stripe.com *.stripe.network; ' +
+      "worker-src 'self' blob:; " +
+      "object-src 'none'; " +
+      "script-src-elem 'self' https://unpkg.com/ https://tile.openstreetmap.org https://cdnjs.cloudflare.com https://js.stripe.com/v3 https://js.stripe.com/v3/fingerprinted/js/"
+  );
+  next();
+});
 // need to put in the begining becouse this will secure our headers
 
 //Development log-in
