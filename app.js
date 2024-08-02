@@ -34,13 +34,12 @@ app.set('views', path.join(__dirname, 'views'));
 // Global middaleeares:
 //Impelement CORS:
 //allow all the request
-// app.use(
-//   cors({
-//     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-//   })
-// );
-//return a midddleware function which then add a couple of a diffrent headers to our response
+app.use(
+  cors({
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+); //return a midddleware function which then add a couple of a diffrent headers to our response
 // backend app ,   fronted app
 //api.natours.com , natours.com => to allow them both we will use origin:
 // app.use(
