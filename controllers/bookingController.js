@@ -130,25 +130,31 @@ exports.getCheckoutSession = async (req, res, next) => {
 // };
 
 const createBookingCheckout = async (session) => {
-  //information about the tour =>  client_reference_id: req.params.tourId => we can get access from there
-  const tour = session.client_reference_id;
-  //information about the user =>  customer_email: req.user.email,
-  const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
-  // information about the price => unit_amount
-  const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
+  try {
+    //information about the tour =>  client_reference_id: req.params.tourId => we can get access from there
+    const tour = session.client_reference_id;
+    //information about the user =>  customer_email: req.user.email,
+    const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
+    // information about the price => unit_amount
+    const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
 
-  // Update the participants count if all procceed !
-  const update = {
-    'startDates.$.participants': startDate.participants + 1,
-  };
-  await Tour.updateOne(
-    {
-      _id_: session.client_reference_id,
-      'startDates.date': session.metadata.tourDate,
-    },
-    { $set: update }
-  );
-  await Booking.create({ tour, user, price });
+    // Update the participants count if all procceed !
+    const update = {
+      'startDates.$.participants': startDate.participants + 1,
+    };
+    console.log(session.metadata.tourDate);
+    await Tour.updateOne(
+      {
+        _id_: session.client_reference_id,
+        'startDates.date': session.metadata.tourDate,
+      },
+      { $set: update }
+    );
+    await Booking.create({ tour, user, price });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };
 exports.webhookCheckout = (req, res, next) => {
   // we using here stripe web-hook way , becouse this is the way to make the site more secure for payment , from the function aboce we can see that if there some hacker that can knew the url , she can basically get the tour wthout paying
