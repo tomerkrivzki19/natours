@@ -142,20 +142,20 @@ const createBookingCheckout = async (session) => {
     const update = {
       'startDates.$.participants': startDate.participants + 1,
     };
-    const tourDate = session.metadata && session.metadata.tourDate;
-    console.log('Tour Date:', tourDate);
+    // const tourDate = session.metadata && session.metadata.tourDate;
+    // console.log('Tour Date:', tourDate);
 
-    // Ensure you handle cases where metadata might be empty or null
-    if (!tourDate) {
-      throw new Error('Tour date not found in session metadata.');
-    }
-    await Tour.updateOne(
-      {
-        _id_: session.client_reference_id,
-        'startDates.date': tourDate,
-      },
-      { $set: update }
-    );
+    // // Ensure you handle cases where metadata might be empty or null
+    // if (!tourDate) {
+    //   throw new Error('Tour date not found in session metadata.');
+    // }
+    // await Tour.updateOne(
+    //   {
+    //     _id_: session.client_reference_id,
+    //     'startDates.date': tourDate,
+    //   },
+    //   { $set: update }
+    // );
     await Booking.create({ tour, user, price });
   } catch (error) {
     console.log(error);
