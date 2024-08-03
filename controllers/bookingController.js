@@ -138,17 +138,16 @@ const createBookingCheckout = async (session) => {
     // information about the price => unit_amount
     const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
 
-    // Update the participants count if all procceed !
-    const update = {
-      'startDates.$.participants': startDate.participants + 1,
-    };
     // const tourDate = session.metadata && session.metadata.tourDate;
-    // console.log('Tour Date:', tourDate);
 
-    // // Ensure you handle cases where metadata might be empty or null
     // if (!tourDate) {
     //   throw new Error('Tour date not found in session metadata.');
     // }
+    // // Ensure you handle cases where metadata might be empty or null
+    // // Update the participants count if all procceed !
+    // const update = {
+    //   'startDates.$.participants': startDate.participants + 1, //get access to the start date
+    // };
     // await Tour.updateOne(
     //   {
     //     _id_: session.client_reference_id,
