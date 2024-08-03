@@ -138,23 +138,29 @@ const createBookingCheckout = async (session) => {
     // information about the price => unit_amount
     const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
 
-    // const tourDate = session.metadata && session.metadata.tourDate;
+    const tourDate = session.metadata && session.metadata.tourDate;
 
-    // if (!tourDate) {
-    //   throw new Error('Tour date not found in session metadata.');
-    // }
-    // // Ensure you handle cases where metadata might be empty or null
-    // // Update the participants count if all procceed !
-    // const update = {
-    //   'startDates.$.participants': startDate.participants + 1, //get access to the start date
-    // };
-    // await Tour.updateOne(
-    //   {
-    //     _id_: session.client_reference_id,
-    //     'startDates.date': tourDate,
-    //   },
-    //   { $set: update }
-    // );
+    if (!tourDate) {
+      throw new Error('Tour date not found in session metadata.');
+    }
+    
+    // Ensure tourDate is in a format that MongoDB can match (e.g., Date object)
+    const dateFilter = new Date(tourDate);
+    
+    const result = await Tour.updateOne(
+      {
+        _id: session.client_reference_id, // Match the Tour document by its ID
+        'startDates.date': dateFilter // Match the startDate by date
+      },
+      {
+        $inc: { 'startDates.$.participants': 1 } // Increment participants by 1
+      }
+    );
+    
+    // Check if the update was successful
+    if (result.nModified === 0) {
+      throw new Error('No document was updated. Ensure the Tour ID and date are correct.');
+    }
     await Booking.create({ tour, user, price });
   } catch (error) {
     console.log(error);
