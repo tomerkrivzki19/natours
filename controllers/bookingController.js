@@ -128,42 +128,45 @@ exports.getCheckoutSession = async (req, res, next) => {
 //     next(error);
 //   }
 // };
-
-const createBookingCheckout = async (session) => {
+const updateParticipants = async (tourId, tourDate) => {
   try {
-    //information about the tour =>  client_reference_id: req.params.tourId => we can get access from there
-    const tour = session.client_reference_id;
-    //information about the user =>  customer_email: req.user.email,
-    const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
-    // information about the price => unit_amount
-    const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
+    const dateToBook = new Date(tourDate);
 
-    const tourDate = session.metadata && session.metadata.tourDate;
-
-    if (!tourDate) {
-      throw new Error('Tour date not found in session metadata.');
-    }
-
+    // Update the participants count
     const result = await Tour.updateOne(
       {
-        _id: session.client_reference_id, // Match the Tour document by its ID
-        'startDates.date': new Date(tourDate), // Match the startDate by date
+        _id: tourId,
+        'startDates.date': dateToBook,
       },
       {
-        $inc: { 'startDates.$.participants': 1 }, // Increment participants by 1
+        $inc: { 'startDates.$.participants': 1 }, // Increment participants count
       }
     );
 
-    // Check if the update was successful
     if (result.nModified === 0) {
-      throw new Error(
-        'No document was updated. Ensure the Tour ID and date are correct.'
+      console.log(
+        'No document was updated. Either the date is not available or already updated.'
       );
+    } else {
+      console.log(`Updated participants for tour ${tourId} on ${tourDate}`);
     }
-    await Booking.create({ tour, user, price });
   } catch (error) {
-    console.log(error);
+    console.error('Error updating participants:', error);
+    throw new Error('Error updating participants');
   }
+};
+const createBookingCheckout = async (session) => {
+  //information about the tour =>  client_reference_id: req.params.tourId => we can get access from there
+  const tour = session.client_reference_id;
+  //information about the user =>  customer_email: req.user.email,
+  const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
+  // information about the price => unit_amount
+  const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
+  await updateParticipants(
+    session.client_reference_id,
+    session.metadata.tourDate
+  );
+  await Booking.create({ tour, user, price });
 };
 exports.webhookCheckout = (req, res, next) => {
   // we using here stripe web-hook way , becouse this is the way to make the site more secure for payment , from the function aboce we can see that if there some hacker that can knew the url , she can basically get the tour wthout paying
