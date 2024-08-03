@@ -130,7 +130,7 @@ exports.getCheckoutSession = async (req, res, next) => {
 // };
 const updateParticipants = async (tourId, tourDate) => {
   try {
-    const dateToBook = new Date(tourDateTimestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
+    const dateToBook = new Date(tourDate * 1000); // Multiply by 1000 to convert seconds to milliseconds
 
     // Update the participants count
     const result = await Tour.updateOne(
