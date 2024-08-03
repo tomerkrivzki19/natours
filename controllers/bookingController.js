@@ -130,7 +130,7 @@ exports.getCheckoutSession = async (req, res, next) => {
 // };
 const updateParticipants = async (tourId, tourDate) => {
   try {
-    const dateToBook = new Date(tourDate);
+    const dateToBook = new Date(tourDateTimestamp * 1000); // Multiply by 1000 to convert seconds to milliseconds
 
     // Update the participants count
     const result = await Tour.updateOne(
@@ -162,10 +162,8 @@ const createBookingCheckout = async (session) => {
   const user = (await User.findOne({ email: session.customer_email }))._id; // to get only the id from the output
   // information about the price => unit_amount
   const price = session.amount_total / 100; // to canculate the actual numnber we need to devide the number , becouse now she is in cents
-  await updateParticipants(
-    session.client_reference_id,
-    session.metadata.tourDate
-  );
+  const tourDateTimestamp = parseInt(session.metadata.tourDate, 10);
+  await updateParticipants(session.client_reference_id, tourDateTimestamp);
   await Booking.create({ tour, user, price });
 };
 exports.webhookCheckout = (req, res, next) => {
