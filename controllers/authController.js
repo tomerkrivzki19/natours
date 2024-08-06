@@ -163,6 +163,7 @@ exports.logout = (req, res, next) => {
     next(error);
   }
 };
+// refresh token
 //a middleware function that will check if the token valid and protect the routes that we selceted
 exports.protect = async (req, res, next) => {
   try {
@@ -184,6 +185,8 @@ exports.protect = async (req, res, next) => {
     // console.log(token);
     //check if the token exist :
     if (!token) {
+      req.user = null;
+      res.locals.user = null;
       return next(
         new AppError('You are not logged in! Please log in to get access.', 401)
       );
@@ -211,6 +214,8 @@ exports.protect = async (req, res, next) => {
 
     // if there no id that match in the decoded to the db then log him out with an err message
     if (!currentUser) {
+      req.user = null;
+      res.locals.user = null;
       return next(
         new AppError(
           'The user belonging to this user does not longer exist. ',
@@ -225,6 +230,8 @@ exports.protect = async (req, res, next) => {
     if (currentUser.changedPasswordAfter(decoded.iat)) {
       // * if the user is actualy changed their password so then we want this err to happen
       // * if the password was actually changed so we want an error
+      req.user = null;
+      res.locals.user = null;
       return next(
         new AppError(
           'User recently changed password! Please log in again.',
@@ -251,7 +258,7 @@ exports.isLoggedIn = async (req, res, next) => {
       //1)verify the token
       const decoded = await promisify(jwt.verify)(
         //promisify-> a build in function in node libary -> make it return promise.
-        req.cookies.jwt,
+        req.cookies.jwt, // refresh token
         process.env.JWT_SECRET
       );
 

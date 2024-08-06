@@ -15,12 +15,11 @@ router.patch('/resetPassword/:token', authController.resetPassword);
 // basiclly we need to create the protect funciton to all of the other request other the top one's .
 //the router user , is used as a little application that runing in our program behind the sence, so like a regular app we can use middleware on this router aswell ,
 
+//Protect All Routes After This Middleware
+router.use(authController.protect);
 ///confirmEmail
 router.post('/confirmEmail', authController.confirmEmail);
 router.get('/confirmEmail/:token', authController.confirmEmailUpdate);
-
-//Protect All Routes After This Middleware
-router.use(authController.protect);
 //what this will do is that after this point , all the bottom one's will be protected as the way it readed
 //this is availble becosue middlewares are syncrible , and this meaning that the code is readed onces it get there and not in the background waiting to end when meantime it running others function.
 
