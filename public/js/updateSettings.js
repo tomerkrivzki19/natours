@@ -11,8 +11,8 @@ export const updateSettings = async (data, type, userId = 'default') => {
     //   type === 'password'
     //     ? '/api/v1/users/updateMyPassword'
     //     : '/api/v1/users/updateMe';
-    console.log(userId);
-    console.log(data);
+    // console.log(userId);
+    // console.log(data);
     let url = '';
     if (type === 'password') {
       url = '/api/v1/users/updateMyPassword';
@@ -51,5 +51,25 @@ export const updateSettings = async (data, type, userId = 'default') => {
   } catch (error) {
     showAlert('error', error.response.data.message);
     return;
+  }
+};
+
+export const sendConfirmEmail = async (email) => {
+  try {
+    const res = await axios.post('/api/v1/users/confirmEmail', {
+      email,
+    });
+
+    if (res.data.status === 'success') {
+      showAlert(
+        'success',
+        `The email was send to your email, please confirm the new link! `
+      );
+      // location.reload(true);
+    }
+  } catch (error) {
+    console.log(error);
+
+    return showAlert('error', error.response.data.message);
   }
 };

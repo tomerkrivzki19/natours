@@ -44,6 +44,8 @@ block content
             .form__group.ma-bt-md
               label.form__label(for='email') Email address
               input#email.form__input(type='email', value=`${user.email}`, required, name='email')
+              if user.verifiedEmail === false
+               a(href=" " data=user.email)#email-confirm.form__label Please confirm your email
             .form__group.form__photo-upload
               img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
               input.form__upload(type='file', accept='image/*', id='photo', name='photo')

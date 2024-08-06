@@ -29,7 +29,7 @@ const createSendToken = (user, statusCode, req, res) => {
     ), //the broswer and the client cookie will delete itself after it expires
 
     //  secure: true, //the cookie will be only send on encrypted connection - HTTPS
-    httpOnly: true, //the cookie cannot be access or modifyed in any way by the browser, the way the broswer act after we set that option is to recive the cookie store it and send it automaticlly along with every reqeuset
+    httpOnly: true, //thehe cookie cannot be access or modifyed in any way by the browser, t way the broswer act after we set that option is to recive the cookie store it and send it automaticlly along with every reqeuset
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     //we need to trust proxys inside app.js => app.enable('trust proxy)
   };
@@ -61,7 +61,27 @@ const createSendToken = (user, statusCode, req, res) => {
     },
   });
 };
+const createSendTokenVerification = (user, statusCode, req, res) => {
+  //                user ->  the user argument!
+  const token = signToken(user._id);
 
+  //Send cookie
+  const cookieOptions = {
+    //             the day now  + the 90 we set on config.env -> covert it to miliseconeds
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ), //the broswer and the client cookie will delete itself after it expires
+
+    //  secure: true, //the cookie will be only send on encrypted connection - HTTPS
+    httpOnly: true, //thehe cookie cannot be access or modifyed in any way by the browser, t way the broswer act after we set that option is to recive the cookie store it and send it automaticlly along with every reqeuset
+    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+    //we need to trust proxys inside app.js => app.enable('trust proxy)
+  };
+
+  //the name of the cookie , the data we sending , options :
+  res.cookie('jwt', token, cookieOptions);
+  res.status(statusCode).render('emailVerification');
+};
 exports.singup = async (req, res, next) => {
   try {
     //* this setup is saying that we can sighn in as admin , it also make every person that will try to connect as admin
@@ -431,6 +451,83 @@ exports.updatePassword = async (req, res, next) => {
     //   status: 'success',
     //   message: 'The password successfully updated',
     // });
+  } catch (error) {
+    next(error);
+  }
+};
+
+//confirm email
+exports.confirmEmail = async (req, res, next) => {
+  try {
+    //1) Get user based on POSTed email
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return next(new AppError('There is no user with email adress', 404));
+    }
+
+    //2) Generate the random token - WE ARE USING THE PASSWORD TOKEN METHODS TO SET EXPIRED TIME TO THE CURRENT TOKEN
+    const resetToken = user.createConfirmEmailToken(); //modifiay the data
+    //validateBeforeSave: false ==> de-activate all the validators that we have set in our schema -> in here its avoiding problems becouse there no need in the requirments that we set in the schema
+    await user.save({ validateBeforeSave: false }); //now we need to save it
+
+    try {
+      const url = `${req.protocol}://${req.get(
+        'host'
+      )}/api/v1/users/confirmEmail/${resetToken}`; //the user click on the email and then she will be abale to do the req from there , we will duplicate that when we nuild our dynamic website
+
+      await new Email(user, url).sendEmailConfirm();
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Token sent to email',
+        //we are not puting the token here becouse this is not secured and we dont want anybody to detect the token that way the could not hacked the account
+      });
+    } catch (error) {
+      user.confirmEmailToken = undefined; // reset both token and expired proparties
+      user.confirmEmailExpires = undefined;
+      await user.save({ validateBeforeSave: false }); // to save the proccess
+      return next(
+        new AppError('There was an error sending the email.  Try again later!'),
+        500
+      );
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+exports.confirmEmailUpdate = async (req, res, next) => {
+  try {
+    //1) Get user based on the token  -
+    // incrypted the original token again so we can compare it  with the one that stored in the db, that is also incrypted
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(req.params.token) // the path /resetPassword/:token --
+      .digest('hex');
+
+    //2) If token has not expired, and there is user, set the new password
+    //here we want to send a err if there not user and also the token has been expired
+    const user = await User.findOne({
+      confirmEmailToken: hashedToken, // we loking for the hash token here that the user set on the url
+      confirmEmailExpires: { $gt: Date.now() }, //we want to check if the passwordResetExpiers proparty is greater then now , becouse if the passwordResetExpiers date is greater then now it means tha in the futuer it hasent been expired
+      //mongo db will convert everything to the same and there for will be able to copmare them acurdly
+    });
+
+    if (!user) {
+      return next(new AppError('Token is invalid or has been expired', 400));
+    }
+
+    //3) Update settings property for the user
+    user.verifiedEmail = true;
+    user.confirmEmailToken = undefined;
+    user.confirmEmailExpires = undefined;
+
+    await user.save({ validateBeforeSave: false }); // save the proccess
+
+    //4) Log the user in, send JWT
+    createSendTokenVerification(user, 200, req, res);
+    // res.status(200).render('emailVerification');
+
+    //after that step the passwordResetExpiers & passwordResetToken is not deleted from db , check it out -> but it bloking after time out so we good for now
   } catch (error) {
     next(error);
   }

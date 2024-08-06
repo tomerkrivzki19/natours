@@ -9,7 +9,7 @@ import 'regenerator-runtime/runtime';
 
 import { login, singup, logout } from './login';
 import { displayMap } from './mapbox';
-import { updateSettings } from './updateSettings';
+import { updateSettings, sendConfirmEmail } from './updateSettings';
 import { bookTour } from './stripe';
 import { showAlert } from './alerts';
 import { sendReview, editReview, deleteReview } from './sendReview';
@@ -52,6 +52,7 @@ const updateUserDataAdminBtn = document.getElementById('updateUserDataAdmin');
 const singupFormAdmin = document.querySelector('.form--singup-admin');
 const deleteUserAdminBtn = document.getElementById('deleteUserDataAdmin');
 const newDateInput = document.getElementById('newDate');
+const emailConfirm = document.getElementById('email-confirm');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -123,6 +124,15 @@ if (updateUserPasswordForm) {
       { passwordCurrent, password, passwordConfirm },
       'password'
     );
+  });
+}
+//confirm email:
+if (emailConfirm) {
+  emailConfirm.addEventListener('click', (e) => {
+    e.preventDefault();
+    const email = emailConfirm.getAttribute('data');
+
+    sendConfirmEmail(email);
   });
 }
 //from the postman route that we have already build - to compare if the same detaills is simmilar

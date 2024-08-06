@@ -49,6 +49,12 @@ const userSchema = new mongoose.Schema({
     default: true, //by defult -> any user that is new is an active user
     select: false, // we dont want to display it in the output , we dont want to show this active flag
   },
+  verifiedEmail: {
+    type: Boolean,
+    default: false,
+  },
+  confirmEmailToken: String,
+  confirmEmailExpires: Date,
 });
 //middleware function that will be proccess between the moment that we recive the data , and proccesing to the db
 userSchema.pre('save', async function (next) {
@@ -57,7 +63,6 @@ userSchema.pre('save', async function (next) {
   //only when the password is changed and also when it created new - if the user is updating we will not want to incrip the password again
   //method that we can use when a surten field if modified then do the next code...
   if (!this.isModified('password')) return next(); //if the password hase been not modified then go to the next function
-
   //Hash the password with cost of 12
 
   //else:   hash=> incriptation -> also an async version that return promise that we need to await
@@ -140,6 +145,24 @@ userSchema.methods.createPasswordResetToken = function () {
 
   //returning the plane text token becouse tis is actually the one we are going to send to the email
   return restToken;
+};
+
+// Generate the random token for confirm email
+userSchema.methods.createConfirmEmailToken = function () {
+  // Generate a token
+  const confirmEmailToken = crypto.randomBytes(32).toString('hex');
+
+  // Hash the token and set it in the database
+  this.confirmEmailToken = crypto
+    .createHash('sha256')
+    .update(confirmEmailToken)
+    .digest('hex');
+
+  // Set the expiration date for the token
+  this.confirmEmailExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
+  // Return the plain text token to send to the user
+  return confirmEmailToken;
 };
 
 //                      we want the model name- User , and created out of the schema that we just created
