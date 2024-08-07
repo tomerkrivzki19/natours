@@ -31,6 +31,17 @@ router.get(
 );
 router.get('/tour/:slug', authController.isLoggedIn, viewController.getTour);
 router.get('/login', authController.isLoggedIn, viewController.getLoginForm);
+router.get(
+  '/login/phone',
+  authController.isLoggedIn,
+  viewController.getPhoneLogin
+);
+router.get(
+  '/login/phone/phoneAuthentiactor',
+  authController.isLoggedIn,
+  viewController.getPhoneAuthenticator
+);
+
 router.get('/singup', authController.isLoggedIn, viewController.getSingupForm);
 
 //protected = refresh token

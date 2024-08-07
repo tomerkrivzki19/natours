@@ -39,6 +39,11 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Password are not the same',
     },
+    phoneNumber: String,
+    verifiedText: {
+      type: Number,
+      maxlength: 8,
+    },
   },
   passwordChangedAt: Date,
   passwordRestToken: String,

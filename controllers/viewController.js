@@ -400,3 +400,15 @@ exports.getAllClientBookings = async (req, res, next) => {
     next(error);
   }
 };
+
+//phone authenticator :
+exports.getPhoneLogin = (req, res, next) => {
+  try {
+    res.status(200).render('phoneAuthenticator');
+  } catch (error) {}
+};
+exports.getPhoneAuthenticator = (req, res, next) => {
+  try {
+    res.status(200).render('phoneVerify');
+  } catch (error) {}
+};
