@@ -4,11 +4,12 @@ block content
   main.main
     .login-form
       h2.heading-secondary.ma-bt-lg Please Enter The Code 
+      button.form__label#resendCode Resend Code
+        span#timer (30)
       form.form.form--login-code-authentication
         .form__group
         label.form__label(for='' data-phone-number=phoneNumber) Your text code was sended to : #{hasedPhone}
         .number-code-container(style='display: flex; justify-content: space-between; align-items: center; background-color: #f0f0f0; padding: 10px; border-radius: 5px; width: 100%; margin: auto;')
          input.form__input(type='text' name='code'  required)       
-         button send again
         .form__group(style='padding-top:5em; display:flex; justify-content:center')
           button.btn.btn--green Confirm 

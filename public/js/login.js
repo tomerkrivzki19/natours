@@ -90,6 +90,21 @@ export const sendPhoneNumber = async (formdata) => {
   }
 };
 
+export const resendCode = async (phoneNumber) => {
+  try {
+    const res = await axios.post('/api/v1/users/login/resendCode', {
+      phoneNumber,
+    });
+    if (res.data.status === 'success') {
+      // location.assign('/');
+      // location.reload(true);   // location.reload() => will reload the page |  location.reload(true) => will force a reload the server and not from the broswer
+      showAlert('success', 'The code was sended to your phone ');
+    }
+  } catch (error) {
+    console.log(error.response);
+    showAlert('error', error.response.data.message);
+  }
+};
 export const verifyPhoneText = async (phoneNumber, code) => {
   try {
     const res = await axios.post('/api/v1/users/login/phone/verify', {

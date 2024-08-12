@@ -13,6 +13,7 @@ import {
   logout,
   sendPhoneNumber,
   verifyPhoneText,
+  resendCode,
 } from './login';
 import { displayMap } from './mapbox';
 import { updateSettings, sendConfirmEmail } from './updateSettings';
@@ -63,6 +64,7 @@ const singupFormAdmin = document.querySelector('.form--singup-admin');
 const deleteUserAdminBtn = document.getElementById('deleteUserDataAdmin');
 const newDateInput = document.getElementById('newDate');
 const emailConfirm = document.getElementById('email-confirm');
+const resendCodeBtn = document.getElementById('resendCode');
 
 // dataset =>  read-only property of the HTMLElement interface provides read/write access to custom data attributes (data-*) on elements
 //DELEGATION:
@@ -105,6 +107,40 @@ if (codeAuthentication) {
     verifyPhoneText(phoneNumber, code);
   });
 }
+//resend code to phone
+//function that will start the count
+document.addEventListener('DOMContentLoaded', () => {
+  if (resendCodeBtn) {
+    const timerElement = document.getElementById('timer');
+
+    let counter = 0;
+    let interval;
+
+    function count() {
+      timerElement.innerHTML = `(${30 - counter})`; //the timer element
+      counter++; //return +1 every sec
+    }
+
+    if (counter >= 30) {
+      timerElement.innerHTML = 0; //the timer element
+      clearInterval(interval);
+    } else {
+    }
+    interval = setInterval(count, 1000);
+
+    resendCodeBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lable = document.querySelector('.form__label');
+      const phoneNumber = lable.getAttribute('data-phone-number');
+      if (counter >= 29) {
+        resendCode(phoneNumber);
+      } else {
+        showAlert('error', 'Please wait to timer to finished');
+      }
+    });
+  }
+});
+
 if (singupForm) {
   singupForm.addEventListener('submit', (e) => {
     e.preventDefault();

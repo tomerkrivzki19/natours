@@ -203,6 +203,38 @@ exports.loginWithPhone = async (req, res, next) => {
     next(error);
   }
 };
+//resend code
+exports.resendCode = async (req, res, next) => {
+  //send a verification to the client
+  try {
+    const { phoneNumber } = req.body;
+
+    const verification = await createVerification(phoneNumber);
+
+    if (verification.status === 'pending') {
+      const token = jwt.sign(
+        { phoneNumber: phoneNumber },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: 5 * 60 * 1000, //valid for 5 min
+        }
+      );
+
+      res.cookie('login', token, {
+        httpOnly: true, // Helps prevent XSS attacks
+        secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+        maxAge: 5 * 60 * 1000, // Cookie expiration time
+      });
+      // send responde
+      res.status(200).json({
+        status: 'success',
+        message: 'the verification text was send to the user phone number',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 //for checking the login with phone token - fronted
 exports.authenticateToken = async (req, res, next) => {

@@ -8,6 +8,7 @@ const router = express.Router();
 router.post('/singup', authController.singup);
 router.post('/login', authController.login);
 router.post('/login/phone', authController.loginWithPhone);
+router.post('/login/resendCode', authController.resendCode);
 router.post('/login/phone/verify', authController.verifyCode);
 
 router.get('/logout', authController.logout);

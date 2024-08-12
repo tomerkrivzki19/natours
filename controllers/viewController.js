@@ -411,6 +411,7 @@ exports.getPhoneLogin = (req, res, next) => {
 };
 exports.getPhoneAuthenticator = (req, res, next) => {
   try {
+    //HASHING the phone number
     const num = res.locals.phoneNumber;
     const number = num.replace(/\D/g, '');
     const hasedPhone =
