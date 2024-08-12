@@ -7,7 +7,13 @@ import '@babel/polyfill';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import { login, singup, logout } from './login';
+import {
+  login,
+  singup,
+  logout,
+  sendPhoneNumber,
+  verifyPhoneText,
+} from './login';
 import { displayMap } from './mapbox';
 import { updateSettings, sendConfirmEmail } from './updateSettings';
 import { bookTour } from './stripe';
@@ -30,6 +36,10 @@ import {
 //DOM ELEMNTS :
 const mapbox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
+const phoneNumberForm = document.querySelector('.form--login-phoneNumber');
+const codeAuthentication = document.querySelector(
+  '.form--login-code-authentication'
+);
 const singupForm = document.querySelector('.form--singup');
 const logOutBtn = document.querySelector('.nav__el--logout');
 const updateUserForm = document.querySelector('.form-user-data');
@@ -72,6 +82,29 @@ if (loginForm) {
 } else {
   console.error('Form element not found');
 }
+//verify form with phone number
+if (phoneNumberForm) {
+  phoneNumberForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    sendPhoneNumber(formData);
+  });
+}
+//verify form with code text
+if (codeAuthentication) {
+  codeAuthentication.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const code = formData.get('code');
+    const lable = document.querySelector('.form__label');
+    const phoneNumber = lable.getAttribute('data-phone-number');
+
+    // console.log(phoneNumber);
+    // console.log(code);
+
+    verifyPhoneText(phoneNumber, code);
+  });
+}
 if (singupForm) {
   singupForm.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -81,14 +114,14 @@ if (singupForm) {
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const passwordConfirm = document.getElementById('passwordConfirm').value;
+    const phoneNumber = document.getElementById('phoneNumber').value;
 
     //2) Check if the password and passwordConfirm is match =>
-    console.log(password, passwordConfirm);
     if (password !== passwordConfirm) {
       return showAlert('error', 'Password and Password Confirm are not match!');
     }
     //3) Send the data to funciton that will proccess the post operation
-    singup(name, email, password, passwordConfirm);
+    singup(name, email, password, passwordConfirm, phoneNumber);
     // login(email, password); //check if the err is provided when faield TODO:
   });
 } else {

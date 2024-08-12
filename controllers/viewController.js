@@ -405,10 +405,21 @@ exports.getAllClientBookings = async (req, res, next) => {
 exports.getPhoneLogin = (req, res, next) => {
   try {
     res.status(200).render('phoneAuthenticator');
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 exports.getPhoneAuthenticator = (req, res, next) => {
   try {
-    res.status(200).render('phoneVerify');
-  } catch (error) {}
+    const num = res.locals.phoneNumber;
+    const number = num.replace(/\D/g, '');
+    const hasedPhone =
+      number.slice(0, -4).replace(/\d/g, '#') + number.slice(-4);
+
+    res.status(200).render('phoneVerify', {
+      hasedPhone,
+    });
+  } catch (error) {
+    next(error);
+  }
 };

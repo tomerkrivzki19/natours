@@ -25,13 +25,20 @@ export const login = async (email, password) => {
   }
 };
 
-export const singup = async (name, email, password, passwordConfirm) => {
+export const singup = async (
+  name,
+  email,
+  password,
+  passwordConfirm,
+  phoneNumber
+) => {
   try {
     const res = await axios.post('/api/v1/users/singup', {
       name,
       email,
       password,
       passwordConfirm,
+      phoneNumber,
     });
 
     if (res.data.status === 'success') {
@@ -45,7 +52,7 @@ export const singup = async (name, email, password, passwordConfirm) => {
       }, 1500);
     }
   } catch (error) {
-    console.log(error);
+    // console.log(error);
     showAlert('error', error.response.data.message);
   }
 };
@@ -58,7 +65,43 @@ export const logout = async () => {
       // location.reload(true);   // location.reload() => will reload the page |  location.reload(true) => will force a reload the server and not from the broswer
     }
   } catch (error) {
-    console.log(err.response);
+    // console.log(err.response);
     showAlert('error', 'Error logging out! Try again .');
+  }
+};
+
+export const sendPhoneNumber = async (formdata) => {
+  try {
+    const phoneNumber = formdata.get('phoneNumber');
+    const email = formdata.get('email');
+
+    const res = await axios.post('/api/v1/users/login/phone', {
+      phoneNumber,
+      email,
+    });
+
+    if (res.data.status === 'success') {
+      showAlert('success', res.data.message);
+      location.assign('/verifyCode');
+    }
+  } catch (error) {
+    console.log(error.response);
+    showAlert('error', error.response.data.message);
+  }
+};
+
+export const verifyPhoneText = async (phoneNumber, code) => {
+  try {
+    const res = await axios.post('/api/v1/users/login/phone/verify', {
+      code,
+      phoneNumber,
+    });
+    if (res.data.status === 'success') {
+      location.assign('/');
+      // location.reload(true);   // location.reload() => will reload the page |  location.reload(true) => will force a reload the server and not from the broswer
+    }
+  } catch (error) {
+    console.log(error.response);
+    showAlert('error', error.response.data.message);
   }
 };

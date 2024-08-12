@@ -2,6 +2,8 @@ const crypto = require('crypto'); //build in node moudle , make us very simple b
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const { encrypt, decrypt } = require('../utils/bcryptFeatures');
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,11 +41,12 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Password are not the same',
     },
-    phoneNumber: String,
-    verifiedText: {
-      type: Number,
-      maxlength: 8,
-    },
+  },
+  //PHONE VERIFICATION SECTION
+  phoneNumber: {
+    type: String,
+    required: true,
+    unique: true,
   },
   passwordChangedAt: Date,
   passwordRestToken: String,
@@ -61,6 +64,13 @@ const userSchema = new mongoose.Schema({
   confirmEmailToken: String,
   confirmEmailExpires: Date,
 });
+//incrypt the phone number
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('phoneNumber')) return next();
+  this.phoneNumber = encrypt(this.phoneNumber);
+  next();
+});
+
 //middleware function that will be proccess between the moment that we recive the data , and proccesing to the db
 userSchema.pre('save', async function (next) {
   //  Only run this function if password was actualy  modified

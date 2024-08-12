@@ -4,9 +4,13 @@ block content
   main.main
     .login-form
       h2.heading-secondary.ma-bt-lg Please Enter your phone number
-      form.form.form--login
+      form.form.form--login-phoneNumber
+        .form__group
+          label.form__label(for='') email:
+          input#email.form__input(type='text',name='email', placeholder='user@gmail.com', required)       
+
         .form__group
           label.form__label(for='') Phone Number:
-          input#tel.form__input(type='tel', placeholder='Format: 052-537-7890', required)       
+          input#tel.form__input(type='tel',name='phoneNumber', placeholder='Format: 052-537-7890', required)       
         .form__group
           button.btn.btn--green Confirm 

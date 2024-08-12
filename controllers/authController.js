@@ -6,6 +6,11 @@ const User = require('../models/userModel');
 //const catchAsync = require('../utils/catchAsync'); // a function that we made instead of trycatch
 const AppError = require('../utils/appError');
 const Email = require('../utils/email');
+const { encrypt, decrypt } = require('../utils/bcryptFeatures');
+const {
+  createVerification,
+  createVerificationCheck,
+} = require('../utils/twilloSMS');
 
 // A global jwt creation function, to save us some time
 const signToken = (id) => {
@@ -142,6 +147,111 @@ exports.login = async (req, res, next) => {
     //   status: 'success',
     //   token,
     // });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.loginWithPhone = async (req, res, next) => {
+  try {
+    //1)get the phone number and check if exist in the db
+    const { phoneNumber, email } = req.body;
+    const user = await User.findOne({ email: email });
+
+    if (!user) return next(new AppError('The user was not found', 404));
+
+    //2)check if the phone number is currect
+    const encryptedPhoneNumber = user.phoneNumber;
+    const decryptedPhoneNumber = decrypt(encryptedPhoneNumber);
+
+    if (decryptedPhoneNumber !== phoneNumber) {
+      return next(
+        new AppError('The phone number is not valid, Please try again', 401)
+      );
+    }
+
+    //3)send a verification to the client
+    try {
+      const verification = await createVerification(decryptedPhoneNumber);
+
+      if (verification.status === 'pending') {
+        const token = jwt.sign(
+          { phoneNumber: phoneNumber },
+          process.env.JWT_SECRET,
+          {
+            expiresIn: 5 * 60 * 1000, //valid for 5 min
+          }
+        );
+
+        // localStorage.setItem('login', token);
+        res.cookie('login', token, {
+          httpOnly: true, // Helps prevent XSS attacks
+          secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
+          maxAge: 5 * 60 * 1000, // Cookie expiration time
+        });
+        //4) send responde
+        res.status(200).json({
+          status: 'success',
+          message: 'the verification text was send to the user phone number',
+        });
+      }
+    } catch (error) {
+      next(error);
+    }
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+//for checking the login with phone token - fronted
+exports.authenticateToken = async (req, res, next) => {
+  try {
+    const token = req.cookies.login;
+
+    if (!token) {
+      return next(new AppError('Somthing went wrong, Please try later', 401));
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findOne({
+      phoneNumber: encrypt(decoded.phoneNumber),
+    });
+    if (!user) {
+      return next(new AppError('Somthing went wrong please try again!', 401));
+    }
+    // Set user data in res.locals
+    res.locals.phoneNumber = decoded.phoneNumber;
+    next();
+  } catch (error) {
+    return next(new AppError('Somthing went wrong, Please try later', 401));
+  }
+};
+
+//verify the code when using the phone:
+exports.verifyCode = async (req, res, next) => {
+  try {
+    //1) get the values
+    const { code, phoneNumber } = req.body;
+
+    //3) send to twillo
+    try {
+      const verificationCheck = await createVerificationCheck(
+        phoneNumber,
+        code
+      );
+
+      if (verificationCheck.status === 'approved') {
+        const decodedPhone = encrypt(phoneNumber);
+        const user = await User.findOne({ phoneNumber: decodedPhone });
+
+        //4) send token - if all prooceed the user logged in so need to send authentcation token JWT
+        createSendToken(user, 200, req, res);
+      }
+    } catch (error) {
+      console.log(error);
+
+      next(new AppError('The code in wrong, Please try again', 404));
+    }
   } catch (error) {
     next(error);
   }

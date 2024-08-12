@@ -37,8 +37,9 @@ router.get(
   viewController.getPhoneLogin
 );
 router.get(
-  '/login/phone/phoneAuthentiactor',
+  '/verifyCode',
   authController.isLoggedIn,
+  authController.authenticateToken,
   viewController.getPhoneAuthenticator
 );
 

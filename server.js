@@ -16,6 +16,7 @@ process.on('uncaughtException', (err) => {
 
 dotenv.config({ path: './config.env' });
 const app = require('./app');
+const { createService } = require('./utils/twilloSMS');
 
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
@@ -37,6 +38,9 @@ mongoose
   .catch((err) => {
     console.log(err, 'connnection to mongoDB failed');
   });
+
+//connection to twillo:
+createService();
 
 // Example to creating a document :
 
