@@ -85,3 +85,4 @@ A: I use Oceanic Next (dimmed bg). You can find my complete VSCode setup [here](
 
 **Q4: Can I see a final version of the course projects?**  
 A: The main project is Natours. You can log in with `laura@example.com` and password `test1234`. The Node.js introduction project is Node Farm.
+=======
