@@ -30,37 +30,42 @@ Ensure you have the following installed:
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/your-username/natours.git
+   git clone https://github.com/tomerkrivzki19/natours.git
 
    ```
 
 2. **Navigate to the Project Directory:**
 
-```cd natours
+```bash
+cd natours
 
 ```
 
 3. **Install Dependencies:**
 
-   ```npm install
+   ```bash
+   npm install
 
    ```
 
 4. **Configure Environment Variables:**
 
-   ```Create a **.env** file in the root directory and set the required environment variables. Refer to **.env.example** for the required variables.
+   ```bash
+   Create a **.env** file in the root directory and set the required environment variables. Refer to **.env.example** for the required variables.
 
    ```
 
 5. **Start the Application:**
 
-   ```npm start
+   ```bash
+   npm start
 
    ```
 
 6. **Run Tests (Optional):**
 
-   ```npm test
+   ```bash
+   npm test
 
    ```
 
