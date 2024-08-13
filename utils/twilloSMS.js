@@ -77,6 +77,8 @@ const twilio = require('twilio'); // Or, for ESM: import twilio from "twilio";
 
 //function for converting 0 to +972 - israel num
 function convertToInternationalFormat(localNumber) {
+  console.log('localNum', localNumber);
+
   localNumber = localNumber.replace(/\D/g, '');
   if (localNumber.startsWith('0')) {
     return '+972' + localNumber.substring(1);

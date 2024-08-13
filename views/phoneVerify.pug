@@ -8,7 +8,7 @@ block content
         span#timer (30)
       form.form.form--login-code-authentication
         .form__group
-        label.form__label(for='' data-phone-number=phoneNumber) Your text code was sended to : #{hasedPhone}
+        label.form__label#phoneNumber(for='' data-phone-number=phoneNumber) Your text code was sended to : #{hasedPhone}
         .number-code-container(style='display: flex; justify-content: space-between; align-items: center; background-color: #f0f0f0; padding: 10px; border-radius: 5px; width: 100%; margin: auto;')
          input.form__input(type='text' name='code'  required)       
         .form__group(style='padding-top:5em; display:flex; justify-content:center')

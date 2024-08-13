@@ -208,7 +208,6 @@ exports.resendCode = async (req, res, next) => {
   //send a verification to the client
   try {
     const { phoneNumber } = req.body;
-
     const verification = await createVerification(phoneNumber);
 
     if (verification.status === 'pending') {

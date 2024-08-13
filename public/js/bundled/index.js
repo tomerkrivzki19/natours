@@ -212,7 +212,7 @@ if (codeAuthentication) codeAuthentication.addEventListener("submit", (e)=>{
     e.preventDefault();
     const formData = new FormData(e.target);
     const code = formData.get("code");
-    const lable = document.querySelector(".form__label");
+    const lable = document.getElementById("phoneNumber");
     const phoneNumber = lable.getAttribute("data-phone-number");
     // console.log(phoneNumber);
     // console.log(code);
@@ -221,25 +221,37 @@ if (codeAuthentication) codeAuthentication.addEventListener("submit", (e)=>{
 //resend code to phone
 //function that will start the count
 document.addEventListener("DOMContentLoaded", ()=>{
-    if (resendCodeBtn) {
-        const timerElement = document.getElementById("timer");
+    const timerElement = document.getElementById("timer");
+    if (resendCodeBtn && timerElement) {
         let counter = 0;
         let interval;
         function count() {
-            timerElement.innerHTML = `(${30 - counter})`; //the timer element
-            counter++; //return +1 every sec
+            counter++; // Increment counter
+            if (counter >= 30) {
+                // Stop the timer
+                timerElement.innerHTML = "0";
+                clearInterval(interval);
+                resendCodeBtn.disabled = false; // Enable button
+            } else // Update timer display
+            timerElement.innerHTML = `(${30 - counter})`;
         }
-        if (counter >= 30) {
-            timerElement.innerHTML = 0; //the timer element
-            clearInterval(interval);
+        function startTimer() {
+            counter = 0; // Reset counter
+            interval = setInterval(count, 1000);
+            resendCodeBtn.disabled = true; // Disable button while timer is running
         }
-        interval = setInterval(count, 1000);
+        // Start timer when the page loads
+        startTimer();
         resendCodeBtn.addEventListener("click", (e)=>{
+            console.log("clicked");
             e.preventDefault();
-            const lable = document.querySelector(".form__label");
+            const lable = document.getElementById("phoneNumber");
             const phoneNumber = lable.getAttribute("data-phone-number");
-            if (counter >= 29) (0, _login.resendCode)(phoneNumber);
-            else (0, _alerts.showAlert)("error", "Please wait to timer to finished");
+            console.log(phoneNumber, "phoneNumber");
+            if (counter >= 30) {
+                (0, _login.resendCode)(phoneNumber); // Call resendCode only if 30 seconds have passed
+                startTimer(); // Restart timer
+            } else (0, _alerts.showAlert)("error", "Please wait for the timer to finish");
         });
     }
 });
@@ -9547,6 +9559,7 @@ const sendPhoneNumber = async (formdata)=>{
 };
 const resendCode = async (phoneNumber)=>{
     try {
+        console.log("phoneNumber", phoneNumber);
         const res = await (0, _axiosDefault.default).post("/api/v1/users/login/resendCode", {
             phoneNumber
         });

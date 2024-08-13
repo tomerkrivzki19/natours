@@ -92,6 +92,8 @@ export const sendPhoneNumber = async (formdata) => {
 
 export const resendCode = async (phoneNumber) => {
   try {
+    console.log('phoneNumber', phoneNumber);
+
     const res = await axios.post('/api/v1/users/login/resendCode', {
       phoneNumber,
     });
