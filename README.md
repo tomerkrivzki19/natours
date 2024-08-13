@@ -27,45 +27,42 @@ Ensure you have the following installed:
 
 ### Installation
 
-1. **Clone the Repository:**
+1.  **Clone the Repository:**
 
-   ```bash
-   git clone https://github.com/tomerkrivzki19/natours.git
+    ```bash
+    git clone https://github.com/tomerkrivzki19/natours.git
 
-   ```
+    ```
 
-2. **Navigate to the Project Directory:**
+2.  **Navigate to the Project Directory:**
+
+    ```bash
+    cd natours
+    ```
+
+3.  **Install Dependencies:**
 
 ```bash
-cd natours
+npm install
 
 ```
 
-3. **Install Dependencies:**
-
-   ```bash
-   npm install
-
-   ```
-
 4. **Configure Environment Variables:**
 
-   ```bash
-   Create a **.env** file in the root directory and set the required environment variables. Refer to **.env.example** for the required variables.
-
-   ```
+Create a **.env** file in the root directory and set the required environment variables. Refer to **.env.example** for the required variables.
 
 5. **Start the Application:**
 
    ```bash
-   npm start
+   npm run start:dev -development
+   npm run start:prod -production
 
    ```
 
 6. **Run Tests (Optional):**
 
    ```bash
-   npm test
+   npm run debug
 
    ```
 
@@ -82,12 +79,8 @@ cd natours
 **Q1: How do I download the files?**  
 A: If you're new to GitHub, click the green "Code" button and select "Download ZIP" to get the entire codebase.
 
-**Q2: I'm stuck in one of the projects. Where do I get help?**  
-A: Try fixing the problem on your own first. Compare your code with the final code. For unresolved issues, post a detailed description in the Q&A area on Udemy, along with a codepen of your code.
-
-**Q3: What VSCode theme are you using?**  
+**Q2: What VSCode theme are you using?**  
 A: I use Oceanic Next (dimmed bg). You can find my complete VSCode setup [here](link-to-setup).
 
-**Q4: Can I see a final version of the course projects?**  
+**Q3: Can I see a final version of the course projects?**  
 A: The main project is Natours. You can log in with `laura@example.com` and password `test1234`. The Node.js introduction project is Node Farm.
-=======
