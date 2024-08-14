@@ -82,5 +82,5 @@ A: If you're new to GitHub, click the green "Code" button and select "Download Z
 **Q2: What VSCode theme are you using?**  
 A: I use Oceanic Next (dimmed bg). You can find my complete VSCode setup [here](https://github.com/voronianski/oceanic-next-color-scheme).
 
-**Q3: Can I see a final version of the course projects?**  
+**Q3: Can I see a final version of the course project?**  
 A: The main project is Natours. You can log in with `laura@example.com` and password `test1234`. The Node.js introduction project is Node Farm.
